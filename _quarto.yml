@@ -3,13 +3,13 @@ project:
   pre-render: R/helper.R
 
 book:
-  title: "Inequality in Austria"
+  title: "Learning shiny"
   author: "Peter Baumgartner"
   date: last-modified
   date-format: YYYY-MM-DD HH:mm
   favicon: "img/favicon_io/apple-touch-icon.png"
-  site-url: https://bookdown.org/pbaumgartner/REPO-NAME/
-  repo-url: https://github.com/petzi53/REPO-NAME
+  site-url: https://bookdown.org/pbaumgartner/learning-shiny/
+  repo-url: https://github.com/petzi53/learning-shiny
   repo-branch: master
   repo-actions: [edit, issue]
   page-navigation: true
@@ -42,6 +42,7 @@ format:
 filters:
    - include-code-files
    - section-bibliographies
+   - shinylive
 
 knitr:
   opts_chunk:

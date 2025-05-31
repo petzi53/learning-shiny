@@ -1,19 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# QUARTO TEMPLATE
+# Learning Shiny
 
 <!-- badges: start -->
 
 <!-- badges: end -->
 
-**This is my template for Quarto books about personal notes by reading R
-books.**
-
-What follows is a template text, that has to be updated for every book.
-
 This Quarto book collects my personal notes, trials and exercises of
-[BOOKNAME](URL) by \[AUTHOR\].
+[Mastering Shiny](https://mastering-shiny.org/) by Hadley Wickham.
 
 WATCH OUT: This is my personal learning material and is therefore
 neither an accurate replication nor an authoritative textbook.
