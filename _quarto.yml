@@ -16,6 +16,7 @@ book:
 
   chapters:
     - index.qmd
+    - 01-first-shiny-app.qmd
 
 bibliography:
     - references.bib
@@ -109,8 +110,8 @@ bul-cap-location: bottom
 language:
    crossref-cnj-title: "R Code"             # replaces "Conjecture"
    crossref-cor-title: "Assessment"         # replaces "Corollary"
-   crossref-def-title: "Experiment"         # replaces "Definition"
-   crossref-exm-title: "Code Collection"    # replaces  "Example"
+   crossref-def-title: "Solution"           # replaces "Definition" (needs "num-experiment")
+   crossref-exm-title: "Example"            # remains  "Example"
    crossref-exr-title: "Exercise"           # remains  "Exercise"
    crossref-fig-title: "Graph"              # replaces "Figure"
    crossref-lem-title: "Resource"           # replaces "Lemma"

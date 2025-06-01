@@ -1,0 +1,1321 @@
+# Your first shiny app {#sec-chap01}
+
+```{r}
+#| label: setup
+#| include: false
+
+base::source(file = "R/helper.R")
+```
+
+## Introduction
+
+:::::: {#obj-chap01}
+::::: my-objectives
+::: my-objectives-header
+Objectives for Chapter 01
+:::
+
+::: my-objectives-container
+-   Using the minimum boilerplate needed for a Shiny app (@sec-01-minimum-app)
+-   How to start and stop a Shiny app (@sec-01-run-and-stop)
+-   UI is short for user interface, which defines how your app *looks* (@sec-01-ui-controls)
+-   Server function defines how your app *works* (@sec-01-adding-behaviour)
+-   `r glossary("Reactive expressions")` as Shiny uses
+    `r glossary("reactive programming")` to automatically update outputs
+    when inputs change (@sec-01-reactive-expressions)
+:::
+:::::
+::::::
+
+## Create app directory and file {#sec-01-minimum-app}
+
+There are several ways to create a Shiny app. I am using the following
+procedure:
+
+:::::: my-procedure
+:::: my-procedure-header
+::: {#prp-01-create-shiny-app}
+: My preferred procedure to create a Shiny app
+:::
+::::
+
+::: my-procedure-container
+1.  In RStudio choose `File | New File > Shiny Web App…`
+2.  In the window fill in the application name.
+3.  This will create the directory with the file `app.R` in the
+    directory. Additionally it will open `app.R` with a boiler template.
+4.  Delete the boiler template, e.g. the whole content of the `app.R`
+    file.
+5.  Type `sh1` followed by `Shift TAB` for my own boiler
+    template[^01-first-shiny-app-1] with the following content:
+
+```{r}
+#| label: boiler-template
+#| eval: false
+#| code-fold: show
+#| code-summary: "My boiler template"
+
+library(shiny)
+
+ui <- fluidPage(
+  
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+
+
+See the help documentation for creating [Code Snippets in the RStudio IDE](https://support.posit.co/hc/en-us/articles/204463668-Code-Snippets-in-the-RStudio-IDE).
+:::
+::::::
+
+[^01-first-shiny-app-1]: This works only in places where programming
+    code is expected (and not in Markdown text passages).
+
+Putting "Hello World" into the `shiny::fluidPage()` function results in
+the most basic example:
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-01-minimum-example}
+: Most basic {**shiny**} example
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-01-minimum-example-code}
+: Most basic {**shiny**} example
+::::::
+:::
+::::{.my-r-code-container}
+
+```{r}
+#| label: minimum-example
+#| eval: false
+#| code-fold: show
+#| code-summary: "Minimum {**shiny**} example"
+
+library(shiny)
+ui <- fluidPage(
+  "Hello, world!"
+)
+
+server <- function(input, output, session) {
+
+    }
+
+shinyApp(ui, server)
+```
+
+***
+
+
+1.  It calls `library(shiny`) to load the shiny package.
+2.  It defines the user interface, the HTML webpage that humans interact
+    with. In this case, it’s a page containing the words “Hello,
+    world!”.
+3.  It specifies the behaviour of our app by defining a server function.
+    It’s currently empty, so our app doesn’t do anything, but we’ll be
+    back to revisit this shortly.
+4.  It executes `shinyApp(ui, server)` to construct and start a Shiny
+    application from UI and server.
+
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-01-minimum-example-shiny}
+: Minimum {**shiny**} example
+::::::
+:::
+::::{.my-r-code-container}
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 40
+
+library(shiny)
+ui <- fluidPage(
+  "Hello, world!"
+)
+
+server <- function(input, output, session) {
+
+    }
+
+shinyApp(ui, server)
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+
+
+
+## Running and stopping {#sec-01-run-and-stop}
+
+There are a few ways to run the app:
+
+-   Click the `Run App` button in the document toolbar.
+-   Use the keyboard shortcut on macOS: `Cmd + Shift + Enter`.
+
+By choosing one of the options under the `Run App`button you can specify
+if you want the results presented
+
+-   in an extra browser **w**indow (shortcut: `Alt + Shift + W`)
+-   in the RStudio **v**iewer pane (shortcut: `Alt + Shift + V`) or
+-   run **e**xternal in your default browser (shortcut:
+    `Alt + Shift + E`).
+
+In the console I found the 
+
+> Listening on http://127.0.0.1:5959
+
+This tells me the URL where your app can be found: `127.0.0.1` is a standard address that means “this computer” and `5959` is a randomly assigned port number. Entering that URL into any compatible web browser opens another copy of the Shiny app.
+
+The red stop sign in the top right console window means that R is busy. I have to stop the app before I can write commands in the console. There are several options to stop the server:
+
+- Click on the stop sign
+- Click in the console and type ESC
+- Close the Shiny app window(s)
+
+::: {.callout-note}
+To speed up the development process you don't need to stop and restart the server to see the changes. When the server is running the button `Run app` changes to `Reload app`. Click on it or use the `Cmd + Shift + Enter` keyboard shortcut to reload the (changed) app.
+:::
+
+## Adding UI controls {#sec-01-ui-controls}
+
+Replace your ui with this code:
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-01-add-ui-controls}
+: Add UI controls
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-01-add-ui-controls-code}
+: Add UI controls
+::::::
+:::
+::::{.my-r-code-container}
+
+```{r}
+#| label: add-ui-controls
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+  selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
+  verbatimTextOutput("summary"),
+  tableOutput("table")
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+***
+
+This example uses four new functions:
+
+1. `shiny::fluidPage()` is a layout function that sets up the basic visual structure of the page. (See @XXX_6.2)
+2. `shiny::selectInput()` is an input control that lets the user interact with the app by providing a value. In this case, it’s a select box with the label “Dataset” and lets you choose one of the built-in datasets that come with R. (See @XXX_2.2)
+3. `shiny::verbatimTextOutput()` is an output control that tell Shiny where to put rendered output, in this case where to display code. 
+4. `shiny::tableOutput()` is another output controls that displays tables. (For output contols ee @XXX_2.3)
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-01-add-ui-controls-shiny}
+: Add UI controls
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 300
+
+library(shiny)
+
+ui <- fluidPage(
+  selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
+  verbatimTextOutput("summary"),
+  tableOutput("table")
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+
+
+
+::: {.callout-note}
+Layout functions, inputs, and outputs have different uses, but they are fundamentally the same under the covers: they’re all just fancy ways to generate HTML, and if you call any of them outside of a Shiny app, you’ll see HTML printed out at the console.
+
+For instance: 
+
+```
+> shiny::tableOutput("table") # results into:
+<div id="table" class="shiny-html-output"></div>
+```
+:::
+
+Running the app again we’ll see a page containing a select box. We only see the input, not the two outputs, because we haven’t yet told Shiny how the input and outputs are related.
+
+## Adding behaviour {#sec-01-adding-behaviour}
+
+Shiny uses `r glossary("reactive programming")` to make apps interactive. 
+(More about reactive programming in @XXX_3.) For now, just be aware
+that it involves telling Shiny how to perform a computation, not
+ordering Shiny to actually go do it.
+
+We’ll tell Shiny how to fill in the summary and table outputs in the sample app by providing the “recipes” for those outputs. Replace your empty server function the folowing code:
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-01-adding-behaviour}
+: Add behaviour
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-01-add-behaviour-code}
+: Add behaviour
+::::::
+:::
+::::{.my-r-code-container}
+
+
+```{r}
+#| label: add-behaviour
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+  selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
+  verbatimTextOutput("summary"),
+  tableOutput("table")
+)
+
+server <- function(input, output, session) {
+  output$summary <- renderPrint({
+    dataset <- get(input$dataset, "package:datasets")
+    summary(dataset)
+  })
+  
+  output$table <- renderTable({
+    dataset <- get(input$dataset, "package:datasets")
+    dataset
+  })
+}
+
+shinyApp(ui, server)
+```
+
+***
+
+
+- The left-hand side of the assignment operator (`<-`), `output$ID`, indicates that you’re providing the recipe for the Shiny output with that ID. 
+- The right-hand side of the assignment uses a specific render function to wrap some code that you provide. Each `render{Type}` function is designed to produce a particular type of output (e.g. text, tables, and plots), and is often paired with a `{type}Output` function. For example, in this app, `shiny::renderPrint()` is paired with `shiny::verbatimTextOutput()` to display a statistical summary with fixed-width (verbatim) text, and `shiny::renderTable()` is paired with `shiny::tableOutput()` to show the input data in a table.
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-01-add-behaviour-shiny}
+: Add behaviour
+::::::
+:::
+::::{.my-r-code-container}
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+library(shiny)
+
+ui <- fluidPage(
+  selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
+  verbatimTextOutput("summary"),
+  tableOutput("table")
+)
+
+server <- function(input, output, session) {
+  output$summary <- renderPrint({
+    dataset <- get(input$dataset, "package:datasets")
+    summary(dataset)
+  })
+  
+  output$table <- renderTable({
+    dataset <- get(input$dataset, "package:datasets")
+    dataset
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
+
+
+::::
+:::::
+
+
+:::
+
+Notice that the summary and table update whenever you change the input dataset. This dependency is created implicitly because we’ve referred to `shiny::input$dataset()` within the output functions. `shiny::input$dataset()` is populated with the current value of the UI component with id `dataset`, and will cause the outputs to automatically update whenever that value changes. *This is the essence of reactivity: outputs automatically react (recalculate) when their inputs change*.
+
+::::
+:::::
+
+## Reducing duplication with reactive expressions {#sec-01-reactive-expressions}
+
+
+
+```{r}
+#| label: duplicated-line
+#| eval: false
+#| code-fold: show
+#| code-summary: "The following line is duplicated:"
+
+dataset <- get(input$dataset, "package:datasets")
+```
+
+
+In traditional R scripting, we use two techniques to deal with duplicated code: either we capture the value using a variable, or capture the computation with a function. Unfortunately neither of these approaches work here, for reasons you’ll learn about in @XXX_13.2. Therefore we need a new mechanism: `r glossary("reactive expressions")`.
+
+::: {.callout-important}
+###### Creating reactive expressions
+
+You create a reactive expression by wrapping a block of code in `reactive({...})` and assigning it to a variable, and you use a reactive expression by calling it like a function. But while it looks like you’re calling a function, a reactive expression has an important difference: it only runs the first time it is called and then it caches its result until it needs to be updated.
+:::
+
+We can update our `shiny::server()` function to use reactive expressions, as shown below. The app behaves identically, but works a little more efficiently because it only needs to retrieve the dataset once, not twice.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-01-add-reactive-expression}
+: Add reactive expression
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-01-add-reactive-expression-code}
+: Add reactive expression to simplify the code
+::::::
+:::
+::::{.my-r-code-container}
+
+```{r}
+#| label: reactive-expression
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+  selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
+  verbatimTextOutput("summary"),
+  tableOutput("table")
+)
+
+server <- function(input, output, session) {
+  # Create a reactive expression
+  dataset <- reactive({
+    get(input$dataset, "package:datasets")
+  })
+
+  output$summary <- renderPrint({
+    # Use a reactive expression by calling it like a function
+    summary(dataset())
+  })
+  
+  output$table <- renderTable({
+    dataset()
+  })
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-add-reactive-expression-shiny}
+: Added reactive expression to simplify the code
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+library(shiny)
+
+ui <- fluidPage(
+  selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
+  verbatimTextOutput("summary"),
+  tableOutput("table")
+)
+
+server <- function(input, output, session) {
+  # Create a reactive expression
+  dataset <- reactive({
+    get(input$dataset, "package:datasets")
+  })
+
+  output$summary <- renderPrint({
+    # Use a reactive expression by calling it like a function
+    summary(dataset())
+  })
+  
+  output$table <- renderTable({
+    dataset()
+  })
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+
+## Summary
+
+In this chapter we’ve created a simple app.
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-01-shiny-cheatsheet}
+: Shiny cheatsheet
+::::::
+:::
+::::{.my-resource-container}
+To remember the shiny components and functions download and use the [shiny cheatsheet](https://rstudio.github.io/cheatsheets/shiny.pdf).
+::::
+:::::
+
+## Exercises
+
+
+### Example 1: Greeting app
+
+Create an app that greets the user by name. You don’t know all the functions you need to do this yet, so I’ve included some lines of code below. 
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-01-greeting-app}
+: Greeting app
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+**Think about which lines you’ll use and then copy and paste them into the right place in a Shiny app**.
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-01-greeting-app-challenge}
+: Greeting app
+::::::
+:::
+::::{.my-r-code-container}
+
+
+```{r}
+#| label: greeting-app-challenge
+#| eval: false
+#| code-fold: show
+#| code-summary: "Which lines of code in which place for a Shiny greeting app?"
+
+tableOutput("mortgage")
+output$greeting <- renderText({
+  paste0("Hello ", input$name)
+})
+numericInput("age", "How old are you?", value = NA)
+textInput("name", "What's your name?")
+textOutput("greeting")
+output$histogram <- renderPlot({
+  hist(rnorm(1000))
+}, res = 96)
+```
+
+
+::::
+:::::
+
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-01-greeting-app-solution}
+: Greeting app
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: greeting-app-code
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+    textInput("name", "What's your name?"),
+    textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+    output$greeting <- renderText({
+        paste0("Hello ", input$name)
+    })
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-01-greeting-app-shiny}
+: Greeting app
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 100
+
+library(shiny)
+
+ui <- fluidPage(
+    textInput("name", "What's your name?"),
+    textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+    output$greeting <- renderText({
+        paste0("Hello ", input$name)
+    })
+}
+
+shinyApp(ui, server)
+```
+
+
+
+
+
+
+::::
+:::::
+
+
+:::
+
+::::
+:::::
+
+
+### Example 2: Multiply `x` with 5
+
+Suppose your friend wants to design an app that allows the user to set a number (`x`) between 1 and 50, and displays the result of multiplying this number by 5. 
+
+This is their first attempt but it has an error.
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-01-multiply-x-with-5}
+: Multiply `x` with 5
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-01-multiply-x-with-5-challenge}
+: Multiply `x` with 5
+::::::
+:::
+::::{.my-r-code-container}
+
+
+```{r}
+#| label: multiply-x-with-5-app-challenge
+#| eval: false
+#| code-fold: show
+#| code-summary: "Correct the error"
+
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("x", label = "If x is", min = 1, max = 50, value = 30),
+  "then x times 5 is",
+  textOutput("product")
+)
+
+server <- function(input, output, session) {
+  output$product <- renderText({ 
+    x * 5
+  })
+}
+
+shinyApp(ui, server)
+
+```
+
+
+![](https://mastering-shiny.org/demos/basic-app/ex-x-times-5.png)
+
+
+::::
+:::::
+
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-multiply-x-with-5-app-solution}
+: Multiply `x` with 5
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: multiply-x-with-5-app-solution
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+    sliderInput("x", label = "If x is", min = 1, max = 50, value = 30),
+    "then x times 5 is",
+    textOutput("product")
+)
+
+server <- function(input, output, session) {
+    output$product <- renderText({
+        input$x * 5
+    })
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-multiply-with-5-app-shiny}
+: Multiply `x` with 5
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 200
+
+library(shiny)
+
+ui <- fluidPage(
+    sliderInput("x", label = "If x is", min = 1, max = 50, value = 30),
+    "then x times 5 is",
+    textOutput("product")
+)
+
+server <- function(input, output, session) {
+    output$product <- renderText({
+        input$x * 5
+    })
+}
+
+shinyApp(ui, server)
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+
+### Example 3: Multiply `x` with `y`
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-01-multiply-x-with-y-challenge}
+: Multiply `x` with `y`
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+Extend the app from the previous exercise to allow the user to set the value of the multiplier, y, so that the app yields the value of x * y. The final result should look like this:.
+
+![](https://mastering-shiny.org/demos/basic-app/ex-x-times-y.png)
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-01-multiply-x-with-y-app-solution}
+: Multiply `x` with `y`
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: multiply-x-with-y-app-solution
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+    sliderInput("x", label = "If x is", min = 1, max = 50, value = 30),
+    sliderInput("y", label = "and y is", min = 1, max = 50, value = 5),
+    "then x times y is",
+    textOutput("product")
+)
+
+server <- function(input, output, session) {
+    output$product <- renderText({
+        input$x * input$y
+    })
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-01-multiply-x-with-y-app-shiny}
+: Multiply `x` with `y`
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+
+library(shiny)
+
+ui <- fluidPage(
+    sliderInput("x", label = "If x is", min = 1, max = 50, value = 30),
+    sliderInput("y", label = "and y is", min = 1, max = 50, value = 5),
+    "then x times y is",
+    textOutput("product")
+)
+
+server <- function(input, output, session) {
+    output$product <- renderText({
+        input$x * input$y
+    })
+}
+
+shinyApp(ui, server)
+
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+
+### Example 4: Use reactive expression
+
+Take the following app which adds some additional functionality to the last app described in the last exercise. What’s new? How could you reduce the amount of duplicated code in the app by using a reactive expression.
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-01-reactive-expression}
+: Simplify code with a reactive expression
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-01-reactive-expression-challenge}
+: Simplify code with a reactive expression
+::::::
+:::
+::::{.my-r-code-container}
+
+
+```{r}
+#| label: reactive-expression-app-challenge
+#| eval: false
+#| code-fold: show
+#| code-summary: "Use a reactive expression"
+
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("x", "If x is", min = 1, max = 50, value = 30),
+  sliderInput("y", "and y is", min = 1, max = 50, value = 5),
+  "then, (x * y) is", textOutput("product"),
+  "and, (x * y) + 5 is", textOutput("product_plus5"),
+  "and (x * y) + 10 is", textOutput("product_plus10")
+)
+
+server <- function(input, output, session) {
+  output$product <- renderText({ 
+    product <- input$x * input$y
+    product
+  })
+  output$product_plus5 <- renderText({ 
+    product <- input$x * input$y
+    product + 5
+  })
+  output$product_plus10 <- renderText({ 
+    product <- input$x * input$y
+    product + 10
+  })
+}
+
+shinyApp(ui, server)
+
+```
+
+
+::::
+:::::
+
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-reactive-expression-app-solution}
+: Simplify code with a reactive expression
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: reactive-expression-app-solution
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+    sliderInput("x", "If x is", min = 1, max = 50, value = 30),
+    sliderInput("y", "and y is", min = 1, max = 50, value = 5),
+    "then, (x * y) is", textOutput("product"),
+    "and, (x * y) + 5 is", textOutput("product_plus5"),
+    "and (x * y) + 10 is", textOutput("product_plus10")
+)
+
+server <- function(input, output, session) {
+    # Create a reactive expression
+    product <- reactive({
+        input$x * input$y
+    })
+
+
+    output$product <- renderText({
+        product()
+    })
+    output$product_plus5 <- renderText({
+        product() + 5
+    })
+    output$product_plus10 <- renderText({
+        product() + 10
+    })
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-ID-WHAT-app-shiny}
+: Simplify code with a reactive expression
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+
+library(shiny)
+
+ui <- fluidPage(
+    sliderInput("x", "If x is", min = 1, max = 50, value = 30),
+    sliderInput("y", "and y is", min = 1, max = 50, value = 5),
+    "then, (x * y) is", textOutput("product"),
+    "and, (x * y) + 5 is", textOutput("product_plus5"),
+    "and (x * y) + 10 is", textOutput("product_plus10")
+)
+
+server <- function(input, output, session) {
+    # Create a reactive expression
+    product <- reactive({
+        input$x * input$y
+    })
+
+
+    output$product <- renderText({
+        product()
+    })
+    output$product_plus5 <- renderText({
+        product() + 5
+    })
+    output$product_plus10 <- renderText({
+        product() + 10
+    })
+}
+
+shinyApp(ui, server)
+
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+### Example 5: Find three bugs
+
+The following app is very similar to one you’ve seen earlier in the chapter: you select a dataset from a package (this time we’re using the {**ggplot2**} package) and the app prints out a summary and plot of the data. It also follows good practice and makes use of reactive expressions to avoid redundancy of code. However there are three bugs in the code provided below. Can you find and fix them?
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-01-find-3-bugs}
+: Find three bugs
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-01-find-3-bugse}
+: Find three bugs
+::::::
+:::
+::::{.my-r-code-container}
+
+
+```{r}
+#| label: find-3-bugs
+#| eval: false
+#| code-fold: show
+#| code-summary: "Find three bugs"
+
+
+library(shiny)
+library(ggplot2)
+
+datasets <- c("economics", "faithfuld", "seals")
+ui <- fluidPage(
+  selectInput("dataset", "Dataset", choices = datasets),
+  verbatimTextOutput("summary"),
+  tableOutput("plot")
+)
+
+server <- function(input, output, session) {
+  dataset <- reactive({
+    get(input$dataset, datasets)
+  })
+  output$summary <- renderPrint({
+    summary(dataset())
+  })
+  output$plot <- renderPlot({
+    plot(dataset)
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+
+
+
+::::
+:::::
+
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-01-find-3-bugs-app-solution}
+: Find three bugs
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: find-3-bugs-app-solution
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+library(ggplot2)
+
+datasets <- c("economics", "faithfuld", "seals")
+ui <- fluidPage(
+    selectInput("dataset", label = "Dataset", choices = datasets),
+    verbatimTextOutput("summary"),
+    plotOutput("plot")
+)
+
+server <- function(input, output, session) {
+    dataset <- reactive({
+        get(input$dataset)
+    })
+    output$summary <- renderPrint({
+        summary(dataset())
+    })
+    output$plot <- renderPlot({
+        plot(dataset())
+    }, res = 96)
+}
+
+shinyApp(ui, server)
+
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-01-find-3-bugs-app-shiny}
+: Find three bugs
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+library(shiny)
+library(ggplot2)
+
+my_datasets <- c("economics", "faithfuld", "seals")
+ui <- fluidPage(
+    selectInput("dataset", label = "Dataset", choices = my_datasets),
+    verbatimTextOutput("summary"),
+    plotOutput("plot")
+)
+
+server <- function(input, output, session) {
+    dataset <- reactive({
+        get(input$dataset)
+    })
+    output$summary <- renderPrint({
+        summary(dataset())
+    })
+    output$plot <- renderPlot({
+        plot(dataset())
+    }, res = 96)
+}
+
+shinyApp(ui, server)
+
+```
+
+::: {.callout-warning}
+This code chunk works as a standalone {**shiny**} app. I do not know what's the difference here with {**shinylive**}. I have to ask in the appropriate forum(s).
+:::
+
+
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
