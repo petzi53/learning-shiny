@@ -126,4 +126,4 @@ language:
    callout-note-title: "Note"            # blue
    callout-warning-title: "Watch out!"   # orange
    callout-important-title: "Important"  # red
-   callout-caution-title: "Typo"         # yellow
+   callout-caution-title: "Caution"      # yellow

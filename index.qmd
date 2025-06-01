@@ -3,7 +3,7 @@
 ::: {.callout-note style="color: blue;"}
 #### This is work in progress
 
-XXX: I have finished XXX%. Currently I am working on Chapter XXX.
+I have finished about 6%. Currently I am working on Chapter 2.
 
 :::
 
@@ -32,9 +32,9 @@ course my own responsibility.
 ## Content and Goals of this Book {.unnumbered}
 
 This Quarto book collects my personal notes, trials and exercises of
-XXX[BOOK NAME](URL) by XXX: NAME OF AUTHOR [CITATION].
+[Mastering Shiny](https://mastering-shiny.org/) by Hadley Wickham [@wickham2021].
 
-XXX: DESCRIPTION OF THE BOOK AND WHY IT IS WORTH FOR A QUARTO BOOK
+I am learning wot work with {**shiny**} because I want to develop a dashboard for investigating countries in world maps with values of different years. For instance I want to use the `r glossary("WHR")` data 2011, 2012, 2014-2024 and show the distributions of the ladder scores abount the countries of the world.
 
 
 
@@ -42,7 +42,7 @@ XXX: DESCRIPTION OF THE BOOK AND WHY IT IS WORTH FOR A QUARTO BOOK
 
 ### Quotes and personal comments
 
-My text consists mostly of quotes from the XXX[BOOK NAME]. Sometimes I have them changed slightly to adpat it to the flow onf my notes. But I have not referenced the poistion of the (semi)quotes in the book. As I am generally follow the book's outline using the same text for headers, it should be clear where to find the quotes. 
+My text consists mostly of quotes from the [Mastering Shiny book](https://www.amazon.de/Mastering-Shiny-Interactive-Reports-Dashboards/dp/1492047384/). Sometimes I have them changed slightly to adapt it to the flow of my notes. But I have not shown that it is a quote nor I jave referenced the position of the (semi)quotes in the book. As I am generally follow the book's outline using the same text for headers, it should be clear where to find the quotes. 
 
 This means that most of the text in this Quarto book is not mine but comes
 from different resources. 
@@ -53,8 +53,8 @@ My personal comments should be clear because most of the times it is a reflectio
 
 ### Glossary
 
-I am using the {**glossary**} package to create links to glossary
-entries.\]
+I am using the {**glossary**} package [@glossary] to create links to glossary
+entries.
 
 ::: my-r-code
 ::: my-r-code-header
@@ -97,7 +97,7 @@ glossary::glossary_path("../glossary-pb/glossary.yml")
 :::
 
 If you hover with your mouse over the double underlined links it opens
-an window with the appropriate glossary text. Try this example: `r glossary("Z-Score")`.
+an window with the appropriate glossary text. Try this example: `r glossary("WHR")`.
 
 ::: my-watch-out
 ::: my-watch-out-header
@@ -117,7 +117,7 @@ source of the glossary entry as an abbreviation or as an URL. Many definitions w
 :::
 :::
 
-If you fork the XXX: [REPO OF THIS BOOK(URL OF THIS BOOK] then the glossary will not
+If you fork [my repository of these notes](https://github.com/petzi53/learning-shiny) then the glossary will not
 work out of the box. Load down the `glossary.yml` file from [my
 glossary-pb GitHub
 repo](https://github.com/petzi53/glossary-pb/blob/master/glossary.yml),
@@ -125,39 +125,20 @@ store it on your hard disk and change the path in the code chunk
 @lst-preface-load-glossary accordingly.
 
 In any case I am the only responsible person for the glossary text, especially
-if I have used text from other resources wrongly. Again: The main purpose of the glossary is to support my persponal learning venture.
+if I have used text from other resources wrongly. Again: The main purpose of the glossary is to support my personal learning venture.
 
 ## R Code and Datasets
 
-During coding I am following the [Tidyverse Style Guide](https://style.tidyverse.org/). But for learning purposes I am trying to prefix all functions with the package name in the format <package>::<function> (e.g., `dplyr::filter()`) This is an overhead but supports me to understand which packages is responsible for which action.
+During coding I am following the [Tidyverse Style Guide](https://style.tidyverse.org/). For learning purposes I am practicing {**shiny**} in two modes:
 
-Sometimes adding just the package name does not work. This is mostly the case when a generic function name like `plot` is used by another package in a more specialized manner. In this case I will try to use the function of the package. If this doesn't work too then I have to come back to the standard usage of `base::library(<package-name>)`.
+1. **{shiny} app**: I am writing the code in extra `app.R` files as explained in the book. I create folders with the number of the chapters, eg., `apps-01`, `apps-02`. Inside of these chapter folders I put the folders for the {**shiny**} examples with self explanatory names so that one can get and distinguish the example files that all have the name `app.R`. Additionally I order these examples with numbers that represents their appearance in the text, e.g., `01-hello-world`, `02-greetings1` `03-greetings2`, etc. 
+2. **{shinylife-r}**: Additionally I provide the example as standalone {**shinylive**} Quarto examples. They have two different version: One is the source code shown as code listing but not evaluated. The other is the working {**shinylive**} example.  This seems to me a nice way to communicate my learning experiences and the results of the {**shiny**} code. All these code chunks start with `{shinylive-r}` instead `{r}` in the header.
 
-I am using the package name also for the default installation of base R.
-This wouldn't be necessary but it helps me to understand where the base
-R functions come from. What follows is a list of base R packages of the
-system library included into every installation and attached (opened) by
-default:
-
--   {**base**}: The R Base Package
--   {**datsets**}: The R Datasets Package
--   {**graphics**}: The R Graphics Package
--   {**grDevices**}: The R Graphics Devices and Support for Colours and
-    Fonts
--   {**methods**}: Formal Methods and Classes
--   {**stats**}: The R Stats Package
--   {**utils**}: The R Utils Package
-
-I am not using always the exact code snippets for my replications
+::: {.callout-caution}
+I am not using always the exact code snippets of the book,
 because I am not only replicating the code to see how it works but also
 to change the values of parameters to observe their influences.
-
-When it is clear then I will follow the advice from Hadley Wickham:
-
-> When you call a function, you typically omit the names of data
-> arguments, because they are used so commonly. If you override the
-> default value of an argument, use the full name ([tidyverse style
-> guide](https://style.tidyverse.org/syntax.html)).
+:::
 
 ## Annex
 
@@ -187,7 +168,7 @@ There is a lot of necessary jargon to learn reading new books. The goal of {**gl
 
 In the meantime {**glossary**} is for me a very important learning vehicle. Whenever an expression appears with a doubled underlined link I know that I will get more information by hovering the mouse over the underlined text.
 
-There is a little inconvenience with abrreviation that could also be part of another glossary entry text string (e.g., `r glossary("APIx", "API")` and `r glossary("Capital Income")`). My workaround is to end the short abbreviation with an additional 'x' and then to call the glossary with the x-version follwed by the text that should be appear in the document (e.g., *r glossary("APIx", "API")*). This double format is a standard feature of the {**glossary**} package so that you can adapt the appearing text to the glossary entry (e.g., singular/plural or other grammar changes).
+There is a little inconvenience with abbreviation that could also be part of another glossary entry text string (e.g., `r glossary("APIx", "API")` and `r glossary("Capital Income")`). My workaround is to end the short abbreviation with an additional 'x' and then to call the glossary with the x-version follwed by the text that should be appear in the document (e.g., *r glossary("APIx", "API")*). This double format is a standard feature of the {**glossary**} package so that you can adapt the appearing text to the glossary entry (e.g., singular/plural or other grammar changes).
 
 
 ::::
@@ -207,7 +188,11 @@ There is a little inconvenience with abrreviation that could also be part of ano
 
 ::: {.my-resource-container}
 
-XXX: [ADD HERE USED ADDITIONAL SOURCES]
+- Wickham, H. (2021). Mastering Shiny: Build Interactive Apps, Reports, and Dashboards Powered by R. O’Reilly UK Ltd.
+- [Online version of Mastering Shiny](https://mastering-shiny.org/index.html)
+- [Mastering Shiny Solutions](https://mastering-shiny-solutions.org/index.html)
+- [shiny cheatsheet](https://rstudio.github.io/cheatsheets/shiny.pdf)
+- [shinylive-r in Quarto](https://quarto.thecoatlessprofessor.com/r-shinylive-demo/)
 :::
 :::
 
