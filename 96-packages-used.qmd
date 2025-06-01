@@ -1,0 +1,254 @@
+# Packages used {#sec-annex-package-used}
+
+```{r}
+#| label: setup
+#| results: hold
+#| include: false
+
+base::source(file = paste0(here::here(), "/R/helper.R"))
+```
+
+## dplyr {#sec-96-dplyr}
+
+:::::: my-num-packagebox
+::: my-num-packagebox-header
+Package Profile: dplyr
+:::
+
+------------------------------------------------------------------------
+
+:::: my-num-packagebox-container
+<center>[A Grammar of Data Manipulation](https://dplyr.tidyverse.org/) [@dplyr]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-dplyr-min.png){width="176"}
+
+A fast, consistent tool for working with data frame like objects, both in memory and out of memory. {**dplyr**} is a grammar of data manipulation, providing a consistent set of verbs that help you solve the most common data manipulation challenges: 
+
+:::
+
+------------------------------------------------------------------------
+
+- `dplyr::mutate()` adds new variables that are functions of existing variables 
+- `dplyr::select()` picks variables based on their names.
+- `dplyr::filter()` picks cases based on their values. 
+- `dplyr::slice()`  subsets rows using their positions.
+- `dplyr::summarise()` reduces multiple values down to a single summary. 
+- `dplyr::arrange()` changes the ordering of the rows.
+
+::::
+::::::
+
+
+## s2 {#sec-96-s2}
+
+:::::: my-num-packagebox
+::: my-num-packagebox-header
+Package Profile: S2
+:::
+
+------------------------------------------------------------------------
+
+:::: my-num-packagebox-container
+<center>[Spherical Geometry Operators Using the S2 Geometry Library](https://r-spatial.github.io/s2/) [@s2]</center>
+
+------------------------------------------------------------------------
+
+<center>(*There is no hexagon sticker available for {**S2**}.*)</center>  
+
+Provides R bindings for Google's s2 library for geometric calculations on the sphere. High-performance constructors and exporters provide high compatibility with existing spatial packages, transformers construct new geometries from existing geometries, predicates provide a means to select geometries based on spatial relationships, and accessors extract information about geometries.
+
+ S2 is perhaps best known as an example of a Discrete Global Grid System (`r glossary("DGGS")`)
+
+------------------------------------------------------------------------
+
+:::::{.my-resource}
+:::{.my-resource-header}
+Other S2 resources
+:::
+::::{.my-resource-container}
+
+- [Welcome to the S2 Geometry Library!](http://s2geometry.io/)
+- {**sf**}-vignette [7. Spherical geometry in sf using s2geometry](https://r-spatial.github.io/sf/articles/sf7.html)
+- [Geometry on the Sphere: Google's S2 Library](https://docs.google.com/presentation/d/1Hl4KapfAENAOf4gv-pSngKwvS_jwNVHRPZTTDzXXn6Q/edit#slide=id.i143): Slides
+::::
+:::::
+
+
+::::
+::::::
+
+## sf {#sec-96-sf}
+
+:::::: my-num-packagebox
+::: my-num-packagebox-header
+Package Profile: sf
+:::
+
+------------------------------------------------------------------------
+
+:::: my-num-packagebox-container
+<center>[Simple Features for R](https://r-spatial.github.io/sf/) [@sf]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-sf-min.png){width="176"}
+
+Support for simple features, a standardized way to encode spatial vector data. Binds to 'GDAL' for reading and writing data, to 'GEOS' for geometrical operations, and to 'PROJ' for projection conversions and datum transformations. Uses by default the 's2' package for spherical geometry operations on ellipsoidal (long/lat) coordinates.
+:::
+
+------------------------------------------------------------------------
+
+::: {#nte-importance-sf .callout-note}
+###### {**sf**} is now the go-to package for analysis of spatial vector data in R
+
+**Simple feature objects in R are stored in a data frame, with geographic
+data occupying a special column, usually named ‘geom’ or ‘geometry’.
+Simple features are, in essence, data frames with a spatial extension.**
+
+:::
+
+{**sf**} provides the same functionality (and more) previously provided
+in three (now deprecated) packages:
+
+-   {**sp**} for data classes
+-   {**rgdal**} for data read/write via an interface to GDAL and PROJ
+    and
+-   {**rgeos**} for spatial operations via an interface to GEOS.
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-02-sf-documentation}
+: {**sf**} documentation
+::::::
+:::
+::::{.my-resource-container}
+sf’s functionality is well documented on its website at
+[r-spatial.github.io/sf/](https://r-spatial.github.io/sf/) which contains [seven
+vignettes](https://r-spatial.github.io/sf/articles/).
+
+1. [Simple Features for R](https://r-spatial.github.io/sf/articles/sf1.html)
+2. [Reading, Writing and Converting Simple Features](https://r-spatial.github.io/sf/articles/sf2.html)
+3. [Manipulating Simple Feature Geometries](https://r-spatial.github.io/sf/articles/sf3.html)
+4. [Manipulating Simple Features](https://r-spatial.github.io/sf/articles/sf4.html)
+5. [Plotting Simple Features](https://r-spatial.github.io/sf/articles/sf5.html)
+6. [Miscellaneous](https://r-spatial.github.io/sf/articles/sf6.html)
+7. [Spherical geometry in sf using s2geometry](https://r-spatial.github.io/sf/articles/sf1.html)
+::::
+:::::
+
+
+
+
+Most of the book notes are a tutorial how to use the {**sf**} package. I will therefore abstain here from additonal comments.
+::::
+::::::
+
+
+
+## sfheaders {#sec-96-sfheaders}
+
+:::::: my-num-packagebox
+::: my-num-packagebox-header
+Package Profile: sfheaders
+:::
+
+:::: my-num-packagebox-container
+
+***
+
+<center>[Converts Between R Objects and Simple Feature Objects](https://dcooley.github.io/sfheaders/index.html) [@sfheaders]</center>
+
+------------------------------------------------------------------------
+
+<center>(*There is no hexagon sticker available for {**sfheaders**}.*)</center>    
+
+
+Converts between R and Simple Feature `sf` objects, without depending on the ‘heavy’ Simple Feature library. Conversion functions are available at both the R level, and through {**Rcpp**}.
+
+::::
+::::::
+
+## stars {#sec-96-stars}
+
+:::::: my-num-packagebox
+::: my-num-packagebox-header
+Package Profile: stars
+:::
+
+------------------------------------------------------------------------
+
+:::: my-num-packagebox-container
+<center>[Spatiotemporal Arrays, Raster and Vector Data Cubes](	https://r-spatial.github.io/stars/) [@stars]</center>
+
+------------------------------------------------------------------------
+
+<center>(*There is no hexagon sticker available for {**Package**}.*)</center>  
+
+
+Reading, manipulating, writing and plotting spatiotemporal arrays (raster and vector data cubes) in 'R', using `r glossary("GDAL")` bindings provided by {**sf**}, and `r glossary("NetCDF")` bindings by {**ncmeta**} and {**RNetCDF**}.
+
+------------------------------------------------------------------------
+
+Read [@pebesma-2023] to learn more about {**stars**}.
+::::
+::::::
+
+
+## terra {#sec-96-terra}
+
+:::::: my-num-packagebox
+::: my-num-packagebox-header
+Package Profile: terra
+:::
+
+------------------------------------------------------------------------
+
+:::: my-num-packagebox-container
+<center>[Spatial Data Analysis](https://rspatial.github.io/terra/) [@terra]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-terra-min.png){width="176"}
+
+Methods for spatial data analysis with vector (points, lines, polygons) and raster (grid) data. Methods for vector data include geometric operations such as intersect and buffer. Raster methods include local, focal, global, zonal and geometric operations. The predict and interpolate methods facilitate the use of regression type (interpolation, machine learning) models for spatial prediction, including with satellite remote sensing data. Processing of very large files is supported. 
+:::
+
+------------------------------------------------------------------------
+
+::: {.callout-note }
+{**terra**} replaces the {**raster**} package ({**terra**} can do more, and it is faster and easier to use).
+:::
+
+
+- See the manual and tutorials on [https://rspatial.org/](https://rspatial.org/) to get started. 
+- Read additionally information about {**terra**} from the package author [@hijmans-2023; @hijmans-2025].
+::::
+::::::
+
+## units {#sec-96-units}
+
+:::::: my-num-packagebox
+::: my-num-packagebox-header
+Package Profile: units
+:::
+
+------------------------------------------------------------------------
+
+:::: my-num-packagebox-container
+<center>[Measurement Units for R Vectors](	https://r-quantities.github.io/units/) [@units]</center>
+
+------------------------------------------------------------------------
+
+<center>(*There is no hexagon sticker available for {**units**}.*)</center>  
+
+Support for measurement units in R vectors, matrices and arrays: automatic propagation, conversion, derivation and simplification of units; raising errors in case of unit incompatibility. Compatible with the POSIXct, Date and difftime classes. Uses the UNIDATA udunits library and unit database for unit compatibility checking and conversion. Documentation about 'units' is provided in the paper by [@pebesma-2016] included as [package vignette](https://r-quantities.github.io/units/).
+
+------------------------------------------------------------------------
+
+::::
+::::::

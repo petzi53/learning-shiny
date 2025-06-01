@@ -3,7 +3,7 @@
 ::: {.callout-note style="color: blue;"}
 #### This is work in progress
 
-I have finished about 6%. Currently I am working on Chapter 2.
+I have finished about 9%. Currently I am working on Chapter 2.
 
 :::
 
@@ -192,7 +192,9 @@ There is a little inconvenience with abbreviation that could also be part of ano
 - [Online version of Mastering Shiny](https://mastering-shiny.org/index.html)
 - [Mastering Shiny Solutions](https://mastering-shiny-solutions.org/index.html)
 - [shiny cheatsheet](https://rstudio.github.io/cheatsheets/shiny.pdf)
+- [shiny docs & tutorial](https://shiny.posit.co/)
 - [shinylive-r in Quarto](https://quarto.thecoatlessprofessor.com/r-shinylive-demo/)
+- [Awesome Shiny Extensions](https://github.com/nanxstats/awesome-shiny-extensions)
 :::
 :::
 

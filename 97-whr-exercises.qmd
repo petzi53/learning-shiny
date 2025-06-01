@@ -1,0 +1,315 @@
+---
+execute:
+  cache: true
+---
+
+
+
+# WHR exercises {#sec-annex-whr-exercises}
+
+
+```{r}
+#| label: setup
+#| results: hold
+#| include: false
+
+base::source(file = "R/helper.R")
+ggplot2::theme_set(ggplot2::theme_bw())
+options(show.signif.stars = FALSE)
+
+```
+
+## Content for WHR exercises {.unnumbered}
+
+::::: {#obj-chap03}
+:::: {.my-objectives}
+::: {.my-objectives-header}
+Objectives
+:::
+
+::: {.my-objectives-container}
+In this file I will try out things I have learned about {**shiny**} with my practice example of `r glossary("WHR")` data.
+
+:::
+::::
+:::::
+
+## Choosing the year via a slider {#sec-annex-choose-year-via-slider}
+
+In `r glossary("WHR")` I have datasets for the years 2011, 2012, 2014-2024. (Yes, 2013 is missing!)
+
+At first I thought to use radio boxes to choose the year the country map should show. But after reading "Numeric Input" in @sec-02-numeric-input I decided for the better alternative of a `sliderInput` with the available years.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-annex-whr-exercises-sliderInput}
+: Choosing the year of the dataset with a slider
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code1
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-annex-whr-exercises-sliderInput-code1}
+: Choosing the year of the dataset with a slider
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: slider-input-code1
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("year", "Choose year", value = 2024, min = 2011, max = 2024)
+)
+
+server <- function(input, output, session) {
+
+    }
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+###### Code2
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-annex-whr-exercises-sliderInput-code2}
+: Choosing the year of the dataset with a slider
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: slider-input-code2
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("year", 
+      label = "Choose year", 
+      value = 2024,
+      min = 2011,
+      max = 2024,
+      sep =""
+      )
+)
+
+server <- function(input, output, session) {
+
+    }
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+###### Shiny1
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-annex-whr-exercises-sliderInput-shiny1}
+: Choosing the year of the dataset with a slider
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 100
+
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("year", "Choose year", value = 2024, min = 2011, max = 2024)
+)
+
+server <- function(input, output, session) {
+
+    }
+
+shinyApp(ui, server)
+```
+
+
+***
+
+The year is not in the desired format. I do not want the comma as a thousand separator. Reading the documentation I learned about the parameter `sep` with it default value `sep = ","`. So with the next tab I will use `sep = ""` to get rid of the thousand separator.
+::::
+:::::
+
+
+
+###### Shiny2
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-annex-whr-exercises-sliderInput-shiny}
+: Choosing the year of the dataset with a slider
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 100
+
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("year", 
+      label = "Choose year", 
+      value = 2024,
+      min = 2011,
+      max = 2024,
+      sep =""
+      )
+)
+
+server <- function(input, output, session) {
+
+    }
+
+shinyApp(ui, server)
+```
+
+***
+
+This is now better. But I have still the problem, that there is no data for 2013. I could leave it in the hope that it will not generate an error but showing all countries with `NA`-values. (Additionally I could place a message saying "For 2013 there is no dataset available".)
+
+Another option would be trying to use `shinyWidgets::sliderTextInput()` to construct a slider widget with characters instead of numeric values.
+
+But in both cases I have to use the data to see the effect of the different code snippets.
+
+
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+::: {.callout-note}
+###### Another very different option is not to use a slider but a menu! But then I don't have the animation option anymore.
+:::
+
+I will come back `shiny::sliderInput()` resp. `shinyWidgets::sliderTextInput()` to check the following options:
+
+- What happens when in a standard slider configuration people choose the year 2013?
+- What does it look with a message saying "For 2013 there is no dataset available".
+- Trying out the animation feature for the `shiny::sliderInput()`
+- Using a specified list of years as character strings with `shinyWidgets::sliderTextInput()`
+- Try out a menu choice with specified years: Which UI has a better, more natural, feeling?
+
+
+## Choose year via drop-down menu {#sec-annex-whr-exercises-year-via-drop-down}
+
+In `r glossary("WHR")` I have datasets for the years 2011, 2012, 2014-2024. Yes, 2013 is missing! Because of the missing year I could use the limited choices option. Radio buttons are for 13 different choices an overhead, so I will go with the drop-down menu.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-annex-whr-exercises-drop-down-menu}
+: Limited choices: Choose year via drop-down menu
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-annex-whr-exercises-drop-down-menu-code}
+: Limited choices: Choose year via drop-down menu
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: whr-exercises-drop-down-menu-code
+#| eval: false
+
+library(shiny)
+
+years <- c("2011", "2012", "2014", "2015", "2016", "2017",
+           "2018", "2019", "2020", "2021", "2022", "2023", "2024")
+
+ui <- fluidPage(
+  selectInput("year", 
+              "Choose year (2013 are no data available)", 
+              base::rev(years)
+              )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-annex-whr-exercises-drop-down-menu-shiny}
+: Limited choices: drop-down menu and radio buttons
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 300
+
+library(shiny)
+
+years <- c("2011", "2012", "2014", "2015", "2016", "2017",
+           "2018", "2019", "2020", "2021", "2022", "2023", "2024")
+
+ui <- fluidPage(
+  selectInput("year", 
+              "Choose year (2013 are no data available)", 
+              base::rev(years)
+              )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::

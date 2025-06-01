@@ -1,3 +1,10 @@
+---
+execute:
+  cache: true
+  echo: true
+---
+
+
 # Your first shiny app {#sec-chap01}
 
 ```{r}

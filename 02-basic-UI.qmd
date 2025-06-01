@@ -1,0 +1,1332 @@
+---
+execute:
+  cache: true
+---
+
+
+# Basic UI {#sec-chap02}
+
+
+```{r}
+#| label: setup
+#| results: hold
+#| include: false
+
+base::source(file = "R/helper.R")
+ggplot2::theme_set(ggplot2::theme_bw())
+options(show.signif.stars = FALSE)
+
+```
+
+## Table of content for chapter 02 {.unnumbered}
+
+::::: {#obj-chap03}
+:::: {.my-objectives}
+::: {.my-objectives-header}
+Chapter section list
+:::
+
+::: {.my-objectives-container}
+
+
+:::
+::::
+:::::
+
+## Introduction
+
+In this chapter, we’ll focus on the front end, and give you a whirlwind tour of the HTML inputs and outputs provided by Shiny. We’ll mostly stick to the inputs and outputs built into Shiny itself. However, there is a rich and vibrant community of extension packages, like
+
+- [shinyWidgets](https://dreamrs.github.io/shinyWidgets/index.html) [@shinyWidgets], 
+- [colourpicker](https://daattali.com/shiny/colourInput/) [@colourpicker], and 
+- [sortable](https://rstudio.github.io/sortable/) [@sortable]. 
+
+You can find a comprehensive, [actively-maintained list of packages supporting {**shiny**}](https://github.com/nanxstats/awesome-shiny-extensions) at , maintained by [Nan Xiao](https://nanx.me/).
+
+## Inputs
+
+### Common structure
+
+There are three common parameters:
+
+1. **inputID**: All input functions have the same first argument: `inputId`. This is the identifier used to connect the front end with the back end: if your UI has an input with ID `"name"`, the server function will access it with `input$name`. The `inputId` has two constraints:
+    - It must be a simple string that contains only letters, numbers, and underscores (no spaces, dashes, periods, or other special characters allowed!). Name it like you would name a variable in R.
+    - It must be unique. If it’s not unique, you’ll have no way to refer to this control in your server function!
+2. **label**: Most input functions have a second parameter called `label`. This is used to create a human-readable label for the control. Shiny doesn’t place any restrictions on this string.
+3. **value**: The third parameter is typically `value`, which, where possible, lets you set the default value.
+
+Remaining parameters are unique to the specific control.
+
+When creating an input, I recommend supplying the `inputId` and `label` arguments by position, and all other arguments by name:
+
+```
+sliderInput("min", "Limit (minimum)", value = 50, min = 0, max = 100)
+```
+
+::: {.callout-note}
+The following sections describe the inputs built into Shiny, loosely grouped according to the type of control they create. The goal is to give you a rapid overview of your options, not to exhaustively describe all the arguments. Read the documentation to get the full details!
+:::
+
+
+### Free text
+
+Collect small amounts of text with `textInput()`, passwords with `passwordInput()`, and paragraphs of text with `textAreaInput()`.
+
+::: {.callout-warning}
+All `passwordInput()` does is hide what the user is typing, so that someone looking over their shoulder can't read it. It's up to you to make sure that any passwords are not accidentally exposed, so we don't recommend using passwords unless you have had some training in secure programming.
+:::
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-free-text-input}
+: Free text input
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-free-text-input-code}
+: Free text input examples
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: free-text-input-code
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  passwordInput("password", "What's your password?"),
+  textAreaInput("story", "Tell me about yourself", rows = 3)
+)
+
+server <- function(input, output, session) {
+
+    }
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-free-text-input-shiny}
+: Free text input examples
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 300
+
+library(shiny)
+
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  passwordInput("password", "What's your password?"),
+  textAreaInput("story", "Tell me about yourself", rows = 3)
+)
+
+server <- function(input, output, session) {
+
+    }
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+If you want to ensure that the text has certain properties you can use `shiny::validate()`, which we’ll come back to in @XXX_8.
+
+### Numeric input {#sec-02-numeric-input}
+
+To collect numeric values, create a constrained text box with `numericInput()` or a slider with `sliderInput()`. If you supply a length-2 numeric vector for the default value of `sliderInput()`, you get a “range” slider with two ends.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-numeric-input}
+: Numeric input
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-numeric-input-code}
+: Numeric input examples
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: numeric-input-code
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+  numericInput("num", "Number one", value = 0, min = 0, max = 100),
+  sliderInput("num2", "Number two", value = 50, min = 0, max = 100),
+  sliderInput("rng", "Range", value = c(10, 20), min = 0, max = 100)
+)
+
+server <- function(input, output, session) {
+
+    }
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-numeric-input-shiny}
+: Numeric input examples
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 300
+
+library(shiny)
+
+ui <- fluidPage(
+  numericInput("num", "Number one", value = 0, min = 0, max = 100),
+  sliderInput("num2", "Number two", value = 50, min = 0, max = 100),
+  sliderInput("rng", "Range", value = c(10, 20), min = 0, max = 100)
+)
+
+server <- function(input, output, session) {
+
+    }
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+Sliders are extremely customisable and there are many ways to tweak their appearance. See [Slider Input Widget — sliderInput](https://shiny.posit.co/r/reference/shiny/latest/sliderinput.html) and [Using sliders](https://shiny.rstudio.com/articles/sliders.html) for more details. See also my experiments in @sec-annex-choose-year-via-slider.
+
+### Dates
+
+Collect a single day with `shiny::dateInput()` or a range of two days with `shiny::dateRangeInput()`. These provide a convenient calendar picker, and additional arguments like `datesdisabled` and `daysofweekdisabled` allow you to restrict the set of valid inputs.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-date-input}
+: Date input
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-date-input-code}
+: Date input examples
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: date-input-code
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+  dateInput("dob", "When were you born?"),
+  dateRangeInput("holiday", "When do you want to go on vacation next?")
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-date-input-shiny}
+: Date input examples
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+
+library(shiny)
+
+ui <- fluidPage(
+  dateInput("dob", "When were you born?"),
+  dateRangeInput("holiday", "When do you want to go on vacation next?")
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+Date format, language, and the day on which the week starts defaults to US standards. If you are creating an app with an international audience, set `format`, `language`, and `weekstart` so that the dates are natural to your users.
+
+### Limited choices
+
+#### Introduction
+
+There are two different approaches to allow the user to choose from a prespecified set of options: `shiny::selectInput()` and `shiny::radioButtons()`.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-limited-choices}
+: Limited choices
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-limited-choices-code}
+: Limited choices: drop-down menu and radio buttons
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: limited-choices-code
+#| eval: false
+
+library(shiny)
+
+animals <- c("dog", "cat", "mouse", "bird", "other", "I hate animals")
+
+ui <- fluidPage(
+  selectInput("state", "What's your favourite state?", state.name),
+  radioButtons("animal", "What's your favourite animal?", animals)
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-limited-choices-shiny}
+: Limited choices: drop-down menu and radio buttons
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+
+library(shiny)
+
+animals <- c("dog", "cat", "mouse", "bird", "other", "I hate animals")
+
+ui <- fluidPage(
+  selectInput("state", "What's your favourite state?", state.name),
+  radioButtons("animal", "What's your favourite animal?", animals)
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+See my experiment in @sec-annex-whr-exercises-year-via-drop-down.
+
+#### Radio buttons
+
+Radio buttons have two nice features: 
+
+- they show all possible options, making them suitable for *short* lists, and 
+- via the `choiceNames`/`choiceValues` arguments, they can display options other than plain text. 
+    - `choiceNames` determines what is shown to the user; 
+    - `choiceValues` determines what is returned in your server function.
+    
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-radio-buttons}
+: Radio buttons
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-radio-buttons-code}
+: Radio buttons
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: radio-buttons-code
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+  radioButtons("rb", "Choose one:",
+    choiceNames = list(
+      icon("angry"),
+      icon("smile"),
+      icon("sad-tear")
+    ),
+    choiceValues = list("angry", "happy", "sad")
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-radio-buttons-shiny}
+: Radio buttons
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 120
+
+library(shiny)
+
+ui <- fluidPage(
+  radioButtons("rb", "Choose one:",
+    choiceNames = list(
+      icon("angry"),
+      icon("smile"),
+      icon("sad-tear")
+    ),
+    choiceValues = list("angry", "happy", "sad")
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+#### Drop-down menus
+
+Dropdowns created with `shiny::selectInput()` take up the same amount of space, regardless of the number of options, making them *more suitable for longer options*. You can also set `multiple = TRUE` to allow the user to select multiple elements.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-drop-down-menus}
+: Drop-down menus
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-drop-down-menus-code}
+: Drop-down menus
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: drop-down-menus-code
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+  selectInput(
+    "state", "What are your favourite states?", state.name,
+    multiple = TRUE
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-drop-down-menus-shiny}
+: Drop-down menus
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 300
+
+library(shiny)
+
+ui <- fluidPage(
+  selectInput(
+    "state", "What are your favourite states?", state.name,
+    multiple = TRUE
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+If you have a very large set of possible options, you may want to use “server-side” `shiny::selectInput()` so that the complete set of possible options are not embedded in the UI (which can make it slow to load), but instead sent as needed by the server. You can learn more about this advanced topic at [Server-side selectize](https://shiny.rstudio.com/articles/selectize.html#server-side-selectize).
+
+#### Check boxes
+
+There’s no way to select multiple values with radio buttons, but there’s an alternative that’s conceptually similar: `shiny::checkboxGroupInput()`. For a checkbox for a single yes/no question, use `shiny::checkboxInput()`:
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-check-boxes}
+: Check boxes
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-check-boxes-code}
+: Check boxes
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: check-boxes-code
+#| eval: false
+
+library(shiny)
+
+animals <- c("dog", "cat", "mouse", "bird", "other", "I hate animals")
+ui <- fluidPage(
+    checkboxGroupInput("animal", "What animals do you like?", animals),
+    checkboxInput("cleanup", "Clean up?", value = TRUE),
+    checkboxInput("shutdown", "Shutdown?")
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-check-boxes-shiny}
+: Check boxes
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 300
+
+library(shiny)
+
+animals <- c("dog", "cat", "mouse", "bird", "other", "I hate animals")
+ui <- fluidPage(
+    checkboxGroupInput("animal", "What animals do you like?", animals),
+    checkboxInput("cleanup", "Clean up?", value = TRUE),
+    checkboxInput("shutdown", "Shutdown?")
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+### File uploads
+
+`shiny::fileInput()` requires special handling on the server side, and is discussed in detail in @XXX_9.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-file-uploads}
+: File uploads
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-file-uploads-code}
+: File uploads
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: file-uploads-code
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+  fileInput("upload", NULL)
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-file-uploads-shiny}
+: File uploads
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 100
+
+library(shiny)
+
+ui <- fluidPage(
+  fileInput("upload", NULL)
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+### Action buttons
+
+Let the user perform an action with shiny::actionButton() or shiny::actionLink(): Actions links and buttons are most naturally paired with shiny::observeEvent() or shiny::eventReactive() in your server function. You haven’t learned about these important functions yet, but we’ll come back to them in @XXX_3.5.
+
+You can customize the appearance using the class argument by using one of `"btn-primary"`, `"btn-success"`, `"btn-info"`, `"btn-warning`", or `"btn-danger"`. You can also change the size with `"btn-lg`", `"btn-sm"`, `"btn-xs`". Finally, you can make buttons span the entire width of the element they are embedded within using `"btn-block"`.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-action-buttons}
+: Action buttons
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-action-buttons-code}
+: Action buttons
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: action-buttons-code
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+  fluidRow(
+    actionButton("click", "Click me!", class = "btn-danger"),
+    actionButton("drink", "Drink me!", class = "btn-lg btn-success")
+  ),
+  fluidRow(
+    actionButton("eat", "Eat me!", class = "btn-block")
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-action-buttons-shiny}
+: Action buttons
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 100
+
+library(shiny)
+
+ui <- fluidPage(
+  fluidRow(
+    actionButton("click", "Click me!", class = "btn-danger"),
+    actionButton("drink", "Drink me!", class = "btn-lg btn-success")
+  ),
+  fluidRow(
+    actionButton("eat", "Eat me!", class = "btn-block")
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+The class argument works by setting the class attribute of the underlying HTML, which affects how the element is styled. To see other options, you can read the [documentation for Bootstrap](http://bootstrapdocs.com/v3.3.6/docs/css/#buttons), the CSS design system used by Shiny.
+
+### Exercises
+
+#### Label as placeholder
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-02-input-ex-01-label-as-placeholder}
+: Use label as placeholder
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+
+When space is at a premium, it’s useful to label text boxes using a placeholder that appears inside the text entry area. How do you call `shiny::textInput()` to generate the UI below?
+
+![](https://mastering-shiny.org/demos/basic-ui/placeholder.png)
+
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-input-ex-01-label-as-placeholder-solution}
+: Use label as placeholder
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: label-as-placeholder-solution
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+    textInput(
+        "name", 
+        label = NULL, 
+        placeholder = label
+        )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-input-ex-01-label-as-placeholder-shiny}
+: Use label as placeholder
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 100
+
+library(shiny)
+
+ui <- fluidPage(
+    textInput(
+        "name", 
+        label = NULL, 
+        placeholder = "Your name"
+        )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+#### Create a date slider
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-02-input-ex-02-create-date-slider}
+: Create a date slider
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+
+Carefully read the documentation for `shiny::sliderInput()` to figure out how to create a date slider, as shown below.
+
+![](https://mastering-shiny.org/demos/basic-ui/date-slider.png)
+
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-input-ex-02-create-date-slider-solution}
+: Create a data slider
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: create-date-slider-solution
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+library(lubridate)
+
+ui <- fluidPage(
+    sliderInput(
+        "deliver",
+        "When should we deliver?",
+        timeFormat = "%F",
+        min = as_date("2020-09-16"),
+        max = as_date("2020-09-23"),
+        value = as_date("2020-09-17")
+    )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-input-ex-02-create-date-slider-shiny}
+: Create a date slider
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 100
+
+library(shiny)
+library(lubridate)
+
+ui <- fluidPage(
+    sliderInput(
+        "deliver",
+        "When should we deliver?",
+        timeFormat = "%F",
+        min = as_date("2020-09-16"),
+        max = as_date("2020-09-23"),
+        value = as_date("2020-09-17")
+    )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+#### Slider animation
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-02-input-ex-03-slider-animation}
+: Slider animation
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+
+Create a slider input to select values between 0 and 100 where the interval between each selectable value on the slider is 5. Then, add animation to the input widget so when the user presses play the input widget scrolls through the range automatically.
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-input-ex-03-slider-animation-solution}
+: Slider animation
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: slider-animation-solution
+#| eval: false
+#| code-fold: show
+
+ui <- fluidPage(
+    sliderInput(
+        "num",
+        "Press play button",
+        min = 0,
+        max = 100,
+        value = 0,
+        step = 5,
+        animate = animationOptions(
+            interval = 1000,
+            loop = TRUE,
+            playButton = "Play",
+            pauseButton = "Stop"
+        )
+    )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-input-ex-03-slider-animation-shiny}
+: Slider animation
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 150
+
+ui <- fluidPage(
+    sliderInput(
+        "num",
+        "Press play button",
+        min = 0,
+        max = 100,
+        value = 0,
+        step = 5,
+        animate = animationOptions(
+            interval = 1000,
+            loop = TRUE,
+            playButton = "Play",
+            pauseButton = "Stop"
+        )
+    )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+#### Menu with subheadings
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-02-input-ex-04-menu-with-subheadings}
+: Menu with subheadings
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+
+If you have a moderately long list in a `shiny::selectInput()`, it’s useful to create sub-headings that break the list up into pieces. Read the documentation to figure out how. (Hint: the underlying HTML is called `<optgroup>`.)
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-input-ex-04-menu-with-subheadings-solution}
+: Menu with subheadings
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: menu-with-subheadings-solution
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+  ui = fluidPage(
+    selectInput("state", "Choose a state:",
+      list(`East Coast` = list("NY", "NJ", "CT"),
+           `West Coast` = list("WA", "OR", "CA"),
+           `Midwest` = list("MN", "WI", "IA")
+           )
+    )
+  )
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-input-ex-04-menu-with-subheadings-shiny}
+: Menu with subheadings
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 300
+
+library(shiny)
+
+  ui = fluidPage(
+    selectInput("state", "Choose a state:",
+      list(`East Coast` = list("NY", "NJ", "CT"),
+           `West Coast` = list("WA", "OR", "CA"),
+           `Midwest` = list("MN", "WI", "IA")
+           )
+    )
+  )
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+
+
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
