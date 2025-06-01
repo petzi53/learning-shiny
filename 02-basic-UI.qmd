@@ -1330,3 +1330,947 @@ shinyApp(ui, server)
 
 ::::
 :::::
+
+## Outputs
+
+Outputs in the UI create placeholders that are later filled by the server function. Like inputs, outputs take a unique ID as their first argument: if your UI specification creates an output with ID `"plot"`, you’ll access it in the server function with `output$plot`.
+
+**Each output function on the front end is coupled with a render function in the back end.** There are three main types of output, corresponding to the three things you usually include in a report: text, tables, and plots. The following sections show you the basics of the output functions on the front end, along with the corresponding render functions in the back end.
+
+### Text
+
+Output regular text with `shiny::textOutput()` and fixed code and console output with `shiny::verbatimTextOutput()`.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-text-output-examples}
+: Text output examples
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code1
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-text-output-examples-code1}
+: Text output examples
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: text-output-examples-code1
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+  textOutput("text"),
+  verbatimTextOutput("code")
+)
+server <- function(input, output, session) {
+  output$text <- renderText({ 
+    "Hello friend!" 
+  })
+  output$code <- renderPrint({ 
+    summary(1:10) 
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
+***
+
+Note that the `{}` are only required in render functions if you need to run multiple lines of code. As you’ll learn shortly, you should do as little computation in your render functions as possible, which means you can often omit them.
+::::
+:::::
+
+###### Code2
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-text-output-examples-code2}
+: Text output examples
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: text-output-examples-code2
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+  textOutput("text"),
+  verbatimTextOutput("code")
+)
+server <- function(input, output, session) {
+  output$text <- renderText("Hello friend!")
+  output$code <- renderPrint(summary(1:10))
+}
+
+shinyApp(ui, server)
+```
+
+
+***
+
+Here’s what the server function would look like if written more compactly.
+
+::::
+:::::
+
+###### Shiny1
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-text-output-examples-shiny1}
+: Text output examples
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 150
+
+ui <- fluidPage(
+  textOutput("text"),
+  verbatimTextOutput("code")
+)
+server <- function(input, output, session) {
+  output$text <- renderText({ 
+    "Hello friend!" 
+  })
+  output$code <- renderPrint({ 
+    summary(1:10) 
+  })
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+###### Shiny2
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-text-output-examples-shiny2}
+: Text output examples
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 150
+
+ui <- fluidPage(
+  textOutput("text"),
+  verbatimTextOutput("code")
+)
+
+server <- function(input, output, session) {
+  output$text <- renderText("Hello friend!")
+  output$code <- renderPrint(summary(1:10))
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+Note that there are two render functions which behave slightly differently:
+
+- `renderText()` combines the result into a single string, and is usually paired with `textOutput()`
+- `renderPrint()` prints the result, as if you were in an R console, and is usually paired with `verbatimTextOutput()`.
+We can see the difference with a toy app:
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-diff-renderText-renderPrint}
+: Difference between `renderText()` and `renderPrint()`
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-diff-renderText-renderPrint-code}
+: Difference between `renderText()` and `renderPrint()`
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: diff-renderText-renderPrint-code
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+  textOutput("text"),
+  verbatimTextOutput("print")
+)
+server <- function(input, output, session) {
+  output$text <- renderText("hello!")
+  output$print <- renderPrint("hello!")
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-diff-renderText-renderPrint-shiny}
+: Difference between `renderText()` and `renderPrint()`
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 100
+
+library(shiny)
+
+ui <- fluidPage(
+  textOutput("text"),
+  verbatimTextOutput("print")
+)
+server <- function(input, output, session) {
+  output$text <- renderText("hello!")
+  output$print <- renderPrint("hello!")
+}
+
+shinyApp(ui, server)
+```
+
+***
+
+This is equivalent to the difference between `cat()` and `print()` in base R.
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+### Tables
+
+There are two options for displaying data frames in tables:
+
+- `tableOutput()` and `renderTable()` render a static table of data, showing all the data at once.
+- `dataTableOutput()` and `renderDataTable()` render a dynamic table, showing a fixed number of rows along with controls to change which rows are visible.
+
+`tableOutput()` is most useful for small, fixed summaries (e.g. model coefficients); `dataTableOutput()` is most appropriate if you want to expose a complete data frame to the user. 
+
+If you want greater control over the output of `dataTableOutput()`, I highly recommend the {**reactable**} package by Greg Lin [@reactable].
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-table-output}
+: Table output examples
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code1
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-table-output-examples-code1}
+: Table output examples
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: 02-table-output-examples-code1
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+  tableOutput("static"),
+  dataTableOutput("dynamic")
+)
+
+server <- function(input, output, session) {
+  output$static <- renderTable(head(mtcars))
+  output$dynamic <- renderDataTable(mtcars, options = list(pageLength = 5))
+}
+
+shinyApp(ui, server)
+```
+
+`shiny::renderDataTable()` is deprecated as of shiny 1.8.1.
+Please use `DT::renderDT()` instead.
+Since you have a suitable version of DT (>= v0.32.1), `shiny::renderDataTable()` will automatically use `DT::renderDT()` under-the-hood.
+If this happens to break your app, set `options(shiny.legacy.datatable = TRUE)` to get the legacy datatable implementation (or `FALSE` to squelch this message).
+See <https://rstudio.github.io/DT/shiny.html> for more information.
+
+::: {.callout-warning}
+There are no warning/error messages in the {**shinylive-r**} mode. For debugging purposes it is necessary to use the standard `app.R` file approach.
+:::
+
+::::
+:::::
+
+###### Code2
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-table-output-examples-code2}
+: Table output examples
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: 02-table-output-examples-code2
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+    tableOutput("static"),
+    DT::DTOutput("dynamic")
+)
+
+server <- function(input, output, session) {
+    output$static <- renderTable(head(mtcars))
+    output$dynamic <- DT::renderDT(mtcars, options = list(pageLength = 5))
+}
+
+shinyApp(ui, server)
+
+```
+
+If I had used `library(DT)` then I wouldn't needed `DT::` in front of the {**DT**} functions.
+
+::: {.callout-note }
+But there is an important difference: Using the `library(<package-name>)` function downloads several packages via <https://repo.r-wasm.org/> ([The WebR binary R package repository](https://repo.r-wasm.org/) contains more than 15,000 packages that have been built for WebAssembly and are available for download from this repository). I think therefore that is generally better to use the `<package-name>::` mode if there are used only some functions from the package in question.
+:::
+
+
+::::
+:::::
+
+
+###### Shiny1
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-table-output-examples-shiny1}
+: Table output examples
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+
+library(shiny)
+
+ui <- fluidPage(
+  tableOutput("static"),
+  dataTableOutput("dynamic")
+)
+
+server <- function(input, output, session) {
+  output$static <- renderTable(head(mtcars))
+  output$dynamic <- renderDataTable(mtcars, options = list(pageLength = 5))
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+
+
+###### Shiny2
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-table-output-examples-shiny2}
+: Table output examples
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+
+library(shiny)
+library(DT)
+
+ui <- fluidPage(
+    tableOutput("static"),
+    DTOutput("dynamic")
+)
+
+server <- function(input, output, session) {
+    output$static <- renderTable(head(mtcars))
+    output$dynamic <- renderDT(mtcars, options = list(pageLength = 5))
+}
+
+shinyApp(ui, server)
+
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+
+
+
+### Plots {#sec-02-plots}
+
+You can display any type of R graphic (base, {**ggplot2**}, or otherwise) with `plotOutput()` and `renderPlot()`.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-02-output-plots}
+: Plot output example
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-output-plot-example-code}
+: Plot output example
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: output-plot-example-code
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+    plotOutput("plot1", height = "400px", width = "400px"),
+    plotOutput("plot2")
+)
+
+server <- function(input, output, session) {
+    output$plot1 <- renderPlot(plot(1:5), res = 96)
+    output$plot2 <- renderPlot(plot(1:5), res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02-output-plot-example-shiny}
+: Plot output example
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 800
+
+library(shiny)
+
+ui <- fluidPage(
+    plotOutput("plot1", height = "400px", width = "400px"),
+    plotOutput("plot2")
+)
+
+server <- function(input, output, session) {
+    output$plot1 <- renderPlot(plot(1:5), res = 96)
+    output$plot2 <- renderPlot(plot(1:5), res = 96)
+}
+
+shinyApp(ui, server)
+ 
+
+
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+By default, `plotOutput()` will take up the full width of its container (more on that shortly), and will be 400 pixels high. You can override these defaults with the `height` and `width` arguments. We recommend always setting `res = 96` as that will make your Shiny plots match what you see in RStudio as closely as possible.
+
+Plots are special because they are outputs that can also act as inputs. `plotOutput()` has a number of arguments like `click`, `dblclick`, and `hover`. If you pass these a string, like `click = "plot_click"`, they’ll create a reactive input (`input$plot_click`) that you can use to handle user interaction on the plot, e.g. clicking on the plot. We’ll come back to interactive plots in Shiny in @XXX_7.
+
+
+### Downloads
+
+You can let the user download a file with `downloadButton()` or `downloadLink()`. These require new techniques in the server function, so we’ll come back to that in @XXX_9.
+
+### Exercises
+
+#### Render function to pair
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-02-output-ex-01-render-function-to-pair}
+: Render function to pair
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+Which of `textOutput()` and `verbatimTextOutput()` should each of the following render functions be paired with?
+
+a) `renderPrint(summary(mtcars))`
+b) `renderText("Good morning!")`
+c) `renderPrint(t.test(1:5, 2:6))`
+d) `renderText(str(lm(mpg ~ wt, data = mtcars)))`
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-input-ex-01-label-as-placeholder-solution}
+: Use label as placeholder
+::::::
+:::
+::::{.my-solution-container}
+
+Which of `textOutput()` and `verbatimTextOutput()` should each of the following render functions be paired with?
+
+
+a) `renderPrint(summary(mtcars))`: `verbatimTextOutput()`
+b) `renderText("Good morning!")`: `textOutput()`
+c) `renderPrint(t.test(1:5, 2:6))`: `verbatimTextOutput()`
+d) `renderText(str(lm(mpg ~ wt, data = mtcars)))`: `textOutput()`
+
+::::
+:::::
+
+
+
+:::
+
+::::
+:::::
+
+#### Plot dimensions and `alt`-tag
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-02-output-ex-02-plot-dimensions-alt-tag}
+: Change plot dimensions and add `alt`-tag
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+
+Re-create the Shiny app from @sec-02-plots, this time setting height to 300px and width to 700px. Set the plot `“alt”` text so that a visually impaired user can tell that its a scatterplot of five random numbers.
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-output-ex-02-plot-dimensions-alt-tag-solution}
+: Plot dimensions and `alt`-tag
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: plot-dimensions-alt-tag-solution
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+    plotOutput("plot", height = "300px", width = "700px"),
+)
+
+server <- function(input, output, session) {
+    output$plot <- renderPlot(
+        plot(1:5), 
+        res = 96,
+        alt = "Scatterplot of five random numbers")
+}
+
+shinyApp(ui, server)
+
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-input-ex-02-plot-dimension-alt-tag-solution}
+: Plot dimensions and `alt`-tag
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+
+library(shiny)
+
+ui <- fluidPage(
+    plotOutput("plot", height = "300px", width = "700px"),
+)
+
+server <- function(input, output, session) {
+    output$plot <- renderPlot(
+        plot(1:5), 
+        res = 96,
+        alt = "Scatterplot of five random numbers")
+}
+
+shinyApp(ui, server)
+
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+#### `DT::renderDT()` options
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-02-input-ex-03-renderDT-options}
+: `DT::renderDT()` options
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge Code
+
+
+Update the options in the call to `DT::renderDT()` below so that the data is displayed, but all other controls are suppressed (i.e., remove the search, ordering, and filtering commands). You’ll need to read [Using DT in shiny](https://rstudio.github.io/DT/shiny.html) and review the more complex [DT options](https://datatables.net/reference/option/).
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02--output-ex-03-renderDT-options-challenge}
+: Standard `DT::renderDT()` options
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: renderDT-options-challenge-code
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+  DT::DTOutput("table")
+)
+
+server <- function(input, output, session) {
+  output$table <- DT::renderDT(mtcars, options = list(pageLength = 5))
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+###### Challenge Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-02--output-ex-03-renderDT-options-challenge}
+: Standard `DT::renderDT()` options
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+library(shiny)
+
+ui <- fluidPage(
+  DT::DTOutput("table")
+)
+
+server <- function(input, output, session) {
+  output$table <- DT::renderDT(mtcars, options = list(pageLength = 5))
+}
+
+shinyApp(ui, server)
+
+
+```
+
+::::
+:::::
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-output-ex-03-renderDT-options-solution-code}
+: Change `DT::renderDT()` options
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: renderDT-options-solution-code
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+    DT::DTOutput("table")
+)
+
+server <- function(input, output, session) {
+    output$table <- DT::renderDT(
+        mtcars,
+        options = list(
+            pageLength = 5,
+            searching = FALSE,
+            ordering = FALSE,
+            lengthChange = FALSE
+        )
+    )
+}
+
+shinyApp(ui, server)
+
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-output-ex-03-renderDT-options-solution-shiny}
+: Change `DT::renderDT()` options
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+library(shiny)
+
+ui <- fluidPage(
+    DT::DTOutput("table")
+)
+
+server <- function(input, output, session) {
+    output$table <- DT::renderDT(
+        mtcars,
+        options = list(
+            pageLength = 5,
+            searching = FALSE,
+            ordering = FALSE,
+            lengthChange = FALSE
+        )
+    )
+}
+
+shinyApp(ui, server)
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+#### Use {reactable}
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-02-output-ex-04-use-reactable}
+: Use reactable
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+
+Alternatively, read up on {**reactable**}, and convert the @sol-02-output-ex-03-renderDT-options-solution-code to use {**reactable**} instead.
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-output-ex-04-use-reactable-solution-code}
+: Menu with subheadings
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: use-reactable-solution-code
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+    reactable::reactableOutput("table")
+)
+
+server <- function(input, output, session) {
+    output$table <- reactable::renderReactable({
+        reactable::reactable(mtcars)
+    })
+}
+
+shinyApp(ui, server)
+
+
+
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-02-output-ex-04-use-reactable-solution-shiny}
+: Use {**reactable**}
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+
+library(shiny)
+
+ui <- fluidPage(
+    reactable::reactableOutput("table")
+)
+
+server <- function(input, output, session) {
+    output$table <- reactable::renderReactable({
+        reactable::reactable(mtcars)
+    })
+}
+
+shinyApp(ui, server)
+
+
+
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+## Summary
+
+This chapter has introduced the major input and output functions that make up the front end of a Shiny app. This was a big info dump, so don’t expect to remember everything after a single read. Instead, come back to this chapter when you’re looking for a specific component: you can quickly scan the figures, and then find the code you need.
+
+In the next chapter, we’ll move on to the back end of a Shiny app: the R code that makes your user interface come to life.
