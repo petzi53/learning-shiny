@@ -1242,6 +1242,7 @@ shinyApp(ui, server)
 
 library(shiny)
 library(ggplot2)
+library(munsell)
 
 datasets <- c("economics", "faithfuld", "seals")
 ui <- fluidPage(
@@ -1288,6 +1289,7 @@ shinyApp(ui, server)
 
 library(shiny)
 library(ggplot2)
+library(munsell)
 
 my_datasets <- c("economics", "faithfuld", "seals")
 ui <- fluidPage(
@@ -1313,7 +1315,7 @@ shinyApp(ui, server)
 ```
 
 ::: {.callout-warning}
-This code chunk works as a standalone {**shiny**} app. I do not know what's the difference here with {**shinylive**}. I have to ask in the appropriate forum(s).
+This code chunk works as a standalone {**shiny**} app without the code line `library(munsell)`. This difference concerns each {**shinylive**} code chunk where {**ggplot2**} is used. — I should report this in the appropriate forum.
 :::
 
 
