@@ -20,7 +20,7 @@ options(show.signif.stars = FALSE)
 
 ## Table of content for chapter 02 {.unnumbered}
 
-::::: {#obj-chap03}
+::::: {#obj-chap02}
 :::: {.my-objectives}
 ::: {.my-objectives-header}
 Chapter section list

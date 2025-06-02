@@ -3,9 +3,11 @@
 ::: {.callout-note style="color: blue;"}
 #### This is work in progress
 
-I have finished about 10%. Currently I am working on Chapter 3.
+I have finished about 14%. Currently I am working on Chapter 3.
 
 :::
+
+
 
 ::: my-watch-out
 ::: my-watch-out-header

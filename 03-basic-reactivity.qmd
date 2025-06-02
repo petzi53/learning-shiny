@@ -1,0 +1,947 @@
+# Basic reactivity {#sec-chap03}
+
+
+```{r}
+#| label: setup
+#| results: hold
+#| include: false
+
+base::source(file = "R/helper.R")
+ggplot2::theme_set(ggplot2::theme_bw())
+options(show.signif.stars = FALSE)
+
+```
+
+## Introduction
+
+::::: {#obj-chap03}
+:::: {.my-objectives}
+::: {.my-objectives-header}
+Chapter section list
+:::
+
+This chapter will provide a gentle introduction to reactive programming, teaching you the basics of the most common reactive constructs you’ll use in Shiny apps.
+
+- Survey of the server function in @sec-03-server-function
+- Simplest form of reactivity in @sec-03-reactive-programming
+- How reactive expressions eliminate duplicated work in @sec-03-reactive-expressions
+- Controlling the time of the evaluation @sec-03-control-timing
+- Observers @sec-03-observers
+
+::: {.my-objectives-container}
+
+:::
+::::
+:::::
+
+## The server function {#sec-03-server-function}
+
+### Input
+
+The `input` argument is a list-like object that contains all the input data sent from the browser, named according to the input ID. Unlike a typical list, `input` objects are read-only. If you attempt to modify an input inside the server function, you’ll get an error.
+
+The error occurs because `input` reflects what’s happening in the browser, and the browser is Shiny’s “single source of truth”. If you could modify the value in R, you could introduce inconsistencies, where the input slider said one thing in the browser, and `input$count` said something different in R. That would make programming challenging! (Later, in @XXX_8, you’ll learn how to use functions like `shiny::updateNumericInput()` to modify the value in the browser, and then `input$count` will update accordingly.)
+
+One more important thing about input: it’s selective about who is allowed to read it. To read from an `input`, you must be in a `r glossary("reactive context")` created by a function like `shiny::renderText()` or `shiny::reactive()`.
+
+### Output
+
+`output` is very similar to `input`: it’s also a list-like object named according to the output ID. The main difference is that you use it for sending output instead of receiving input. You always use the `output` object in concert with a `render` function.
+
+The render function does two things:
+
+- It sets up a special reactive context that automatically tracks what inputs the output uses.
+- It converts the output of your R code into HTML suitable for display on a web page.
+
+Like the `input`, the `output` is picky about how you use it. You’ll get an error if:
+
+- You forget the render function.
+- You attempt to read from an output.
+
+
+## Reactive programming {#sec-03-reactive-programming}
+
+An app is going to be pretty boring if it only has inputs or only has outputs. The real magic of Shiny happens when you have an app with both.
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-greeting-example}
+: Interactive greeting as an example for reactive programming
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-greeting-example}
+```{r}
+#| label: greeting-example
+#| eval: false
+
+ui <- shiny::fluidPage(
+  shiny::textInput("name", "What's your name?"),
+  shiny::textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+  output$greeting <- shiny::renderText({
+    paste0("Hello ", input$name, "!")
+  })
+}
+
+shiny::shinyApp(ui, server)
+```
+
+:::
+
+```{shinylive-r}
+#| standalone: true
+
+
+ui <- shiny::fluidPage(
+  shiny::textInput("name", "What's your name?"),
+  shiny::textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+  output$greeting <- shiny::renderText({
+    paste0("Hello ", input$name, "!")
+  })
+}
+
+shiny::shinyApp(ui, server)
+```
+
+This is the big idea in Shiny: you don’t need to tell an output when to update, because Shiny automatically figures it out for you.
+::::
+:::::
+
+::: {.callout-important}
+It’s Shiny’s responsibility to decide when code is executed, not yours. Think of your app as providing Shiny with recipes, not giving it commands.
+:::
+
+
+
+
+### Imperative vs declarative programming
+
+This difference between commands and recipes is one of the key differences between two important styles of programming:
+
+- In **imperative programming**, you issue a specific command and it’s carried out immediately. This is the style of programming you’re used to in your analysis scripts: you command R to load your data, transform it, visualise it, and save the results to disk.
+- In **declarative programming**, you express higher-level goals or describe important constraints, and rely on someone else to decide how and/or when to translate that into action. This is the style of programming you use in Shiny.
+
+With imperative code you say “Make me a sandwich”. With declarative code you say “Ensure there is a sandwich in the refrigerator whenever I look inside of it”. Imperative code is assertive; declarative code is passive-aggressive.
+
+### Lazyness
+
+One of the strengths of declarative programming in Shiny is that it allows apps to be extremely lazy. A Shiny app will only ever do the minimal amount of work needed to update the output controls that you can currently see. This laziness, however, comes with an important downside that you should be aware of.
+
+::: {.callout-important}
+If you’re working on a Shiny app and you just can’t figure out why your code never gets run, double check that your UI and server functions are using the same identifiers.
+:::
+
+
+### The reactive graph
+
+Shiny’s laziness has another important property. In most R code, you can understand the order of execution by reading the code from top to bottom. That doesn’t work in Shiny, because code is only run when needed. To understand the order of execution you need to instead look at the `r glossary("reactive graph")`, which describes how inputs and outputs are connected.
+
+![This is the reactive graph for @cnj-03-greeting-example. It shows how the inputs and outputs are connected](https://mastering-shiny.org/diagrams/basic-reactivity/graph-1b.png){#fig-03-01 
+fig-alt="The graph consists of two blocks titled 'name' and 'greeting'. They are connected horizontally by an arrow from left tot the right. The left 'name' block has a pike to the right which would fit into the bump of the 'greeting' block." fig-align="center" 
+width="8cm"}
+
+The reactive graph contains one symbol for every input and output, and we connect an input to an output whenever the output accesses the input. This graph tells you that greeting will need to be recomputed whenever name is changed. We’ll often describe this relationship as `greeting` has a `r glossary("reactive dependencies", "reactive dependency")` on `name`.
+
+Note the graphical conventions we used for the inputs and outputs: the name input naturally fits into the greeting output.
+
+![The shapes used by the components of the reactive graph evoke the ways in which they connect.](https://mastering-shiny.org/diagrams/basic-reactivity/graph-1a.png){#fig-03-02 
+fig-alt="The graph consists of two blocks titled 'name' and 'greeting'. The left 'name' block has a pike to the right which fits into the bump of the 'greeting' block." fig-align="center" 
+width="35%"}
+
+The reactive graph is a powerful tool for understanding how your app works. As your app gets more complicated, it’s often useful to make a quick high-level sketch of the reactive graph to remind you how all the pieces fit together. Throughout this book we’ll show you the reactive graph to help understand how the examples work, and later on, in @XXX_14, you’ll learn how to use {**reactlog**} which will draw the graph for you.
+
+### Reactive expressions {#sec-03-reactive-expressions-sub}
+
+There’s one more important component that you’ll see in the reactive graph: the reactive expression. We’ll come back to reactive expressions in detail very shortly; for now think of them as a tool that reduces duplication in your reactive code by introducing additional nodes into the reactive graph.
+
+We don’t need a reactive expression in our very simple app, but I’ll add one anyway so you can see how it affects the reactive graph (see @fig-03-03).
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-greeting-example}
+: Interactive greeting as an example for reactive programming
+::::::
+:::
+::::{.my-r-code-container}
+
+:::{#lst-greeting-example2}
+```{r}
+#| label: greeting-example2
+#| eval: false
+
+ui <- shiny::fluidPage(
+  shiny::textInput("name", "What's your name?"),
+  shiny::textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+  output$greeting <- shiny::renderText(string())
+  string <- shiny::reactive(paste0("Hello ", input$name, "!"))
+}
+
+shiny::shinyApp(ui, server)
+```
+
+:::
+
+```{shinylive-r}
+#| standalone: true
+
+ui <- shiny::fluidPage(
+  shiny::textInput("name", "What's your name?"),
+  shiny::textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+  string <- shiny::reactive(paste0("Hello ", input$name, "!"))
+  output$greeting <- shiny::renderText(string())
+}
+
+shiny::shinyApp(ui, server)
+```
+
+***
+
+Compare the tiny difference in the server code with @lst-greeting-example.
+::::
+:::::
+
+
+
+![A reactive expression is drawn with angles on both sides because it connects inputs to outputs.](https://mastering-shiny.org/diagrams/basic-reactivity/graph-2b.png){#fig-03-03 
+fig-alt="The graph consists of three blocks titled 'name', 'string and 'greeting'. The blocks are connected by two arrows from left to the right. 'name' block has a pike to the right which fits into the bump of the 'string' block which itself has a bump fitting into the 'greeting' block." fig-align="center" 
+width="70%"}
+
+Reactive expressions take inputs and produce outputs so they have a shape that combines features of both inputs and outputs.
+
+### Execution order
+
+It’s important to understand that the order in which your code runs is solely determined by the reactive graph. This is different from most R code where the execution order is determined by the order of lines. For example, we could flip the order of the two lines in our simple server function:
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-greeting-example}
+: Interactive greeting as an example for reactive programming
+::::::
+:::
+::::{.my-r-code-container}
+
+:::{#lst-greeting-example3}
+```{r}
+#| label: greeting-example3
+#| eval: false
+
+ui <- shiny::fluidPage(
+  shiny::textInput("name", "What's your name?"),
+  shiny::textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+  string <- shiny::reactive(paste0("Hello ", input$name, "!"))
+  output$greeting <- shiny::renderText(string())
+}
+
+shiny::shinyApp(ui, server)
+```
+
+:::
+
+```{shinylive-r}
+#| standalone: true
+
+ui <- shiny::fluidPage(
+  shiny::textInput("name", "What's your name?"),
+  shiny::textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+  output$greeting <- shiny::renderText(string())
+  string <- shiny::reactive(paste0("Hello ", input$name, "!"))
+}
+
+shiny::shinyApp(ui, server)
+```
+
+***
+
+Again: Compare the tiny difference in the server code; this time with @lst-greeting-example2.
+::::
+:::::
+
+
+
+You might think that this would yield an error because `output$greeting` refers to a reactive expression, string, that hasn’t been created yet. But remember Shiny is lazy, so that code is only run when the session starts, after string has been created.
+
+Instead, this code yields the same reactive graph as above, so the order in which the code is run is exactly the same. Organizing your code like this is confusing for humans, and best avoided. Instead, make sure that reactive expressions and outputs only refer to things defined above, not below. This will make your code easier to understand.
+
+This concept is very important and different to most other R code, so I’ll say it again:
+
+::: {.callout-important}
+The order in which reactive code is run is determined only by the reactive graph, not by its layout in the server function.
+:::
+
+### Exercises
+
+#### Find bugs
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-03-ex-01-find-bugs}
+: Find the bugs in the three server functions
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-ex-01-find-bugs-challenge}
+: Find the bugs in the three server functions
+::::::
+:::
+::::{.my-r-code-container}
+
+Fix the simple errors found in each of the three server functions below. First try spotting the problem just by reading the code; then run the code to make sure you’ve fixed it.
+
+```{r}
+#| label: find-bugs-challenge
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  textOutput("greeting")
+)
+
+server1 <- function(input, output, server) {
+  input$greeting <- renderText(paste0("Hello ", name))
+}
+
+server2 <- function(input, output, server) {
+  greeting <- paste0("Hello ", input$name)
+  output$greeting <- renderText(greeting)
+}
+
+server3 <- function(input, output, server) {
+  output$greting <- paste0("Hello", input$name)
+}
+
+shinyApp(ui, server)
+```
+
+
+::::
+:::::
+
+
+
+###### Solution (Code)
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-ex-01-find-bugs-solution-code}
+: Show the bugs in the three server functions and add correct code
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-03-ex-01-find-bugs-solution-code}
+
+```{r}
+#| label: find-bugs-solution
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  textOutput("greeting")
+)
+
+# server1 <- function(input, output, server) {
+#   input$greeting <- renderText(paste0("Hello ", name))
+##### output$greeting instead of input$greeting #######
+# }
+# 
+# server2 <- function(input, output, server) {
+#   greeting <- paste0("Hello ", input$name)
+##### assigning value directly not allowed ######
+#   output$greeting <- renderText(greeting)
+# }
+# 
+# server3 <- function(input, output, server) {
+#   output$greting <- paste0("Hello", input$name)
+##### missing 'e' in output$greting #######
+# }
+
+# correct code
+server <- function(input, output, server) {
+    output$greeting <- renderText(paste0("Hello", input$name))
+}
+
+shinyApp(ui, server)
+```
+
+:::
+::::
+:::::
+
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-03-ex-01-find-bugs-app-shiny}
+: Run @lst-03-ex-01-find-bugs-solution-code with correct code
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 100
+
+library(shiny)
+
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  textOutput("greeting")
+)
+
+# server1 <- function(input, output, server) {
+#   input$greeting <- renderText(paste0("Hello ", name))
+##### output$greeting instead of input$greeting #######
+# }
+# 
+# server2 <- function(input, output, server) {
+#   greeting <- paste0("Hello ", input$name)
+##### assigning value directly not allowed ######
+#   output$greeting <- renderText(greeting)
+# }
+# 
+# server3 <- function(input, output, server) {
+#   output$greting <- paste0("Hello", input$name)
+##### missing 'e' in output$greting #######
+# }
+
+# correct code
+server <- function(input, output, server) {
+    output$greeting <- renderText(paste0("Hello", input$name))
+}
+
+shinyApp(ui, server)
+
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+#### Draw reactive graphs
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-03-ex-02-draw-reactive-graphs}
+: Draw reactive graph for server functions
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-ex-02-find-bugs-challenge}
+: Draw reactive graph for server functions
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-draw-graphs-challenge}
+```{r}
+#| label: draw-graphs-challenge
+#| eval: false
+#| code-fold: show
+
+server1 <- function(input, output, session) {
+  c <- reactive(input$a + input$b)
+  e <- reactive(c() + input$d)
+  output$f <- renderText(e())
+}
+
+server2 <- function(input, output, session) {
+  x <- reactive(input$x1 + input$x2 + input$x3)
+  y <- reactive(input$y1 + input$y2)
+  output$z <- renderText(x() / y())
+}
+
+server3 <- function(input, output, session) {
+  d <- reactive(c() ^ input$d)
+  a <- reactive(input$a * 10)
+  c <- reactive(b() / input$c)
+  b <- reactive(a() + input$b)
+}
+```
+
+:::
+::::
+:::::
+
+
+
+###### Solution (Graphs)
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-ex-02-draw-graphs-solution}
+: Draw the graphs in the three server functions of @lst-draw-graphs-challenge
+::::::
+:::
+::::{.my-r-code-container}
+
+I've tried to find the solution myself and then I've compared my result with the [drawing graph solutions](https://mastering-shiny-solutions.org/basic-reactivity.html#solution-15) in Mastering Shiny Solutions [@ther4dsonlinelearningcommunity2023]
+
+The first two examples of my trials coincide with Mastering Shiny Solutions. In the third example I had a chain of the inputs a,b,c,d and not — as in Mastering Shiny Solutions — a step by step chain where each input is depending of an input with the same name.
+
+***
+
+![Solution of the reactive graph: server 1](https://mastering-shiny-solutions.org/images/4.3.6.1-s1.png){#fig-03-ex-02-1 
+fig-alt="The graph consists of six blocks titled a-f. 'a' and 'b' are connected horizontally by an arrow from left tot the right with 'c'. The block 'e' gets its input (= arrows) by 'c' and 'd' and 'e' finally put its result into 'f'" fig-align="center" 
+width="50%"}
+
+***
+
+![Solution of the reactive graph: server 2](https://mastering-shiny-solutions.org/images/4.3.6.1-s2.png){#fig-03-ex-02-2 
+fig-alt="The graph consists of six blocks titled a-f. 'a' and 'b' are connected horizontally by an arrow from left tot the right with 'c'. The block 'e' gets its input (= arrows) by 'c' and 'd' and 'e' finally put its result into 'f'" fig-align="center" 
+width="50%"}
+
+***
+
+![Solution of the reactive graph: server 3](https://mastering-shiny-solutions.org/images/4.3.6.1-s3.png){#fig-03-ex-02-3 
+fig-alt="The graph consists of six blocks titled a-f. 'a' and 'b' are connected horizontally by an arrow from left tot the right with 'c'. The block 'e' gets its input (= arrows) by 'c' and 'd' and 'e' finally put its result into 'f'" fig-align="center" 
+width="50%"}
+
+
+::::
+:::::
+
+Compare the graphs with the server code snippets in @lst-draw-graphs-challenge.
+
+
+
+:::
+
+::::
+:::::
+
+#### Failed code snippet
+
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-03-ex-03-failed-code}
+: Why will this code fail?
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-ex-03-failed-code-challenge}
+: Why will this code snippet fail?
+::::::
+:::
+::::{.my-r-code-container}
+
+
+::: {#lst-03-ex-03-failed-code-challenge}
+```{r}
+#| label: failed-code-challenge
+#| eval: false
+#| code-fold: show
+
+var <- reactive(df[[input$var]])
+range <- reactive(range(var(), na.rm = TRUE))
+```
+
+
+Failed code snippet
+:::
+::::
+:::::
+
+
+
+###### Solution (Code)
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-ex-03-failed-code-solution}
+: Why failed the code in @lst-03-ex-03-failed-code-challenge
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-03-ex-03-failed-code-solution}
+
+```{r}
+#| label: failed-code-solution
+#| eval: false
+#| code-fold: show
+
+library(shiny)
+
+df <- mtcars
+
+ui <- fluidPage(
+    selectInput("var", NULL, choices = colnames(df)),
+    verbatimTextOutput("debug")
+)
+
+server <- function(input, output, session) {
+    col_var <- reactive( df[input$var] )
+    col_range <- reactive({ range(col_var(), na.rm = TRUE ) })
+    output$debug <- renderPrint({ col_range() })
+
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+Code example with changed names of the reactives
+:::
+::::
+:::::
+
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-03-ex-01-find-bugs-app-shiny}
+: Run @lst-03-ex-03-failed-code-challenge with correct code
+::::::
+:::
+::::{.my-solution-container}
+
+base::range() and stats::var() are bad names for reactives because they are reserved names for other functions:
+
+- `base::range()` returns a vector containing the minimum and maximum of all the given arguments.
+- `stats::var()` computes the variance of x.
+
+In the following solution code from [Mastering Shiny Solutions](https://mastering-shiny-solutions.org/basic-reactivity.html#solution-16) I have followed their idea to change `range` into `col_range` and  `var` into `col_var`. These new names substitute the bad names for the reactives in the failed code snippet.
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 300
+
+library(shiny)
+
+df <- mtcars
+
+ui <- fluidPage(
+    selectInput("var", NULL, choices = colnames(df)),
+    verbatimTextOutput("debug")
+)
+
+server <- function(input, output, session) {
+    col_var <- reactive( df[input$var] )
+    col_range <- reactive({ range(col_var(), na.rm = TRUE ) })
+    output$debug <- renderPrint({ col_range() })
+
+}
+
+shinyApp(ui = ui, server = server)
+
+```
+::::
+:::::
+
+Compare the Shiny result with the code used for the solution in @lst-03-ex-03-failed-code-solution.
+
+:::
+
+::::
+:::::
+
+## Reactive expressions {#sec-03-reactive-expressions}
+
+Reactive expressions have a flavor of both inputs and outputs:
+
+- Like outputs, reactive expressions depend on inputs and automatically know when they need updating.
+- Like inputs, you can use the results of a reactive expression in an output.
+
+This duality means we need some new vocab: I’ll use **producers** to refer to reactive inputs and expressions, and **consumers** to refer to reactive expressions and outputs.
+
+![Inputs and expressions are reactive producers; expressions and outputs are reactive consumers](https://mastering-shiny.org/diagrams/basic-reactivity/producers-consumers.png){#fig-03-07
+fig-alt="The graphics shows the connection between `input`, `expression` and `outputs` as Venn diagram. `input` and `expression` form the so-called **Producers**; `expression` and `outputs` constitute the **Consumers**" fig-align="center" 
+width="70%"}
+
+### The motivation
+
+Imagine I want to compare two simulated datasets with a plot and a hypothesis test. I’ve done a little experimentation and come up with the functions below: `freqpoly()` visualizes the two distributions with `r glossary("frequency polygon")`s, and `t_test()` uses a t-test to compare means and summarizes the results with a string:
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-datasets}
+: Compare two simulated datasets with a plot and a hypothesis test.
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: fig-compare-simulated-datasets
+#| fig-cap: "Compare two simulated datasets with a plot and a hypothesis test"
+
+freqpoly <- function(x1, x2, binwidth = 0.1, xlim = c(-3, 3)) {
+  df <- base::data.frame(
+    x = base::c(x1, x2),
+    g = base::c(base::rep("x1", base::length(x1)), 
+                base::rep("x2", base::length(x2)))
+  )
+
+  ggplot2::ggplot(df, ggplot2::aes(x, colour = g)) +
+    ggplot2::geom_freqpoly(binwidth = binwidth, linewidth = 1) +
+    ggplot2::coord_cartesian(xlim = xlim)
+}
+
+t_test <- function(x1, x2) {
+  test <- stats::t.test(x1, x2)
+
+  # use sprintf() to format t.test() results compactly
+  base::sprintf(
+    "p value: %0.3f\n[%0.2f, %0.2f]",
+    test$p.value, test$conf.int[1], test$conf.int[2]
+  )
+}
+
+### prepare values
+x1 <- stats::rnorm(100, mean = 0, sd = 0.5)
+x2 <- stats::rnorm(200, mean = 0.15, sd = 0.9)
+
+### call functions
+freqpoly(x1, x2)
+base::cat(t_test(x1, x2))
+```
+
+
+::::
+:::::
+
+
+### The app
+
+I’d like to use these two tools to quickly explore a bunch of simulations. A Shiny app is a great way to do this because it lets you avoid tediously modifying and re-running R code. Below I wrap the pieces into a Shiny app where I can interactively tweak the inputs.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-03-compare-simulated-data}
+: Case study: Compare simulated data
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-data-code}
+: Case study: Compare simulated data
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-03-compare-simulated-data-code}
+```{r}
+#| label: case-study-ui-code
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+  fluidRow(
+    column(4,
+      "Distribution 1",
+      numericInput("n1", label = "n", value = 1000, min = 1),
+      numericInput("mean1", label = "µ", value = 0, step = 0.1),
+      numericInput("sd1", label = "σ", value = 0.5, min = 0.1, step = 0.1)
+    ),
+    column(4,
+      "Distribution 2",
+      numericInput("n2", label = "n", value = 1000, min = 1),
+      numericInput("mean2", label = "µ", value = 0, step = 0.1),
+      numericInput("sd2", label = "σ", value = 0.5, min = 0.1, step = 0.1)
+    ),
+    column(4,
+      "Frequency polygon",
+      numericInput("binwidth", label = "Bin width", value = 0.1, step = 0.1),
+      sliderInput("range", label = "range", value = c(-3, 3), min = -5, max = 5)
+    )
+  ),
+  fluidRow(
+    column(9, plotOutput("hist")),
+    column(3, verbatimTextOutput("ttest"))
+  )
+)
+
+server <- function(input, output, session) {
+  output$hist <- renderPlot({
+    x1 <- rnorm(input$n1, input$mean1, input$sd1)
+    x2 <- rnorm(input$n2, input$mean2, input$sd2)
+
+    freqpoly(x1, x2, binwidth = input$binwidth, xlim = input$range)
+  }, res = 96)
+
+  output$ttest <- renderText({
+    x1 <- rnorm(input$n1, input$mean1, input$sd1)
+    x2 <- rnorm(input$n2, input$mean2, input$sd2)
+
+    t_test(x1, x2)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+Compare simulated data with plot and t-test
+
+:::
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-data-shiny}
+: Case study: Compare simulated data
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+library(shiny)
+library(ggplot2)
+library(munsell)
+
+freqpoly <- function(x1, x2, binwidth = 0.1, xlim = c(-3, 3)) {
+  df <- base::data.frame(
+    x = base::c(x1, x2),
+    g = base::c(base::rep("x1", base::length(x1)), 
+                base::rep("x2", base::length(x2)))
+  )
+
+  ggplot2::ggplot(df, ggplot2::aes(x, colour = g)) +
+    ggplot2::geom_freqpoly(binwidth = binwidth, linewidth = 1) +
+    ggplot2::coord_cartesian(xlim = xlim)
+}
+
+t_test <- function(x1, x2) {
+  test <- stats::t.test(x1, x2)
+
+  # use sprintf() to format t.test() results compactly
+  base::sprintf(
+    "p value: %0.3f\n[%0.2f, %0.2f]",
+    test$p.value, test$conf.int[1], test$conf.int[2]
+  )
+}
+
+ui <- fluidPage(
+  fluidRow(
+    column(4,
+      "Distribution 1",
+      numericInput("n1", label = "n", value = 1000, min = 1),
+      numericInput("mean1", label = "µ", value = 0, step = 0.1),
+      numericInput("sd1", label = "σ", value = 0.5, min = 0.1, step = 0.1)
+    ),
+    column(4,
+      "Distribution 2",
+      numericInput("n2", label = "n", value = 1000, min = 1),
+      numericInput("mean2", label = "µ", value = 0, step = 0.1),
+      numericInput("sd2", label = "σ", value = 0.5, min = 0.1, step = 0.1)
+    ),
+    column(4,
+      "Frequency polygon",
+      numericInput("binwidth", label = "Bin width", value = 0.1, step = 0.1),
+      sliderInput("range", label = "range", value = c(-3, 3), min = -5, max = 5)
+    )
+  ),
+  fluidRow(
+    column(9, plotOutput("hist")),
+    column(3, verbatimTextOutput("ttest"))
+  )
+)
+
+server <- function(input, output, session) {
+  output$hist <- renderPlot({
+    x1 <- rnorm(input$n1, input$mean1, input$sd1)
+    x2 <- rnorm(input$n2, input$mean2, input$sd2)
+
+    freqpoly(x1, x2, binwidth = input$binwidth, xlim = input$range)
+  }, res = 96)
+
+  output$ttest <- renderText({
+    x1 <- rnorm(input$n1, input$mean1, input$sd1)
+    x2 <- rnorm(input$n2, input$mean2, input$sd2)
+
+    t_test(x1, x2)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+Compare the code in @lst-03-compare-simulated-data-code for this shiny app.
+
+:::
+
+::::
+:::::
+
+
+
+
+### The reactive graph
+
+### Simplifying the graph
+
+
+## Controlling timing of evaluation {#sec-03-control-timing}
+
+## Observers {#sec-03-observers}

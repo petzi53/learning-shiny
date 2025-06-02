@@ -18,6 +18,7 @@ book:
     - index.qmd
     - 01-first-shiny-app.qmd
     - 02-basic-UI.qmd
+    - 03-basic-reactivity.qmd
   appendices:
     - 96-packages-used.qmd
     - 97-whr-exercises.qmd
