@@ -526,19 +526,19 @@ The first two examples of my trials coincide with Mastering Shiny Solutions. In 
 
 ***
 
-![Solution of the reactive graph: server 1](https://mastering-shiny-solutions.org/images/4.3.6.1-s1.png){#fig-03-ex-02-1 
+![Solution of the reactive graph: server 1](https://mastering-shiny-solutions.org/images/4.3.6.1-s1.png){#fig-03-04
 fig-alt="The graph consists of six blocks titled a-f. 'a' and 'b' are connected horizontally by an arrow from left tot the right with 'c'. The block 'e' gets its input (= arrows) by 'c' and 'd' and 'e' finally put its result into 'f'" fig-align="center" 
 width="50%"}
 
 ***
 
-![Solution of the reactive graph: server 2](https://mastering-shiny-solutions.org/images/4.3.6.1-s2.png){#fig-03-ex-02-2 
+![Solution of the reactive graph: server 2](https://mastering-shiny-solutions.org/images/4.3.6.1-s2.png){#fig-03-05 
 fig-alt="The graph consists of six blocks titled a-f. 'a' and 'b' are connected horizontally by an arrow from left tot the right with 'c'. The block 'e' gets its input (= arrows) by 'c' and 'd' and 'e' finally put its result into 'f'" fig-align="center" 
 width="50%"}
 
 ***
 
-![Solution of the reactive graph: server 3](https://mastering-shiny-solutions.org/images/4.3.6.1-s3.png){#fig-03-ex-02-3 
+![Solution of the reactive graph: server 3](https://mastering-shiny-solutions.org/images/4.3.6.1-s3.png){#fig-03-06 
 fig-alt="The graph consists of six blocks titled a-f. 'a' and 'b' are connected horizontally by an arrow from left tot the right with 'c'. The block 'e' gets its input (= arrows) by 'c' and 'd' and 'e' finally put its result into 'f'" fig-align="center" 
 width="50%"}
 
@@ -763,7 +763,7 @@ I’d like to use these two tools to quickly explore a bunch of simulations. A S
 ::::: {.my-code-collection-icon}
 :::::
 :::::: {#exm-03-compare-simulated-data}
-: Case study: Compare simulated data
+: Case study: Compare simulated data V1
 ::::::
 
 ::::
@@ -777,16 +777,28 @@ I’d like to use these two tools to quickly explore a bunch of simulations. A S
 :::::{.my-r-code}
 :::{.my-r-code-header}
 :::::: {#cnj-03-compare-simulated-data-code}
-: Case study: Compare simulated data
+: Case study: Compare simulated data V1
 ::::::
 :::
 ::::{.my-r-code-container}
-::: {#lst-03-compare-simulated-data-code}
+::: {#lst-03-compare-simulated-data-code1}
 ```{r}
-#| label: case-study-ui-code
+#| label: compare-simulated-data-code
 #| eval: false
 
+## source .R file with the two functions didn't work
+## so I had to use the original code instead of the following
+
+base::source(
+      base::paste0(here::here(), "/R/shiny-03-V2.R"),
+      local = TRUE,
+      chdir = TRUE,
+      encoding = "utf-8"
+    )
+
 library(shiny)
+library(ggplot2)
+library(munsell)
 
 ui <- fluidPage(
   fluidRow(
@@ -845,7 +857,7 @@ Compare simulated data with plot and t-test
 :::::{.my-r-code}
 :::{.my-r-code-header}
 :::::: {#cnj-03-compare-simulated-data-shiny}
-: Case study: Compare simulated data
+: Case study: Compare simulated data V1
 ::::::
 :::
 ::::{.my-r-code-container}
@@ -853,31 +865,39 @@ Compare simulated data with plot and t-test
 #| standalone: true
 #| viewerHeight: 600
 
-library(shiny)
-library(ggplot2)
-library(munsell)
-
+# source .R file with the two functions didn't work
 freqpoly <- function(x1, x2, binwidth = 0.1, xlim = c(-3, 3)) {
-  df <- base::data.frame(
-    x = base::c(x1, x2),
-    g = base::c(base::rep("x1", base::length(x1)), 
-                base::rep("x2", base::length(x2)))
-  )
+    df <- base::data.frame(
+        x = base::c(x1, x2),
+        g = base::c(base::rep("x1", base::length(x1)),
+                    base::rep("x2", base::length(x2)))
+    )
 
-  ggplot2::ggplot(df, ggplot2::aes(x, colour = g)) +
-    ggplot2::geom_freqpoly(binwidth = binwidth, linewidth = 1) +
-    ggplot2::coord_cartesian(xlim = xlim)
+    ggplot2::ggplot(df, ggplot2::aes(x, colour = g)) +
+        ggplot2::geom_freqpoly(binwidth = binwidth, linewidth = 1) +
+        ggplot2::coord_cartesian(xlim = xlim)
 }
 
 t_test <- function(x1, x2) {
-  test <- stats::t.test(x1, x2)
+    test <- stats::t.test(x1, x2)
 
-  # use sprintf() to format t.test() results compactly
-  base::sprintf(
-    "p value: %0.3f\n[%0.2f, %0.2f]",
-    test$p.value, test$conf.int[1], test$conf.int[2]
-  )
+    # use sprintf() to format t.test() results compactly
+    base::sprintf(
+        "p value: %0.3f\n[%0.2f, %0.2f]",
+        test$p.value, test$conf.int[1], test$conf.int[2]
+    )
 }
+
+# base::source(
+#       base::paste0(here::here(), "/R/shiny-03-V2.R"),
+#       local = TRUE,
+#       chdir = TRUE,
+#       encoding = "utf-8"
+#     )
+
+library(shiny)
+library(ggplot2)
+library(munsell)
 
 ui <- fluidPage(
   fluidRow(
@@ -927,7 +947,1065 @@ shinyApp(ui, server)
 ::::
 :::::
 
-Compare the code in @lst-03-compare-simulated-data-code for this shiny app.
+Compare the code in @lst-03-compare-simulated-data-code1 for this shiny app.
+
+:::
+
+::::
+:::::
+
+::: {.callout-warning}
+I had to duplicate the code for the two functions `freqpoly()` and `t_test()` because sourcing the code from an extra .R file did not work. I tried several options of `source("path-to-file", local = TRUE)`
+
+- file in an extra directory with additional option `chdir = TRUE`,
+- file in main directory references with `source('./<file_name>', local=TRUE)`
+- file calling with `here::here()` applying `if(FALSE){library(here)}` to include additional R packages that are not automatically discovered,
+- adding `encoding="utf-8"`
+
+:::
+
+You can find a live version at <https://hadley.shinyapps.io/ms-case-study-1>; I recommend opening the app with the above link, because it uses the whole screen width and it is therefore easier to play with. Having a quick play to make sure you understand its basic operation is essential before you continue reading.
+
+
+### The reactive graph
+
+Shiny is smart enough to update an output only when the inputs it refers to change; it’s not smart enough to only selectively run pieces of code inside an output. In other words, outputs are atomic: they’re either executed or not as a whole.
+
+For example, take this snippet from the server:
+
+```
+x1 <- rnorm(input$n1, input$mean1, input$sd1)
+x2 <- rnorm(input$n2, input$mean2, input$sd2)
+t_test(x1, x2)
+```
+
+As a human reading this code you can tell that we only need to update `x1` when `n1`, `mean1`, or `sd1` changes, and we only need to update `x2` when `n2`, `mean2`, or `sd2` changes. Shiny, however, only looks at the output as a whole, so it will update both `x1` and `x2` every time one of `n1`, `mean1`, `sd1`, `n2`, `mean2`, or `sd2` changes. This leads to the reactive graph shown in @fig-03-08.
+
+![The reactive graph shows that every output depends on every input](https://mastering-shiny.org/diagrams/basic-reactivity/case-study-1.png){#fig-03-08 
+fig-alt="The inputs n1, mean1, sd1, n2, mean2, sd2 are all connected to the outputs ttest and hist. Additionally binwidth and range are connected to hist." fig-align="center" 
+width="40%"}
+
+You’ll notice that the graph is very dense: almost every input is connected directly to every output. This creates two problems:
+
+- The app is hard to understand because there are so many connections. There are no pieces of the app that you can pull out and analyse in isolation.
+- The app is inefficient because it does more work than necessary. For example, if you change the breaks of the plot, the data is recalculated; if you change the value of `n1`, `x2` is updated (in two places!).
+
+There’s one other major flaw in the app: the frequency polygon and t-test use separate random draws. This is rather misleading, as you’d expect them to be working on the same underlying data.
+
+Fortunately, we can fix all these problems by using reactive expressions to pull out repeated computation.
+
+
+### Simplifying the graph
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-03-compare-simulated-data2}
+: Case study: Compare simulated data V2
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-data-code2}
+: Case study: Compare simulated data V2
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-03-compare-simulated-data-code2}
+```{r}
+#| label: compare-simulated-data-code2
+#| eval: false
+
+## source .R file with the two functions didn't work
+base::source(
+      base::paste0(here::here(), "/R/shiny-03-V2.R"),
+      local = TRUE,
+      chdir = TRUE,
+      encoding = "utf-8"
+    )
+
+library(shiny)
+library(ggplot2)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(4,
+      "Distribution 1",
+      numericInput("n1", label = "n", value = 1000, min = 1),
+      numericInput("mean1", label = "µ", value = 0, step = 0.1),
+      numericInput("sd1", label = "σ", value = 0.5, min = 0.1, step = 0.1)
+    ),
+    column(4,
+      "Distribution 2",
+      numericInput("n2", label = "n", value = 1000, min = 1),
+      numericInput("mean2", label = "µ", value = 0, step = 0.1),
+      numericInput("sd2", label = "σ", value = 0.5, min = 0.1, step = 0.1)
+    ),
+    column(4,
+      "Frequency polygon",
+      numericInput("binwidth", label = "Bin width", value = 0.1, step = 0.1),
+      sliderInput("range", label = "range", value = c(-3, 3), min = -5, max = 5)
+    )
+  ),
+  fluidRow(
+    column(9, plotOutput("hist")),
+    column(3, verbatimTextOutput("ttest"))
+  )
+)
+
+server <- function(input, output, session) {
+  x1 <- reactive(rnorm(input$n1, input$mean1, input$sd1))
+  x2 <- reactive(rnorm(input$n2, input$mean2, input$sd2))
+
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = input$binwidth, xlim = input$range)
+  }, res = 96)
+
+  output$ttest <- renderText({
+    t_test(x1(), x2())
+  })
+}
+
+shinyApp(ui, server)
+```
+
+Compare simulated data with plot and t-test using reactive expressions
+:::
+
+Compare the code in @lst-03-compare-simulated-data-code1 for this shiny app without reactive expressions
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-data-shiny2}
+: Case study: Compare simulated data V2
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+# source .R file with the two functions didn't work
+freqpoly <- function(x1, x2, binwidth = 0.1, xlim = c(-3, 3)) {
+    df <- base::data.frame(
+        x = base::c(x1, x2),
+        g = base::c(base::rep("x1", base::length(x1)),
+                    base::rep("x2", base::length(x2)))
+    )
+
+    ggplot2::ggplot(df, ggplot2::aes(x, colour = g)) +
+        ggplot2::geom_freqpoly(binwidth = binwidth, linewidth = 1) +
+        ggplot2::coord_cartesian(xlim = xlim)
+}
+
+t_test <- function(x1, x2) {
+    test <- stats::t.test(x1, x2)
+
+    # use sprintf() to format t.test() results compactly
+    base::sprintf(
+        "p value: %0.3f\n[%0.2f, %0.2f]",
+        test$p.value, test$conf.int[1], test$conf.int[2]
+    )
+}
+
+# base::source(
+#       base::paste0(here::here(), "/R/shiny-03-V2.R"),
+#       local = TRUE,
+#       chdir = TRUE,
+#       encoding = "utf-8"
+#     )
+
+library(shiny)
+library(ggplot2)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(4,
+      "Distribution 1",
+      numericInput("n1", label = "n", value = 1000, min = 1),
+      numericInput("mean1", label = "µ", value = 0, step = 0.1),
+      numericInput("sd1", label = "σ", value = 0.5, min = 0.1, step = 0.1)
+    ),
+    column(4,
+      "Distribution 2",
+      numericInput("n2", label = "n", value = 1000, min = 1),
+      numericInput("mean2", label = "µ", value = 0, step = 0.1),
+      numericInput("sd2", label = "σ", value = 0.5, min = 0.1, step = 0.1)
+    ),
+    column(4,
+      "Frequency polygon",
+      numericInput("binwidth", label = "Bin width", value = 0.1, step = 0.1),
+      sliderInput("range", label = "range", value = c(-3, 3), min = -5, max = 5)
+    )
+  ),
+  fluidRow(
+    column(9, plotOutput("hist")),
+    column(3, verbatimTextOutput("ttest"))
+  )
+)
+
+server <- function(input, output, session) {
+  x1 <- reactive(rnorm(input$n1, input$mean1, input$sd1))
+  x2 <- reactive(rnorm(input$n2, input$mean2, input$sd2))
+
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = input$binwidth, xlim = input$range)
+  }, res = 96)
+
+  output$ttest <- renderText({
+    t_test(x1(), x2())
+  })
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+Compare the code in @lst-03-compare-simulated-data-code2 for this shiny app.
+
+:::
+
+::::
+:::::
+
+This transformation yields the substantially simpler graph shown in @fig-03-09. This simpler graph makes it easier to understand the app because you can understand connected components in isolation; the values of the distribution parameters only affect the output via `x1` and `x2.` This rewrite also makes the app much more efficient since it does much less computation. Now, when you change the `binwidth` or `range`, only the plot changes, not the underlying data.
+
+![title](https://mastering-shiny.org/diagrams/basic-reactivity/case-study-2.png){#fig-03-09 
+fig-alt="The inputs n1, mean1, sd1 connect to x1 and the inputs n2, mean2, sd2 connect to x2. x1 and x2 connect to ttest and hist. binwidth and range connect to hist." fig-align="center" 
+width="40%"}
+
+To emphasize this modularity @fig-03-10 draws boxes around the independent components. We’ll come back to this idea in @XXX_19, when we discuss modules. Modules allow you to extract out repeated code for reuse, while guaranteeing that it’s isolated from everything else in the app. Modules are an extremely useful and powerful technique for more complex apps.
+
+![Modules enforce isolation between parts of an app](https://mastering-shiny.org/diagrams/basic-reactivity/case-study-3.png){#fig-03-10 
+fig-alt="The inputs n1, mean1, sd1 connect to x1; the inputs n2, mean2, sd2 connect to x2. x1 and x2 connect to ttest and hist; binwidth and range connect to hist. Additionally there are two boxes drawn. One around n1, mean, sd1 and x1, the other one around n2, mean2, sd2 and x2." fig-align="center" 
+width="40%"}
+
+You might be familiar with the “rule of three” of programming: whenever you copy and paste something three times, you should figure out how to reduce the duplication (typically by writing a function). **In Shiny, however, I think you should consider the rule of one**: whenever you copy and paste something once, you should consider extracting the repeated code out into a reactive expression. The rule is stricter for Shiny because reactive expressions don’t just make it easier for humans to understand the code, they also improve Shiny’s ability to efficiently rerun code.
+
+
+### Why do we need reactive expressions?
+
+When you first start working with reactive code, you might wonder why we need reactive expressions. Why can’t you use your existing tools for reducing duplication in code: creating new variables and writing functions? Unfortunately neither of these techniques work in a reactive environment.
+
+- **If you try to use a variable to reduce duplication**, you’ll get an error because you’re attempting to access input values outside of a reactive context. Even if you didn’t get that error, you’d still have a problem: `x1` and `x2` would only be computed once, when the session begins, not every time one of the inputs was updated.
+- **If you try to use a function to reduce duplication** it has the same problem as the original code: any input will cause all outputs to be recomputed, and the t-test and the frequency polygon will be run on separate samples. Reactive expressions automatically cache their results, and only update when their inputs change.
+
+
+## Controlling timing of evaluation {#sec-03-control-timing}
+
+Now that you’re familiar with the basic ideas of reactivity, we’ll discuss two more advanced techniques that allow you to either increase or decrease how often a reactive expression is executed. Here I’ll show how to use the basic techniques; in @XXX_15, we’ll come back to their underlying implementations.
+
+To explore the basic ideas, I’m going to simplify my simulation app. I’ll use a distribution with only one parameter, and force both samples to share the same `n`. I’ll also remove the plot controls. This yields a smaller UI object and server function.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-03-compare-simulated-data3}
+: Case study: Compare simulated data V3
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-data-code3}
+: Case study: Compare simulated data V3
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-03-compare-simulated-data-code3}
+```{r}
+#| label: compare-simulated-data-code3
+#| eval: false
+
+## source .R file with the two functions didn't work
+base::source(
+      base::paste0(here::here(), "/R/shiny-03-V2.R"),
+      local = TRUE,
+      chdir = TRUE,
+      encoding = "utf-8"
+    )
+
+library(shiny)
+library(ggplot2)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(3,
+      numericInput("lambda1", label = "lambda1", value = 3),
+      numericInput("lambda2", label = "lambda2", value = 5),
+      numericInput("n", label = "n", value = 1e4, min = 0)
+    ),
+    column(9, plotOutput("hist"))
+  )
+)
+server <- function(input, output, session) {
+  x1 <- reactive(rpois(input$n, input$lambda1))
+  x2 <- reactive(rpois(input$n, input$lambda2))
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = 1, xlim = c(0, 40))
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+A simpler app that displays a frequency polygon of random numbers drawn from two Poisson distributions.
+:::
+
+Compare the code with original app @lst-03-compare-simulated-data-code1 (without reactive expression) and @lst-03-compare-simulated-data-code2 (with reactive expressions) with this more simpler app that draws from two Poisson distributions.
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-data-shiny3}
+: Case study: Compare simulated data V3
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+# source .R file with the two functions didn't work
+freqpoly <- function(x1, x2, binwidth = 0.1, xlim = c(-3, 3)) {
+    df <- base::data.frame(
+        x = base::c(x1, x2),
+        g = base::c(base::rep("x1", base::length(x1)),
+                    base::rep("x2", base::length(x2)))
+    )
+
+    ggplot2::ggplot(df, ggplot2::aes(x, colour = g)) +
+        ggplot2::geom_freqpoly(binwidth = binwidth, linewidth = 1) +
+        ggplot2::coord_cartesian(xlim = xlim)
+}
+
+t_test <- function(x1, x2) {
+    test <- stats::t.test(x1, x2)
+
+    # use sprintf() to format t.test() results compactly
+    base::sprintf(
+        "p value: %0.3f\n[%0.2f, %0.2f]",
+        test$p.value, test$conf.int[1], test$conf.int[2]
+    )
+}
+
+# base::source(
+#       base::paste0(here::here(), "/R/shiny-03-V2.R"),
+#       local = TRUE,
+#       chdir = TRUE,
+#       encoding = "utf-8"
+#     )
+
+library(shiny)
+library(ggplot2)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(3,
+      numericInput("lambda1", label = "lambda1", value = 3),
+      numericInput("lambda2", label = "lambda2", value = 5),
+      numericInput("n", label = "n", value = 1e4, min = 0)
+    ),
+    column(9, plotOutput("hist"))
+  )
+)
+server <- function(input, output, session) {
+  x1 <- reactive(rpois(input$n, input$lambda1))
+  x2 <- reactive(rpois(input$n, input$lambda2))
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = 1, xlim = c(0, 40))
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+Compare the code in @lst-03-compare-simulated-data-code3 for this shiny app.
+
+:::
+
+To play around with this app use the live version at <https://hadley.shinyapps.io/ms-simulation-2>.
+
+::::
+:::::
+
+![The reactive graph of a simpler app that displays a frequency polygon of random numbers drawn from two Poisson distributions.](https://mastering-shiny.org/diagrams/basic-reactivity/timing.png){#fig-03-11 
+fig-alt="lambda1 and n connect to x1, lambda2 and n connect to x2. x1 and x2 connect to the hist output." fig-align="center" 
+width="40%"}
+
+### Timed invalidation
+
+Imagine you wanted to reinforce the fact that this is for simulated data by constantly resimulating the data, so that you see an animation rather than a static plot. We can increase the frequency of updates with a new function: `shiny::reactiveTimer()`.
+
+`shiny::reactiveTimer()` is a reactive expression that has a dependency on a hidden input: the current time. You can use a `reactiveTimer()` when you want a reactive expression to invalidate itself more often than it otherwise would. For example, the following code uses an interval of 500 ms so that the plot will update twice a second. This is fast enough to remind you that you’re looking at a simulation, without dizzying you with rapid changes.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-03-compare-simulated-data4}
+: Case study: Compare simulated data V4
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-data-code4}
+: Case study: Compare simulated data V4
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-03-compare-simulated-data-code4}
+```{r}
+#| label: compare-simulated-data-code4
+#| eval: false
+
+# source .R file with the two functions didn't work
+base::source(
+      base::paste0(here::here(), "/R/shiny-03-V2.R"),
+      local = TRUE,
+      chdir = TRUE,
+      encoding = "utf-8"
+    )
+
+library(shiny)
+library(ggplot2)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(3,
+      numericInput("lambda1", label = "lambda1", value = 3),
+      numericInput("lambda2", label = "lambda2", value = 5),
+      numericInput("n", label = "n", value = 1e4, min = 0)
+    ),
+    column(9, plotOutput("hist"))
+  )
+)
+
+server <- function(input, output, session) {
+  timer <- reactiveTimer(500)
+
+  x1 <- reactive({
+    timer()
+    rpois(input$n, input$lambda1)
+  })
+  x2 <- reactive({
+    timer()
+    rpois(input$n, input$lambda2)
+  })
+
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = 1, xlim = c(0, 40))
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+Animation of a frequency polygon of random numbers drawn from two Poisson distributions.
+:::
+
+Note how we use `timer()` in the reactive expressions that compute `x1()` and `x2()`: we call it, but don’t use the value. This lets `x1` and `x2` take a reactive dependency on timer, without worrying about exactly what value it returns.
+
+Compare the code with static app @lst-03-compare-simulated-data-code3 with this animation.
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-data-shiny4}
+: Case study: Compare simulated data V4
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+# source .R file with the two functions didn't work
+freqpoly <- function(x1, x2, binwidth = 0.1, xlim = c(-3, 3)) {
+    df <- base::data.frame(
+        x = base::c(x1, x2),
+        g = base::c(base::rep("x1", base::length(x1)),
+                    base::rep("x2", base::length(x2)))
+    )
+
+    ggplot2::ggplot(df, ggplot2::aes(x, colour = g)) +
+        ggplot2::geom_freqpoly(binwidth = binwidth, linewidth = 1) +
+        ggplot2::coord_cartesian(xlim = xlim)
+}
+
+t_test <- function(x1, x2) {
+    test <- stats::t.test(x1, x2)
+
+    # use sprintf() to format t.test() results compactly
+    base::sprintf(
+        "p value: %0.3f\n[%0.2f, %0.2f]",
+        test$p.value, test$conf.int[1], test$conf.int[2]
+    )
+}
+
+# source(
+#       paste0(here::here(), "/R/shiny-03-V2.R"),
+#       local = TRUE,
+#       chdir = TRUE,
+#       encoding = "utf-8"
+#     )
+
+library(shiny)
+library(ggplot2)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(3,
+      numericInput("lambda1", label = "lambda1", value = 3),
+      numericInput("lambda2", label = "lambda2", value = 5),
+      numericInput("n", label = "n", value = 1e4, min = 0)
+    ),
+    column(9, plotOutput("hist"))
+  )
+)
+
+server <- function(input, output, session) {
+  timer <- reactiveTimer(500)
+
+  x1 <- reactive({
+    timer()
+    rpois(input$n, input$lambda1)
+  })
+  x2 <- reactive({
+    timer()
+    rpois(input$n, input$lambda2)
+  })
+
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = 1, xlim = c(0, 40))
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+Compare the code in @lst-03-compare-simulated-data-code3 for this shiny app.
+
+:::
+
+
+::::
+:::::
+
+![title](https://mastering-shiny.org/diagrams/basic-reactivity/timing-timer.png){#fig-03-12 
+fig-alt="lambda1 and n connect to x1, lambda2 and n connect to x2. x1 and x2 connect to the hist output. Additionally there is a (hidden) timer input that connects to x1 and x2." fig-align="center" 
+width="50%"}
+
+### On click
+
+In the above scenario, think about what would happen if the simulation code took 1 second to run. We perform the simulation every 0.5s, so Shiny would have more and more to do, and would never be able to catch up. The same problem can happen if someone is rapidly clicking buttons in your app and the computation you are doing is relatively expensive. It’s possible to create a big backlog of work for Shiny, and while it’s working on the backlog, it can’t respond to any new events. This leads to a poor user experience.
+
+If this situation arises in your app, you might want to require the user to opt-in to performing the expensive calculation by requiring them to click a button. This is a great use case for an `shiny::actionButton()`.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-03-compare-simulated-data5-action-button}
+: Case study: Compare simulated data V5 (action button V1)
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-data-code5-action-button1}
+: Case study: Compare simulated data V5 (action button V1)
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-03-compare-simulated-data-code5-action-button1}
+```{r}
+#| label: compare-simulated-data-code5-action-button1
+#| eval: false
+
+# source .R file with the two functions didn't work
+base::source(
+      base::paste0(here::here(), "/R/shiny-03-V2.R"),
+      local = TRUE,
+      chdir = TRUE,
+      encoding = "utf-8"
+    )
+
+library(shiny)
+library(ggplot2)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(3,
+      numericInput("lambda1", label = "lambda1", value = 3),
+      numericInput("lambda2", label = "lambda2", value = 5),
+      numericInput("n", label = "n", value = 1e4, min = 0),
+      actionButton("simulate", "Simulate!")
+    ),
+    column(9, plotOutput("hist"))
+  )
+)
+
+server <- function(input, output, session) {
+  x1 <- reactive({
+    input$simulate
+    rpois(input$n, input$lambda1)
+  })
+  x2 <- reactive({
+    input$simulate
+    rpois(input$n, input$lambda2)
+  })
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = 1, xlim = c(0, 40))
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+Action button to compare a frequency polygon of random numbers drawn from two Poisson distributions (Version 1).
+:::
+
+
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-data-shiny5-action-button1}
+: Case study: Compare simulated data V5 (action button V1)
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+# source .R file with the two functions didn't work
+freqpoly <- function(x1, x2, binwidth = 0.1, xlim = c(-3, 3)) {
+    df <- base::data.frame(
+        x = base::c(x1, x2),
+        g = base::c(base::rep("x1", base::length(x1)),
+                    base::rep("x2", base::length(x2)))
+    )
+
+    ggplot2::ggplot(df, ggplot2::aes(x, colour = g)) +
+        ggplot2::geom_freqpoly(binwidth = binwidth, linewidth = 1) +
+        ggplot2::coord_cartesian(xlim = xlim)
+}
+
+t_test <- function(x1, x2) {
+    test <- stats::t.test(x1, x2)
+
+    # use sprintf() to format t.test() results compactly
+    base::sprintf(
+        "p value: %0.3f\n[%0.2f, %0.2f]",
+        test$p.value, test$conf.int[1], test$conf.int[2]
+    )
+}
+
+# source(
+#       paste0(here::here(), "/R/shiny-03-V2.R"),
+#       local = TRUE,
+#       chdir = TRUE,
+#       encoding = "utf-8"
+#     )
+
+library(shiny)
+library(ggplot2)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(3,
+      numericInput("lambda1", label = "lambda1", value = 3),
+      numericInput("lambda2", label = "lambda2", value = 5),
+      numericInput("n", label = "n", value = 1e4, min = 0),
+      actionButton("simulate", "Simulate!")
+    ),
+    column(9, plotOutput("hist"))
+  )
+)
+
+server <- function(input, output, session) {
+  x1 <- reactive({
+    input$simulate
+    rpois(input$n, input$lambda1)
+  })
+  x2 <- reactive({
+    input$simulate
+    rpois(input$n, input$lambda2)
+  })
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = 1, xlim = c(0, 40))
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+Press the "Simulate" button to compare another step of the two Poison distribution. But observe that changes in the input field also start the calculation and redrawing of the graph. This code doesn’t accomplish our goal; we’ve added another dependency instead of replacing the existing dependencies.
+
+Compare the code in @lst-03-compare-simulated-data-code5-action-button1 for this shiny app.
+
+:::
+
+
+::::
+:::::
+
+
+![This reactive graph doesn’t accomplish our goal; we’ve added a dependency instead of replacing the existing dependencies.](https://mastering-shiny.org/diagrams/basic-reactivity/timing-button.png){#fig-03-13 
+fig-alt="lambda1 and n connect to x1, lambda2 and n connect to x2. x1 and x2 connect to the hist output. Additionally there is another input from the action button that connects also to x1 and x2." fig-align="center" 
+width="70%"}
+
+
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-03-compare-simulated-data6-action-button2}
+: Case study: Compare simulated data V6 (action button V2)
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-data-code6-action-button2}
+: Case study: Compare simulated data V6 (action button V2)
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-03-compare-simulated-data-code6-action-button2}
+```{r}
+#| label: compare-simulated-data-code6-action-button2
+#| eval: false
+
+# source .R file with the two functions didn't work
+base::source(
+      base::paste0(here::here(), "/R/shiny-03-V2.R"),
+      local = TRUE,
+      chdir = TRUE,
+      encoding = "utf-8"
+    )
+
+library(shiny)
+library(ggplot2)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(3,
+      numericInput("lambda1", label = "lambda1", value = 3),
+      numericInput("lambda2", label = "lambda2", value = 5),
+      numericInput("n", label = "n", value = 1e4, min = 0),
+      actionButton("simulate", "Simulate!")
+    ),
+    column(9, plotOutput("hist"))
+  )
+)
+
+server <- function(input, output, session) {
+  x1 <- eventReactive(input$simulate, {
+    rpois(input$n, input$lambda1)
+  })
+  x2 <- eventReactive(input$simulate, {
+    rpois(input$n, input$lambda2)
+  })
+
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = 1, xlim = c(0, 40))
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+Action button to compare a frequency polygon of random numbers drawn from two Poisson distributions (Version 2).
+:::
+
+Compare this code with the wrong V1 version in @lst-03-compare-simulated-data-code5-action-button1.
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-compare-simulated-data-shiny6-action-button2}
+: Case study: Compare simulated data V6 (action button V2)
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+# source .R file with the two functions didn't work
+freqpoly <- function(x1, x2, binwidth = 0.1, xlim = c(-3, 3)) {
+    df <- base::data.frame(
+        x = base::c(x1, x2),
+        g = base::c(base::rep("x1", base::length(x1)),
+                    base::rep("x2", base::length(x2)))
+    )
+
+    ggplot2::ggplot(df, ggplot2::aes(x, colour = g)) +
+        ggplot2::geom_freqpoly(binwidth = binwidth, linewidth = 1) +
+        ggplot2::coord_cartesian(xlim = xlim)
+}
+
+t_test <- function(x1, x2) {
+    test <- stats::t.test(x1, x2)
+
+    # use sprintf() to format t.test() results compactly
+    base::sprintf(
+        "p value: %0.3f\n[%0.2f, %0.2f]",
+        test$p.value, test$conf.int[1], test$conf.int[2]
+    )
+}
+
+# source(
+#       paste0(here::here(), "/R/shiny-03-V2.R"),
+#       local = TRUE,
+#       chdir = TRUE,
+#       encoding = "utf-8"
+#     )
+
+library(shiny)
+library(ggplot2)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(3,
+      numericInput("lambda1", label = "lambda1", value = 3),
+      numericInput("lambda2", label = "lambda2", value = 5),
+      numericInput("n", label = "n", value = 1e4, min = 0),
+      actionButton("simulate", "Simulate!")
+    ),
+    column(9, plotOutput("hist"))
+  )
+)
+
+server <- function(input, output, session) {
+  x1 <- eventReactive(input$simulate, {
+    rpois(input$n, input$lambda1)
+  })
+  x2 <- eventReactive(input$simulate, {
+    rpois(input$n, input$lambda2)
+  })
+
+  output$hist <- renderPlot({
+    freqpoly(x1(), x2(), binwidth = 1, xlim = c(0, 40))
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+Press the "Simulate" button to compare another step of the two Poison distribution. Observe that changes in the input field does not start the calculation and redrawing of the graph.
+
+Compare the code in @lst-03-compare-simulated-data-code6-action-button2 for this shiny app.
+
+:::
+
+
+::::
+:::::
+
+![`shiny::eventReactive()` makes it possible to separate the dependencies (black arrows) from the values used to compute the result (pale gray arrows).](https://mastering-shiny.org/diagrams/basic-reactivity/timing-button-2.png){#fig-03-14 
+fig-alt="x1 and x2 no longer have a reactive dependency on (are connected to) lambda1, lambda2, and n. There arrows in pale grey that show the connection of lambda1 and n to x1 as well the connection of lambda2 and n to x2. These pale grey arrows will remind you that x1 and x2 continue to use the values, but no longer take a reactive dependency on them." fig-align="center" width="50%"}
+
+
+## Observers {#sec-03-observers}
+
+So far, we’ve focused on what’s happening inside the app. But sometimes you need to reach outside of the app and cause side-effects to happen elsewhere in the world. This might be saving a file to a shared network drive, sending data to a web API, updating a database, or (most commonly) printing a debugging message to the console. These actions don’t affect how your app looks, so you shouldn’t use an output and a render function. Instead you need to use an `r glossary("observer")`.
+
+There are multiple ways to create an observer, and we’ll come back to them later in  @XXX_15.3. For now, I wanted to show you how to use `shiny::observeEvent()`, because it gives you an important debugging tool when you’re first learning Shiny.
+
+`shiny::observeEvent()` is very similar to `shiny::eventReactive()`. It has two important arguments: `eventExpr` and `handlerExpr`. 
+
+- `eventExpr` is the input or expression to take a dependency on.
+- `handlerExpr` is the code that will be run. 
+
+
+For example, the following modification to `shiny::server()` means that every time that name is updated, a message will be sent to the console.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-03-message-when-input-updated}
+: Message whenever the input is updated
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-message-when-input-updated-code}
+: Message whenever the input is updated
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-03-message-when-input-updated-code}
+```{r}
+#| label: message-when-input-updated-code
+#| eval: false
+
+library(shiny)
+
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+  string <- reactive(paste0("Hello ", input$name, "!"))
+
+  output$greeting <- renderText(string())
+  observeEvent(input$name, {
+    message("Greeting performed")
+  })
+}
+
+
+shinyApp(ui, server)
+```
+
+Example of using `shiny::observeEvent`
+:::
+::::
+:::::
+
+
+###### Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-message-when-input-updated-shiny}
+: Message whenever the input is updated
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+
+library(shiny)
+
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+  string <- reactive(paste0("Hello ", input$name, "!"))
+
+  output$greeting <- renderText(string())
+  observeEvent(input$name, {
+    message("Greeting performed")
+  })
+}
+
+
+
+shinyApp(ui, server)
+```
+
+***
+
+Look at @lst-03-message-when-input-updated-code the code for this app.
+
+::: {.callout-warning}
+`shiny::observeEvent()` does work as a separate app, but does not work with {**shinylive**}, e.g. it does not send a message neither to the console nor to the HTML web page. I assume it has again to do with variable scoping rules or with the {**shinylive**} configuration.
+:::
+
+::::
+:::::
 
 :::
 
@@ -935,13 +2013,19 @@ Compare the code in @lst-03-compare-simulated-data-code for this shiny app.
 :::::
 
 
+There are two important differences between `shiny::observeEvent()` and `shiny::eventReactive()`:
 
+- You don’t assign the result of `observeEvent()` to a variable, so
+- You can’t refer to it from other reactive consumers.
 
-### The reactive graph
+Observers and outputs are closely related. You can think of outputs as having a special side-effect: updating the HTML in the user’s browser. To emphasize this closeness, we’ll draw them the same way in the reactive graph. This yields the following reactive graph shown in @fig-03-15.
 
-### Simplifying the graph
+![In the reactive graph, an observer looks the same as an output](https://mastering-shiny.org/diagrams/basic-reactivity/graph-3.png){#fig-03-15 
+fig-alt="The input 'name' is connected to 'string' and to the output 'message'. The 'string' element is connected to the output 'greeting'." fig-align="center" 
+width="40%"}
 
+## Summary
 
-## Controlling timing of evaluation {#sec-03-control-timing}
+This chapter should have improved your understanding of the backend of Shiny apps, the server() code that responds to user actions. You’ve also taken the first steps in mastering the reactive programming paradigm that underpins Shiny.
 
-## Observers {#sec-03-observers}
+This chapter concludes our overview of the foundations of Shiny. The next chapter will help you practice the material you’ve seen so far by creating a bigger Shiny app designed to support a data analysis.

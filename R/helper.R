@@ -386,5 +386,8 @@ t_col <- function(color, percent = 50, name = NULL) {
     ## Save the color
     invisible(t.col)
 }
+
+
+
 ## END
 
