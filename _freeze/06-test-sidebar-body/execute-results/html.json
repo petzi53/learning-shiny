@@ -1,0 +1,15 @@
+{
+  "hash": "bbb09a32beb9ff22913070c85a5fd5fd",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\nformat: \n  html:\n    page-layout: article\n    grid: \n        sidebar-width: 250px\n        body-width:\t2000px\n        margin-width: 250px\n---\n\n# Test margins 2 {#sec-chap06}\n\n\n\n\n## Table of content for chapter 06 {.unnumbered}\n\n::::: {#obj-chap06}\n:::: {.my-objectives}\n::: {.my-objectives-header}\nChapter section list\n:::\n\n::: {.my-objectives-container}\n\n\n\n:::\n::::\n:::::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

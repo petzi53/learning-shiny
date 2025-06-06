@@ -19,9 +19,13 @@ book:
     - 01-first-shiny-app.qmd
     - 02-basic-UI.qmd
     - 03-basic-reactivity.qmd
+    - 04-er-injuries.qmd
+    - 05-test-margin-body.qmd
+    - 06-test-sidebar-body.qmd
+    - 07-test-quarto-live.qmd
   appendices:
-    - 96-packages-used.qmd
-    - 97-whr-exercises.qmd
+    - 50-packages-used.qmd
+    - 60-whr-exercises.qmd
 
 bibliography:
     - references.bib
@@ -123,7 +127,7 @@ language:
    crossref-lst-title: "Listing / Output"   # replaces  "Listing"
    crossref-prp-title: "Procedure"          # replaces "Proposition"
    crossref-tbl-title: "Table"              # remains  "Table"
-   crossref-thm-title: "Formula"            # replaces "Theorem"
+   crossref-thm-title: "Formula"            # replaces "Theorem" (needs "formula")
 #   crossref-int-title: "Interpretation"
 
 # https://github.com/quarto-dev/quarto-cli/blob/main/src/resources/language/_language.yml

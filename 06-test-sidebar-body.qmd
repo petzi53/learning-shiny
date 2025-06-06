@@ -1,0 +1,39 @@
+---
+format: 
+  html:
+    page-layout: article
+    grid: 
+        sidebar-width: 250px
+        body-width:	2000px
+        margin-width: 250px
+---
+
+# Test margins 2 {#sec-chap06}
+
+
+```{r}
+#| label: setup
+#| results: hold
+#| include: false
+
+base::source(file = "R/helper.R")
+ggplot2::theme_set(ggplot2::theme_bw())
+options(show.signif.stars = FALSE)
+
+```
+
+## Table of content for chapter 06 {.unnumbered}
+
+::::: {#obj-chap06}
+:::: {.my-objectives}
+::: {.my-objectives-header}
+Chapter section list
+:::
+
+::: {.my-objectives-container}
+
+
+
+:::
+::::
+:::::

@@ -865,6 +865,10 @@ Compare simulated data with plot and t-test
 #| standalone: true
 #| viewerHeight: 600
 
+library(shiny)
+library(ggplot2)
+library(munsell)
+
 # source .R file with the two functions didn't work
 freqpoly <- function(x1, x2, binwidth = 0.1, xlim = c(-3, 3)) {
     df <- base::data.frame(
@@ -895,9 +899,7 @@ t_test <- function(x1, x2) {
 #       encoding = "utf-8"
 #     )
 
-library(shiny)
-library(ggplot2)
-library(munsell)
+
 
 ui <- fluidPage(
   fluidRow(
@@ -1099,6 +1101,8 @@ Compare the code in @lst-03-compare-simulated-data-code1 for this shiny app with
 ```{shinylive-r}
 #| standalone: true
 #| viewerHeight: 600
+
+
 
 # source .R file with the two functions didn't work
 freqpoly <- function(x1, x2, binwidth = 0.1, xlim = c(-3, 3)) {

@@ -1,0 +1,893 @@
+# Case study: ER injuries {#sec-chap04}
+
+```{r}
+#| label: setup
+#| results: hold
+#| include: false
+
+base::source(file = "R/helper.R")
+ggplot2::theme_set(ggplot2::theme_bw())
+
+library(shiny)
+library(vroom)
+library(tidyverse)
+
+```
+
+## Introduction
+
+This time I have loaded the packages {**shiny**}, {**vroom**} (for fast file reading) and {**tidyverse**} (for general data analyzing) only once in the initializing `setup` code chunk.
+
+
+
+::::: {#obj-chap04}
+:::: {.my-objectives}
+::: {.my-objectives-header}
+Chapter section list
+:::
+
+::: {.my-objectives-container}
+
+
+:::
+::::
+:::::
+
+## The data
+
+We’re going to explore data from the National Electronic Injury Surveillance System (NEISS), collected by the Consumer Product Safety Commission. This is a long-term study that records all accidents seen in a representative sample of hospitals in the United States. It’s an interesting dataset to explore because every one is already familiar with the domain, and each observation is accompanied by a short narrative that explains how the accident occurred. You can find out more about this dataset at <https://github.com/hadley/neiss>.
+
+In this chapter, I’m going to focus on just the data from 2017. This keeps the data small enough (~10 MB) that it’s easy to store in git (along with the rest of the book), which means we don’t need to think about sophisticated strategies for importing the data quickly (we’ll come back to those later in the book). You can see the code I used to create the extract for this chapter at <https://github.com/hadley/mastering-shiny/blob/main/neiss/data.R>.
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-download-neiss-data}
+: Download the NEISS dataset
+::::::
+:::
+::::{.my-r-code-container}
+
+<center>**Run this code chunk manually if the file(s) still needs to be downloaded.**</center>
+```{r}
+#| label: download-neiss-data
+#| eval: false
+
+dir.create("neiss")
+
+download <- function(name) {
+  url <- "https://raw.github.com/hadley/mastering-shiny/main/neiss/"
+  download.file(paste0(url, name), paste0("neiss/", name), quiet = TRUE)
+}
+download("injuries.tsv.gz")
+download("population.tsv")
+download("products.tsv")
+```
+
+::::
+:::::
+
+
+The main dataset we’ll use is `injuries`, which contains around 250,000 observations:
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-show-neiss-data-injuries}
+: Show first rows of the NEISS dataset
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: show-neiss-data
+
+injuries <- vroom::vroom("neiss/injuries.tsv.gz")
+injuries
+```
+
+::::
+:::::
+
+Each row represents a single accident with 10 variables:
+
+- `trmt_date` is date the person was seen in the hospital (not when the accident occurred).
+- `age`, `sex`, and `race` give demographic information about the person who experienced the accident.
+- `body_part` is the location of the injury on the body (like ankle or ear); location is the place where the accident occurred (like home or school).
+- `diag` gives the basic diagnosis of the injury (like fracture or laceration).
+- `prod_code` is the primary product associated with the injury.
+`weight` is statistical weight giving the estimated number of people who would suffer this injury if this dataset was scaled to the entire population of the US.
+- `narrative` is a brief story about how the accident occurred.
+
+We’ll pair it with two other data frames for additional context: `products` lets us look up the product name from the product code, and `population` tells us the total US population in 2017 for each combination of age and sex.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-04-load-additonal-datasets}
+: Load and show additional datasets
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### products
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-load-show-products}
+: Load and show the `products` dataset
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: load-show-products
+#| message: false
+
+products <- vroom::vroom("neiss/products.tsv")
+products
+```
+
+::::
+:::::
+
+
+###### population
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-load-show-population}
+: Load ans show the `population` dataset
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: load-show-population
+#| message: false
+
+population <- vroom::vroom("neiss/population.tsv")
+population
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+
+
+
+
+## Exploration
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-04-explore-dataset}
+: Explore the dataset(s)
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### toilets
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-injuries-toilets}
+: Pull out the injuries associated with `toilets`
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: injuries-toilets
+
+selected <- injuries |> filter(prod_code == 649)
+nrow(selected)
+```
+
+
+***
+
+From `r nrow(injuries)` accidents in the year 2017 `r nrow(selected)` (`r sprintf("%.2f", nrow(selected) /nrow(injuries) * 100)`%) involved a toilet.
+::::
+:::::
+
+
+###### location
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-location-summary}
+: Location where the accident with the toilet happened
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: location-summary
+
+selected |> count(location, wt = weight, sort = TRUE)
+```
+
+***
+
+As you might expect, injuries involving toilets most often occur at home.
+::::
+:::::
+
+###### body part
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-summary-body-part}
+: Body part affected of the injury connected with a toilet
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: summary-body-part
+
+selected |> count(body_part, wt = weight, sort = TRUE)
+```
+
+***
+The most common body parts involved possibly suggest that these are falls (since the head and face are not usually involved in routine toilet usage).
+
+::::
+:::::
+
+
+###### diagnosis
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-summary-diagnosis}
+: Diagnosis resulted from the accident that involved a toilet
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: summary-diagnosis
+
+selected |> count(diag, wt = weight, sort = TRUE)
+```
+
+***
+The diagnoses seem rather varied. There is no pattern recognizable.
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+We can also explore the pattern across age and sex. We have enough data here that a table is not that useful, and so I make a plot, @fig-pattern-age-sex-total, that makes the patterns more obvious.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-04-pattern-age-sex}
+: Pattern across age and sex
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### total
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-pattern-age-sex-total}
+: Calculate and show the number of accidents broken down by age and sex
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: fig-pattern-age-sex-total
+#| fig-cap: "Estimated number of injuries caused by toilets, broken down by age and sex"
+#| results: hold
+
+summary <- selected %>% 
+  count(age, sex, wt = weight)
+summary
+
+summary %>% 
+  ggplot(aes(age, n, colour = sex)) + 
+  geom_line() + 
+  labs(y = "Estimated number of injuries")
+```
+
+***
+
+We see a spike for young boys peaking at age 3, and then an increase (particularly for women) starting around middle age, and a gradual decline after age 80. I suspect the peak is because boys usually use the toilet standing up, and the increase for women is due to osteoporosis (i.e. I suspect women and men have injuries at the same rate, but more women end up in the ER because they are at higher risk of fractures).
+
+
+::::
+:::::
+
+One problem with interpreting this pattern is that we know that there are fewer older people than younger people, so the population available to be injured is smaller. We can control for this by comparing the number of people injured with the total population and calculating an injury rate. See the next tab, where a rate per 10,000 is used.
+
+###### per 10,000
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-pattern-age-sex-rate}
+: Calculate and show the number of accidents per 10,000 people broken down by age and sex
+::::::
+:::
+::::{.my-r-code-container}
+
+```{r}
+#| label: fig-pattern-age-sex-rate
+#| fig-cap: "Estimated rate of injuries per 10,000 people, broken down by age and sex"
+#| results: hold
+
+summary <- selected %>% 
+  count(age, sex, wt = weight) %>% 
+  left_join(population, by = c("age", "sex")) %>% 
+  mutate(rate = n / population * 1e4)
+
+summary
+
+summary %>% 
+  ggplot(aes(age, rate, colour = sex)) + 
+  geom_line(na.rm = TRUE) + 
+  labs(y = "Injuries per 10,000 people")
+```
+
+***
+(Note that the rates only go up to age 80 because I couldn’t find population data for ages over 80.)
+
+Plotting the rate yields a strikingly different trend after age 50: the difference between men and women is much smaller, and we no longer see a decrease. This is because women tend to live longer than men, so at older ages there are simply more women alive to be injured by toilets.
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+
+Finally, we can look at some of the narratives. Browsing through these is an informal way to check our hypotheses, and generate new ideas for further exploration. Here I pull out a random sample of 20:
+
+
+:::{.column-page}
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-pull-out-narratives}
+: Pull out 20 random examples of the narrative
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: pull-out-narratives
+
+selected %>% 
+  sample_n(20) %>% 
+  pull(narrative)
+```
+
+::::
+:::::
+:::
+
+Having done this exploration for one product, it would be very nice if we could easily do it for other products, without having to retype the code. So let’s make a Shiny app!
+
+## Prototype
+
+::: {.callout-note}
+When building a complex app, I strongly recommend starting as simple as possible, so that you can confirm the basic mechanics work before you start doing something more complicated.
+:::
+
+Here I’ll start with one input (the product code), three tables, and one plot. When designing a first prototype, the challenge is in making it “as simple as possible”. There’s a tension between getting the basics working quickly and planning for the future of the app. Either extreme can be bad: 
+
+- **if you design too narrowly**, you’ll spend a lot of time later on reworking your app; 
+- **if you design too rigorously**, you’ll spend a bunch of time writing code that later ends up on the cutting floor. 
+
+To help get the balance right, I often do a few pencil-and-paper sketches to rapidly explore the UI and reactive graph before committing to code.
+
+
+
+:::{.column-screen-inset}
+
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-shiny-ER-prototype-shiny}
+: Shiny app for emergency room (ER) prototype
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 1300
+#| components: [editor, viewer]
+
+library(shiny)
+library(tidyverse)
+library(munsell)
+
+base::source(
+  "https://raw.githubusercontent.com/petzi53/learning-shiny/refs/heads/master/R/neiss.R")
+
+
+ui <- fluidPage(
+  fluidRow(
+    column(8,
+      selectInput("code", "Product", 
+                  choices = prod_codes,
+                  width = "100%")
+    )
+  ),
+  fluidRow(
+    column(4, tableOutput("diag")), 
+    column(4, tableOutput("location")),
+    column(4, tableOutput("body_part"))
+
+  ),
+  fluidRow(
+    column(12, plotOutput("age_sex"))
+  )
+)
+
+server <- function(input, output, session) {
+  selected <- reactive(injuries %>% filter(prod_code == input$code))
+
+  output$diag <- renderTable(
+    selected() %>% count(diag, wt = weight, sort = TRUE), width = "100%"
+  )
+  output$body_part <- renderTable(
+    selected() %>% count(body_part, wt = weight, sort = TRUE), width = "100%"
+  )
+  output$location <- renderTable(
+    selected() %>% count(location, wt = weight, sort = TRUE), width = "100%"
+  )
+
+  summary <- reactive({
+    selected() %>%
+      count(age, sex, wt = weight) %>%
+      left_join(population, by = c("age", "sex")) %>%
+      mutate(rate = n / population * 1e4)
+  })
+
+  output$age_sex <- renderPlot({
+    summary() %>%
+      ggplot(aes(age, n, colour = sex)) +
+      geom_line() +
+      labs(y = "Estimated number of injuries")
+  }, res = 96)
+}
+
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+## Polish tables
+
+Now that we have the basic components in place and working, we can progressively improve our app. The first problem with this app is that it shows a lot of information in the tables, where we probably just want the highlights. To fix this we need to first figure out how to truncate the tables. I’ve chosen to do that with a combination of {**forcats**} functions: I convert the variable to a factor, order by the frequency of the levels, and then lump together all levels after the top 5.
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-polish-table-injuries}
+: Polish injuries table
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: polish-table-injuries
+
+(
+  injuries |> 
+    dplyr::mutate(
+      diag = forcats::fct_lump(
+        forcats::fct_infreq(diag), 
+        n = 5))  |> 
+    dplyr::group_by(diag)  |> 
+    dplyr::summarise(n = base::as.integer(base::sum(weight)))
+)
+```
+
+::::
+:::::
+
+I wrote a little function to automate this for any variable. The details aren’t really important here, but we’ll come back to them in @XXX_12.
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-polish-table-function}
+: Function for polish table
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: polish-table-function
+
+count_top <- function(df, var, n = 5) {
+  df |> 
+    dplyr::mutate(
+      {{ var }} := forcats::fct_lump(
+        forcats::fct_infreq({{ var }}), 
+        n = n)
+      )  |> 
+    dplyr::group_by({{ var }})  |> 
+    dplyr::summarise(n = base::as.integer(base::sum(weight)))
+}
+```
+
+::::
+:::::
+
+
+I made one other change to improve the aesthetics of the app: I forced all tables to take up the maximum width (i.e. fill the column that they appear in). This makes the output more aesthetically pleasing because it reduces the amount of incidental variation.
+
+:::{.column-screen-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-polished-ER-neiss}
+: Polished ER shiny app
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 720
+#| components: [editor, viewer]
+
+
+library(shiny)
+library(tidyverse)
+library(munsell)
+
+##>> get data and functions
+basic_url = "https://raw.githubusercontent.com/petzi53/learning-shiny/refs/heads/master/"
+base::source(base::paste0(basic_url, "R/neiss.R"))
+##>>
+
+
+library(shiny)
+library(tidyverse)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(8,
+      selectInput("code", "Product", 
+          choices = prod_codes, width = "100%")
+    )
+  ),
+  fluidRow(
+    column(4, tableOutput("diag")), 
+    column(4, tableOutput("location")), 
+    column(4, tableOutput("body_part"))
+  ),
+  fluidRow(
+    column(12, plotOutput("age_sex"))
+  )
+)
+
+server <- function(input, output, session) {
+  selected <- reactive(injuries %>% filter(prod_code == input$code))
+  
+  ##<< tables
+  output$diag <- renderTable(count_top(selected(), diag), width = "100%")
+  output$body_part <- renderTable(count_top(selected(), body_part), width = "100%")
+  output$location <- renderTable(count_top(selected(), location), width = "100%")
+  ##>>
+  
+  summary <- reactive({
+    selected() %>%
+      count(age, sex, wt = weight) %>%
+      left_join(population, by = c("age", "sex")) %>%
+      mutate(rate = n / population * 1e4)
+  })
+
+  output$age_sex <- renderPlot({
+    summary() %>%
+      ggplot(aes(age, n, colour = sex)) +
+      geom_line() +
+      labs(y = "Estimated number of injuries")
+  }, res = 96)
+}
+
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+## Rate vs count
+
+So far, we’re displaying only a single plot, but we’d like to give the user the choice between visualizing the number of injuries or the population-standardized rate. First I add a control to the UI. Here I’ve chosen to use a `shiny::selectInput()` because it makes both states explicit, and it would be easy to add new states in the future:
+
+:::{.column-screen-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-polished-ER-neiss}
+: ER shiny app with rate and count
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 720
+#| components: [editor, viewer]
+
+
+library(shiny)
+library(tidyverse)
+library(munsell)
+
+##>> get data and functions
+basic_url = "https://raw.githubusercontent.com/petzi53/learning-shiny/refs/heads/master/"
+base::source(base::paste0(basic_url, "R/neiss.R"))
+##>>
+
+
+library(shiny)
+library(tidyverse)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(8,
+      selectInput("code", "Product",
+        choices = setNames(products$prod_code, products$title),
+        width = "100%"
+      )
+    ),
+    column(2, selectInput("y", "Y axis", c("rate", "count")))
+  ),
+  fluidRow(
+    column(4, tableOutput("diag")), 
+    column(4, tableOutput("location")), 
+    column(4, tableOutput("body_part"))
+  ),
+  fluidRow(
+    column(12, plotOutput("age_sex"))
+  )
+)
+
+server <- function(input, output, session) {
+  selected <- reactive(injuries %>% filter(prod_code == input$code))
+  
+  ##<< tables
+  output$diag <- renderTable(count_top(selected(), diag), width = "100%")
+  output$body_part <- renderTable(count_top(selected(), body_part), width = "100%")
+  output$location <- renderTable(count_top(selected(), location), width = "100%")
+  ##>>
+  
+  summary <- reactive({
+    selected() %>%
+      count(age, sex, wt = weight) %>%
+      left_join(population, by = c("age", "sex")) %>%
+      mutate(rate = n / population * 1e4)
+  })
+
+    output$age_sex <- renderPlot({
+    if (input$y == "count") {
+      summary() %>%
+        ggplot(aes(age, n, colour = sex)) +
+        geom_line() +
+        labs(y = "Estimated number of injuries")
+    } else {
+      summary() %>%
+        ggplot(aes(age, rate, colour = sex)) +
+        geom_line(na.rm = TRUE) +
+        labs(y = "Injuries per 10,000 people")
+    }
+  }, res = 96)
+}
+
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+## Narrative
+
+Finally, I want to provide some way to access the narratives because they are so interesting, and they give an informal way to cross-check the hypotheses you come up with when looking at the plots. In the R code, I sample multiple narratives at once, but there’s no reason to do that in an app where you can explore interactively.
+
+There are two parts to the solution. 
+
+- First we add a new row to the bottom of the UI. I use an action button to trigger a new story, and put the narrative in a `shiny::textOutput()`:
+- I then use `shiny::eventReactive()` to create a reactive that only updates when the button is clicked or the underlying data changes.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-04-neiss-narrative}
+: Code snippets for narratives of ER injuries
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Button
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-neiss-narrative-button}
+: Code Snippet: Create button in the UI
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: neiss-narrative-button
+#| eval: false
+
+  fluidRow(
+    column(2, actionButton("story", "Tell me a story")),
+    column(10, textOutput("narrative"))
+  )
+```
+
+::::
+:::::
+
+
+###### Update
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-neiss-narrative-update}
+: Code snippet: Update whenever button pressed or data changed
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: neiss-narrative-update
+#| eval: false
+
+  narrative_sample <- eventReactive(
+    list(input$story, selected()),
+    selected() %>% pull(narrative) %>% sample(1)
+  )
+  output$narrative <- renderText(narrative_sample())
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+
+
+
+:::{.column-screen-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-04-finished-ER-injuries}
+: ER injuries shiny app finished version
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 780
+#| components: [editor, viewer]
+
+
+library(shiny)
+library(tidyverse)
+library(munsell)
+
+##>> get data and functions
+basic_url = "https://raw.githubusercontent.com/petzi53/learning-shiny/refs/heads/master/"
+base::source(base::paste0(basic_url, "R/neiss.R"))
+##>>
+
+
+library(shiny)
+library(tidyverse)
+library(munsell)
+
+ui <- fluidPage(
+  fluidRow(
+    column(8,
+      selectInput("code", "Product",
+        choices = setNames(products$prod_code, products$title),
+        width = "100%"
+      )
+    ),
+    column(2, selectInput("y", "Y axis", c("rate", "count")))
+  ),
+  fluidRow(
+    column(4, tableOutput("diag")), 
+    column(4, tableOutput("location")), 
+    column(4, tableOutput("body_part"))
+  ),
+  fluidRow(
+    column(12, plotOutput("age_sex"))
+  ),
+  fluidRow(
+    column(2, actionButton("story", "Tell me a story")),
+    column(10, textOutput("narrative"))
+  )
+)
+
+server <- function(input, output, session) {
+  selected <- reactive(injuries %>% filter(prod_code == input$code))
+  
+    ##<< tables
+    output$diag <- renderTable(count_top(selected(), diag), width = "100%")
+    output$body_part <- renderTable(count_top(selected(), body_part), width = "100%")
+    output$location <- renderTable(count_top(selected(), location), width = "100%")
+    ##>>
+  
+    summary <- reactive({
+      selected() %>%
+        count(age, sex, wt = weight) %>%
+        left_join(population, by = c("age", "sex")) %>%
+        mutate(rate = n / population * 1e4)
+    })
+
+    output$age_sex <- renderPlot({
+    if (input$y == "count") {
+      summary() %>%
+        ggplot(aes(age, n, colour = sex)) +
+        geom_line() +
+        labs(y = "Estimated number of injuries")
+    } else {
+      summary() %>%
+        ggplot(aes(age, rate, colour = sex)) +
+        geom_line(na.rm = TRUE) +
+        labs(y = "Injuries per 10,000 people")
+    }
+  }, res = 96)
+    
+    narrative_sample <- eventReactive(
+      list(input$story, selected()),
+      selected() %>% pull(narrative) %>% sample(1)
+  )
+    output$narrative <- renderText(narrative_sample())
+}
+
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
