@@ -1,3 +1,8 @@
+---
+execute:
+  cache: true
+---
+
 # Case study: ER injuries {#sec-chap04}
 
 ```{r}

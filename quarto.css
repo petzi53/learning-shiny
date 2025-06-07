@@ -68,38 +68,53 @@ iframe {
 }
 
 
+/* ##############   Checklistox numbered / ToDo  ############# */
 
-/* ##############   Checklist / ToDo  ############# */
+.my-checklistbox {
+    margin-left: 0;
+    padding-bottom: 0.1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    opacity: 85%;
 
-.my-checklist {
-  margin: 1em 0;
-  border: 2px solid #838B8B;  /* azure4 */
-  border-left: 10px solid #838B8B;
-  border-radius: 10px;
+    border-radius: .25rem;
+    border-left: solid #838B8B .3rem; /* azure4 */
+    border-right: solid 1px #838B8B;
+    border-top: solid 1px #838B8B;
+    border-bottom: solid 1px #838B8B;
+    border-left-color: #838B8B !important;
 }
 
-.my-checklist-header {
-  margin-left: 0;
-  padding-left:  60px;
-  padding-top:  15px;
-  padding-bottom: 0.1em;
-  color: black;
-  background-color: #E0EEEE; /* azure2 */
-  border-top-right-radius: 10px;
-  font-size: 1em;
-  font-weight: bold;
-  background-size: 40px;
-  background-repeat: no-repeat;
-  background-position: 15px center;
-  background-image: url("img/icons8/checklist-80.png");
+.my-checklistbox-header {
+
+    margin-left: 0;
+    padding-left:  60px;
+    padding-top:  15px;
+    padding-bottom: 0.1em;
+
+    display: flex;
+    color: #6d7a86;
+    background-color: #E0EEEE; /* azure2 */
+    border-top-right-radius: .25rem;
+    font-size: 1em;
+    font-weight: bold;
+    background-size: 40px;
+    background-repeat: no-repeat;
+    background-position: 15px center;
+    background-image: url("img/icons8/checklist-80.png");
 }
 
-.my-checklist-container {
-  padding-top: 5px;
-  padding-left: 10px;
-  color: black;
-  background-color: white;
-  border-bottom-right-radius: 10px;
+.my-checklistbox-body {
+    font-weight: 400;
+    margin-top: 5px;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+
+.my-checklistbox-body > :last-child {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
 }
 
 

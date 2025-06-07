@@ -1,0 +1,17 @@
+{
+  "hash": "2cc7cdf61fae5ee2f1b603cdd78bb99b",
+  "result": {
+    "engine": "knitr",
+    "markdown": "# Uploads and donwloads {#sec-chap09}\n\n\n\n\n## Table of content for chapter 04 {.unnumbered}\n\n::::: {#obj-chap03}\n:::: {.my-objectives}\n::: {.my-objectives-header}\nChapter section list\n:::\n\n::: {.my-objectives-container}\n\n\n\n\n:::\n::::\n:::::\n",
+    "supporting": [
+      "09-uploads-downloads_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

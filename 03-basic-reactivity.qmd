@@ -1,3 +1,8 @@
+---
+execute:
+  cache: true
+---
+
 # Basic reactivity {#sec-chap03}
 
 
@@ -139,7 +144,7 @@ If you’re working on a Shiny app and you just can’t figure out why your code
 :::
 
 
-### The reactive graph
+### The reactive graph {#sec-03-reactive-graph}
 
 Shiny’s laziness has another important property. In most R code, you can understand the order of execution by reading the code from top to bottom. That doesn’t work in Shiny, because code is only run when needed. To understand the order of execution you need to instead look at the `r glossary("reactive graph")`, which describes how inputs and outputs are connected.
 

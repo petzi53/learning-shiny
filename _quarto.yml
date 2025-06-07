@@ -3,7 +3,7 @@ project:
   pre-render: R/helper.R
 
 book:
-  title: "Learning shiny"
+  title: "Learning Shiny"
   author: "Peter Baumgartner"
   date: last-modified
   date-format: YYYY-MM-DD HH:mm
@@ -16,13 +16,20 @@ book:
 
   chapters:
     - index.qmd
-    - 01-first-shiny-app.qmd
-    - 02-basic-UI.qmd
-    - 03-basic-reactivity.qmd
-    - 04-er-injuries.qmd
-    - 05-test-margin-body.qmd
-    - 06-test-sidebar-body.qmd
-    - 07-test-quarto-live.qmd
+    - part: "Getting started"
+      chapters:
+        - 01-first-shiny-app.qmd
+        - 02-basic-UI.qmd
+        - 03-basic-reactivity.qmd
+        - 04-er-injuries.qmd
+    - part: "Shiny in action"
+      chapters:
+        - intro1.qmd
+        - 05-workflow.qmd
+        - 06-layouts.qmd
+        - 07-graphics.qmd
+        - 08-user-feedback.qmd
+        - 09-uploads-downloads.qmd
   appendices:
     - 50-packages-used.qmd
     - 60-whr-exercises.qmd
@@ -122,7 +129,7 @@ language:
    crossref-def-title: "Solution"           # replaces "Definition" (needs "num-experiment")
    crossref-exm-title: "Example"            # remains  "Example"
    crossref-exr-title: "Exercise"           # remains  "Exercise"
-   crossref-fig-title: "Graph"              # replaces "Figure"
+   crossref-fig-title: "Screenshot"              # replaces "Figure"
    crossref-lem-title: "Resource"           # replaces "Lemma"
    crossref-lst-title: "Listing / Output"   # replaces  "Listing"
    crossref-prp-title: "Procedure"          # replaces "Proposition"
@@ -131,7 +138,7 @@ language:
 #   crossref-int-title: "Interpretation"
 
 # https://github.com/quarto-dev/quarto-cli/blob/main/src/resources/language/_language.yml
-   callout-tip-title: "Report"           # green
+   callout-tip-title: "Tip"           # green
    callout-note-title: "Note"            # blue
    callout-warning-title: "Watch out!"   # orange
    callout-important-title: "Important"  # red

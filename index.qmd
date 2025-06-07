@@ -3,7 +3,7 @@
 ::: {.callout-note style="color: blue;"}
 #### This is work in progress
 
-I have finished about 18%. Currently I am working on Chapter 4.
+I have finished about 29%. Currently I am working on Exercises for chapter 4 and taking notes for chapter 9 (Chapter 6, 7, and 8 are still empty.
 
 :::
 

@@ -1,14 +1,4 @@
----
-format: 
-  html:
-    page-layout: article
-    grid: 
-        sidebar-width: 250px
-        body-width:	2000px
-        margin-width: 250px
----
-
-# Test margins 2 {#sec-chap06}
+# Graphics (empty) {#sec-chap07}
 
 
 ```{r}
@@ -22,15 +12,16 @@ options(show.signif.stars = FALSE)
 
 ```
 
-## Table of content for chapter 06 {.unnumbered}
+## Table of content for chapter 04 {.unnumbered}
 
-::::: {#obj-chap06}
+::::: {#obj-chap03}
 :::: {.my-objectives}
 ::: {.my-objectives-header}
 Chapter section list
 :::
 
 ::: {.my-objectives-container}
+
 
 
 

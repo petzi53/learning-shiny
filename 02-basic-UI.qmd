@@ -43,7 +43,7 @@ In this chapter, we’ll focus on the front end, and give you a whirlwind tour o
 
 You can find a comprehensive, [actively-maintained list of packages supporting {**shiny**}](https://github.com/nanxstats/awesome-shiny-extensions) at , maintained by [Nan Xiao](https://nanx.me/).
 
-## Inputs
+## Inputs {#sec-02-inputs}
 
 ### Common structure
 
@@ -1331,7 +1331,7 @@ shinyApp(ui, server)
 ::::
 :::::
 
-## Outputs
+## Outputs {#sec-02-outputs}
 
 Outputs in the UI create placeholders that are later filled by the server function. Like inputs, outputs take a unique ID as their first argument: if your UI specification creates an output with ID `"plot"`, you’ll access it in the server function with `output$plot`.
 

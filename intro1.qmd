@@ -1,0 +1,30 @@
+# Introduction {.unnumbered}
+
+The following chapters give you a grab bag of useful techniques. I think everyone should start with Chapter 5, because it gives you important tools for developing and debugging apps, and getting help when you’re stuck.
+
+After that, there’s no prescribed order and relatively few connections between the chapters: I’d suggest quickly skimming to get the lay of the land (and so you might remember these tools if related problems crop up in the future), and otherwise only deeply reading the bits that you currently need.
+
+::::: {#obj-intro1}
+:::: {.my-objectives}
+::: {.my-objectives-header}
+Overview of "Shiny in action" chapters 
+:::
+
+::: {.my-objectives-container}
+
+ Here’s a quick run down of the main topics of the "Shiny in action" chapters:
+
+- **Chapter5: Workflow** gives you important tools for developing and debugging apps, and getting help when you’re stuck.
+- **Chapter 6: Layout, themes, HTML** details the various ways you can layout input and output components on a page, and how you can customize their appearance with themes.
+- **Chapter 7: Graphics** shows you how to add direct interaction to your plot and how to display images generated in other ways.
+- **Chapter 8: User feedback** covers a family of techniques (including inline errors, notifications, progress bars, and dialog boxes) for giving feedback to your users while your app runs.
+- **Chapter 9: Uploads and downloads** discusses how to transfer files to and from your app.
+- **Chapter 10: Dynamic UI** shows you how to dynamic modify your apps user interface while it runs.
+- **Chapter 11: Bookmarking** shows how to record app state in such a way that your users can bookmark it.
+- **Chapter 12: Tidy evaluation** shows you how to allow users to select variables when working with tidyverse packages.
+:::
+::::
+:::::
+
+
+

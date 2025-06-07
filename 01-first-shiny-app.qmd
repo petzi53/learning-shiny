@@ -269,9 +269,9 @@ shinyApp(ui, server)
 This example uses four new functions:
 
 1. `shiny::fluidPage()` is a layout function that sets up the basic visual structure of the page. (See @XXX_6.2)
-2. `shiny::selectInput()` is an input control that lets the user interact with the app by providing a value. In this case, it’s a select box with the label “Dataset” and lets you choose one of the built-in datasets that come with R. (See @XXX_2.2)
+2. `shiny::selectInput()` is an input control that lets the user interact with the app by providing a value. In this case, it’s a select box with the label “Dataset” and lets you choose one of the built-in datasets that come with R. (See @sec-02-inputs)
 3. `shiny::verbatimTextOutput()` is an output control that tell Shiny where to put rendered output, in this case where to display code. 
-4. `shiny::tableOutput()` is another output controls that displays tables. (For output contols ee @XXX_2.3)
+4. `shiny::tableOutput()` is another output controls that displays tables. (For output controls see @sec-02-outputs)
 
 ::::
 :::::
@@ -335,7 +335,7 @@ Running the app again we’ll see a page containing a select box. We only see th
 ## Adding behaviour {#sec-01-adding-behaviour}
 
 Shiny uses `r glossary("reactive programming")` to make apps interactive. 
-(More about reactive programming in @XXX_3.) For now, just be aware
+(More about reactive programming in @sec-chap03.) For now, just be aware
 that it involves telling Shiny how to perform a computation, not
 ordering Shiny to actually go do it.
 
