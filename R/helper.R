@@ -1,15 +1,16 @@
 ##########################################################
 # Project: Some utility scripts for my Quarto books
 # Author: Peter Baumgartner
-# Edit date: May 19, 2024
+# Version 1.0: June 8, 2025
+#
 # CONTENT:
 ## - my_glance_data: glance at a specified number of random data
 ## - my_qq_plot: create histogram with overlaid dnorm curve
 ## - my_scatter: create scatterplot with lm and loess curve
-## - list_plotter: plot color list as a palette
-## - save_data_file: save data file
-## - pkgs_dl: package downloads
-## - t_col: transparent colors
+## - my_save_data_file: save data file
+## - my_pkgs_dl: package downloads
+## - private_list_plotter: plot color list as a palette
+## - private_t_col: transparent colors
 ##########################################################
 
 
@@ -21,6 +22,7 @@ glossary::glossary_path("../glossary-pb/glossary.yml")
 
 ##########################################################
 # my_glance_data: Glance at a specified number of random data
+# Version 1.0: June 8, 2025
 # Purpose:
   # To prevent possible bias with head()/tail() or
   # other function that print some data excerpts
@@ -51,7 +53,8 @@ first_and_last_row <-  function(df) {
 }
 
 ##########################################################
-# : Create histogram with overlaid dnorm curve
+# my_hist_dnorm: Create histogram with overlaid dnorm curve
+# Version 1.0: June 8, 2025
 # Purpose:
 # Compare histogram with normal distribution and density
 # Author: Peter Baumgartner
@@ -111,6 +114,7 @@ my_hist_dnorm <- function(df, v, n_bins = 30,
 
 ##########################################################
 # my_qq_plot: Create q-q-plot
+# Version 1.0: June 8, 2025
 # Purpose:
 # Generate check normality assumption
 # Author: Peter Baumgartner
@@ -172,6 +176,7 @@ my_qq_plot <- function(
 
 ##########################################################
 # my_scatter: Create scatterplot with lm and loess curve
+# Version 1.0: June 8, 2025
 # Purpose:
 # Generate check
 # Author: Peter Baumgartner
@@ -241,64 +246,17 @@ my_scatter <- function(
 
     p
 }
-################################################################
-# list_plotter: Plot color list as a palette
-# Purpose:
-# Display different color palettes for easy comparison
-# Author: Emil Hvitfeldt
-# Developed for r-color-palettes and {paletteer} package
-# See: https://github.com/EmilHvitfeldt/r-color-palettes/blob/main/R/list_plotter.R
-# I have used it in my personal notes on "Statistics with R"
-# # See: https://bookdown.org/pbaumgartner/swr-harris/
-################################################################
-
-
-
-list_plotter <- function(color_list, names, package_name) {
-    par(mar = c(0, 0, 0, 0) + 0.1)
-
-    plot(
-        0,
-        0,
-        type = "n",
-        axes = FALSE,
-        bty = "n",
-        xlab = "",
-        ylab = "",
-        xlim = c(0, 1),
-        ylim = c(-length(color_list) - 1, 0)
-    )
-
-    title(package_name, line = -3)
-    for (i in seq_len(length(color_list))) {
-        colors_len <- length(color_list[[i]])
-        breaks <- seq(from = 0,
-                      to = 1,
-                      length = colors_len + 1)
-
-
-        text(0, -i, names[i], pos = 4)
-        rect(
-            xleft = breaks[1:colors_len],
-            xright = breaks[1:colors_len + 1],
-            ytop = -0.15 - i,
-            ybottom = -0.8 - i,
-            col = color_list[[i]],
-            border = NA
-        )
-    }
-}
 
 ################################################################
-# pb_create_folder:
-# Purpose:
+# my_create_folder:
+# Version 1.0: June 8, 2025
 # check if folder already exists at parameter "path"
 # if not, then create folder
 # Author: Peter Baumgartner
 # path = character string:
 #                example: "/Users/xxyyzz/Documents/my-data/"
 ################################################################
-pb_create_folder <- function(path){
+my_create_folder <- function(path){
 
   if (!base::file.exists(path))
     {base::dir.create(path)}
@@ -306,7 +264,8 @@ pb_create_folder <- function(path){
 
 
 ################################################################
-# save_data_file: Save data file for the specified chapter
+# my_save_data_file: Save data file for the specified chapter
+# Version 1.0: June 8, 2025
 # Purpose:
 # If folder not exists, create it and save object as .rds file
 # Author: Peter Baumgartner
@@ -318,7 +277,7 @@ pb_create_folder <- function(path){
 # # See: https://bookdown.org/pbaumgartner/swr-harris/
 ################################################################
 
-pb_save_data_file <- function(chapter_folder, object, file_name){
+my_save_data_file <- function(chapter_folder, object, file_name){
     data_folder <- base::paste0(here::here(), "/data/")
     if (!base::file.exists(data_folder))
     {base::dir.create(data_folder)}
@@ -337,7 +296,8 @@ pb_save_data_file <- function(chapter_folder, object, file_name){
 
 
 ################################################################
-# pkgs_downloads: Get number of downloads from RStudio CRAN Mirror
+# my_pkgs_downloads: Get number of downloads from RStudio CRAN Mirror
+# Version 1.0: June 8, 2025
 # Purpose:
 # Compare popularity of different packages
 # Author: Peter Baumgartner
@@ -348,7 +308,7 @@ pb_save_data_file <- function(chapter_folder, object, file_name){
 # I have used the function in my notes on "Statistics with R"
 # # See: https://bookdown.org/pbaumgartner/swr-harris/
 ################################################################
-pkgs_dl <-  function(pkgs, period = "last-week", days = 7) {
+my_pkgs_dl <-  function(pkgs, period = "last-week", days = 7) {
     dl_pkgs <- cranlogs::cran_downloads(when = period, packages = pkgs)
 
     start_date = base::min(dl_pkgs$date)
@@ -365,29 +325,83 @@ pkgs_dl <-  function(pkgs, period = "last-week", days = 7) {
 }
 
 
-## Transparent colors
-## Mark Gardener 2015
-## www.dataanalytics.org.uk
 
-t_col <- function(color, percent = 50, name = NULL) {
-    #      color = color name
-    #    percent = % transparency
-    #       name = an optional name for the color
 
-    ## Get RGB values for named color
-    rgb.val <- col2rgb(color)
+################################################################
+#
+#                  Not my functions (private)                  #
+#
+################################################################
+# private_list_plotter: Plot color list as a palette
+# Version 1.0: June 8, 2025
+# Purpose:
+# Display different color palettes for easy comparison
+# Author: Emil Hvitfeldt
+# Developed for r-color-palettes and {paletteer} package
+# See: https://github.com/EmilHvitfeldt/r-color-palettes/blob/main/R/list_plotter.R
+# I have used it in my personal notes on "Statistics with R"
+# # See: https://bookdown.org/pbaumgartner/swr-harris/
+################################################################
 
-    ## Make new color using input color as base and alpha set by transparency
-    t.col <- rgb(rgb.val[1], rgb.val[2], rgb.val[3],
-                 max = 255,
-                 alpha = (100 - percent) * 255 / 100,
-                 names = name)
 
-    ## Save the color
-    invisible(t.col)
+private_list_plotter <- function(color_list, names, package_name) {
+  par(mar = c(0, 0, 0, 0) + 0.1)
+
+  plot(
+    0,
+    0,
+    type = "n",
+    axes = FALSE,
+    bty = "n",
+    xlab = "",
+    ylab = "",
+    xlim = c(0, 1),
+    ylim = c(-length(color_list) - 1, 0)
+  )
+
+  title(package_name, line = -3)
+  for (i in seq_len(length(color_list))) {
+    colors_len <- length(color_list[[i]])
+    breaks <- seq(from = 0,
+                  to = 1,
+                  length = colors_len + 1)
+
+
+    text(0, -i, names[i], pos = 4)
+    rect(
+      xleft = breaks[1:colors_len],
+      xright = breaks[1:colors_len + 1],
+      ytop = -0.15 - i,
+      ybottom = -0.8 - i,
+      col = color_list[[i]],
+      border = NA
+    )
+  }
 }
 
+################################################################
+# private_t_color: Transparent colors
+# Version 1.0: June 8, 2025
+# Author: Mark Gardener 2015 www.dataanalytics.org.uk
+################################################################
 
+private_t_col <- function(color, percent = 50, name = NULL) {
+  #   color = color name
+  #   percent = % transparency
+  #   name = an optional name for the color
+
+  ## Get RGB values for named color
+  rgb.val <- col2rgb(color)
+
+  ## Make new color using input color as base and alpha set by transparency
+  t.col <- rgb(rgb.val[1], rgb.val[2], rgb.val[3],
+               max = 255,
+               alpha = (100 - percent) * 255 / 100,
+               names = name)
+
+  ## Save the color
+  invisible(t.col)
+}
 
 ## END
 

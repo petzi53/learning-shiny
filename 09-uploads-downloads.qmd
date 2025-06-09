@@ -6,9 +6,10 @@
 #| results: hold
 #| include: false
 
-base::source(file = "R/helper.R")
-ggplot2::theme_set(ggplot2::theme_bw())
-options(show.signif.stars = FALSE)
+library(glossary)
+glossary::glossary_path("../glossary-pb/glossary.yml")
+
+library(shiny)
 
 ```
 
@@ -23,8 +24,103 @@ Chapter section list
 ::: {.my-objectives-container}
 
 
-
-
 :::
 ::::
 :::::
+
+## File upload
+
+### UI
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-file-upload-ui}
+: File upload UI
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+
+
+ui <- fluidPage(
+  fileInput("upload", "Upload a file")
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+***
+
+Try in interactive mode adding / changing the arguments `label`, `width`, `buttonLabel` and `placeholder` to see how it affects the UI appearance.
+::::
+:::::
+
+The UI needed to support file uploads is simple: just add `shiny::fileInput()` to your UI.
+
+Like most other UI components, there are only two required arguments: `id` and `label`. The `width`, `buttonLabel` and `placeholder` arguments allow you to tweak the appearance in other ways. I won’t discuss them here, but you can read more about them in [File Upload Control — fileInput](https://shiny.posit.co/r/reference/shiny/1.6.0/fileinput.html).
+
+### Server
+
+Handling `fileInput()` on the server is a little more complicated than other inputs. Most inputs return simple vectors, but `fileInput()` returns a data frame with four columns:
+
+- **name**: the original file name on the user’s computer.
+- **size**: the file size, in bytes. By default, the user can only upload files up to 5 MB. You can increase this limit by setting the shiny.maxRequestSize option prior to starting Shiny. For example, to allow up to 10 MB run options(shiny.maxRequestSize = 10 * 1024^2).
+- **type**: the `r glossary("MIME type")` of the file. This is a formal specification of the file type that is usually derived from the extension and is rarely needed in Shiny apps.
+- **datapath**: the path to where the data has been uploaded on the server. Treat this path as ephemeral: if the user uploads more files, this file may be deleted. The data is always saved to a temporary directory and given a temporary name.
+
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-file-upload-server}
+: File upload server 
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+#| layout: vertical
+
+ui <- fluidPage(
+  fileInput("upload", NULL, buttonLabel = "Upload...", multiple = TRUE),
+  tableOutput("files")
+)
+server <- function(input, output, session) {
+  output$files <- renderTable(input$upload)
+}
+
+shinyApp(ui, server)
+```
+
+::: {.callout-warning #wrn-09-file-upload-server}
+
+`fileInput()` does not show multiple uploaded files. One can see only the last one. 
+
+This issue was on May 2, 2021 [opened at GitHub](https://github.com/hadley/mastering-shiny/issues/468), but it is still not closed. I do not know with my rudimentary knowledge at the moment (2025-06-08) how to solve this problem.
+
+
+:::
+
+
+::::
+:::::
+
+
+### Uploading data
+
+If the user is uploading a dataset, there are two details that you need to be aware of:
+
+- `input$upload` is initialized to `NULL` on page load, so you’ll need `req(input$upload)` to make sure your code waits until the first file is uploaded.
+
+The `accept` argument allows you to limit the possible inputs. The easiest way is to supply a character vector of file extensions, like `accept = ".csv"`. But the accept argument is only a suggestion to the browser, and is not always enforced, so it’s good practice to also validate it (e.g. @XXX_8.1) yourself. The easiest way to get the file extension in R is `tools::file_ext()`, just be aware it removes the leading `.` from the extension.
+
+Putting all these ideas together gives us the following app where you can upload a `.csv` or `.tsv` file and see the first `n` rows. See it in action in <https://hadley.shinyapps.io/ms-upload-validate>.

@@ -878,17 +878,17 @@ Creating the smallest possible reprex is particularly important for Shiny apps, 
 
 :::
 
-::: {.my-checklistbox}
+::: {.my-checklist}
 
-::::{.my-checklistbox-header} 
-::::: {.my-checklistbox-icon}
+::::{.my-checklist-header} 
+::::: {.my-checklist-icon}
 :::::
 ::::::  {#tdo-05-reprex}
 :::::: 
 : Take a final pass through your Reprex
 ::::
 
-:::: {.my-checklistbox-body} 
+:::: {.my-checklist-body} 
 - Is every input and output in UI related to the problem?
 - Does your app have a complex layout that you can simplify to help focus on the problem at hand? Have you removed all UI customisation that makes your app look good, but isn’t related to the problem?
 - Are there any reactives in `server()` that you can now remove?

@@ -1,30 +1,748 @@
-# Layouts (empty) {#sec-chap06}
-
+# Layouts, themes, HTML {#sec-chap06}
 
 ```{r}
 #| label: setup
 #| results: hold
 #| include: false
 
-base::source(file = "R/helper.R")
-ggplot2::theme_set(ggplot2::theme_bw())
-options(show.signif.stars = FALSE)
+library(glossary)
+glossary::glossary_path("../glossary-pb/glossary.yml")
+
+library(shiny)
 
 ```
 
-## Table of content for chapter 04 {.unnumbered}
+## Introduction
 
-::::: {#obj-chap03}
-:::: {.my-objectives}
-::: {.my-objectives-header}
+:::::: {#obj-chap06}
+::::: my-objectives
+::: my-objectives-header
 Chapter section list
 :::
 
-::: {.my-objectives-container}
-
-
-
-
+::: my-objectives-container
 :::
+:::::
+::::::
+
+:::::{.my-watch}
+:::{.my-watch-header}
+Is the chapter outdated because of {bslib}?
+:::
+::::{.my-watch-container}
+I am not sure if the following explanations are still the best
+way to create layouts for Shiny. It seems to me, that with the
+{**bslib**}[^06-layouts-1] package a more modern toolkit based on
+[Bootstrap](https://getbootstrap.com/) is now available.
+
+{**bslib**} has several advantages:
+
+- It is designed not only to work for Shiny but also for other contexts, like R Markdown.
+- It provides [custom theming](https://rstudio.github.io/bslib/articles/theming/index.html), even interactively in real-time.
+- It uses newer versions of `r glossary("Bootstrap")` and `r glossary("Bootswatch")`, whereas Shiny and `r glossary("R Markdown")` currently default to Bootstrap 3 and may continue to do so to maintain backwards compatibility.
+
+[^06-layouts-1]: Therefore the name: bslib is an acronym for
+    **b**oot**s**trap **lib**rary.
 ::::
 :::::
+
+
+
+
+    
+
+    
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-06-bslib-layout-design}
+: {bslib} layout design
+::::::
+:::
+::::{.my-resource-container}
+
+- {**bslib**} [package documentation](https://rstudio.github.io/bslib/index.html) for custom bootstrap `r glossary("SASS")` themes for Shiny and R Markdown
+- New Shiny [application layout guide](https://shiny.posit.co/r/articles/build/layout-guide/) based on {**bslib**}
+- [Bootstrap](https://getbootstrap.com/) is a free and open-source CSS framework designed for responsive, mobile-first front-end web development.
+- [Bootswatch](https://bootswatch.com/) is a collection of pre-built themes that can be easily applied to a Bootstrap project, simplifying the process of achieving a polished and professional look.
+
+:::
+:::::
+
+
+## Single page layout
+
+Layout functions provide the high-level visual structure of an app.
+Layouts are created by a hierarchy of function calls, where the
+hierarchy in R matches the hierarchy in the generated HTML. This helps
+you understand layout code.
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-06-single-page-layout}
+: Single page layout
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+
+ui <- fluidPage(
+  titlePanel("Hello Shiny!"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("obs", "Observations:", min = 0, max = 1000, value = 500)
+    ),
+    mainPanel(
+      plotOutput("distPlot")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+:::
+::::::
+
+### Page functions
+
+The most important, but least interesting, layout function is
+`fluidPage()`, which you’ve seen in pretty much every example so far.
+But what’s it doing and what happens if you use it by itself? Figure 6.1
+shows the results: it looks like a very boring app but there’s a lot
+going behind the scenes, because `fluidPage()` sets up all the HTML,
+CSS, and JavaScript that Shiny needs.
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-06-fluid-page}
+: An UI consisting just of `fluidPage()`
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| components: [editor, viewer]
+
+
+ui <- fluidPage()
+
+server <- function(input, output, session) {}
+
+shinyApp(ui, server)
+```
+:::
+::::::
+
+In addition to `fluidPage()`, Shiny provides a couple of other page
+functions that can come in handy in more specialized situations:
+`fixedPage()` and `fillPage()`.
+
+-   `fixedPage()` works like `fluidPage()` but has a fixed maximum
+    width, which stops your apps from becoming unreasonably wide on
+    bigger screens.
+-   `fillPage()` fills the full height of the browser and is useful if
+    you want to make a plot that occupies the whole screen.
+
+:::::: my-resource
+:::: my-resource-header
+::: {#lem-06-fluid-page}
+: Page functions
+:::
+::::
+
+::: my-resource-container
+-   [fluidPage()](https://shiny.posit.co/r/reference/shiny/latest/fluidpage.html):
+    Create a page with fluid layout.
+-   [fixedPage()](https://shiny.posit.co/r/reference/shiny/latest/fixedpage.html):
+    Create a page with a fixed layout.
+-   [fillPage()](https://shiny.posit.co/r/reference/shiny/latest/fillpage.html):
+    Create a page that fills the window.
+:::
+::::::
+
+### Page with sidebar
+
+To make more complex layouts, you’ll need call layout functions inside
+of `fluidPage()`. For example, to make a two-column layout with inputs
+on the left and outputs on the right you can use `sidebarLayout()`
+(along with its friends `titlePanel()`, `sidebarPanel()`, and
+`mainPanel()`).
+
+:::::: my-resource
+:::: my-resource-header
+::: {#lem-06-page-with-sidebar}
+: Sidebar functions
+:::
+::::
+
+::: my-resource-container
+-   [sidebarLayout()](https://shiny.posit.co/r/reference/shiny/latest/sidebarlayout.html):
+    Layout a sidebar and main area. Create a layout (`sidebarLayout()`)
+    with a sidebar (`sidebarPanel()`) and main area (`mainPanel()`)
+-   [titlePanel()](https://shiny.posit.co/r/reference/shiny/latest/titlepanel.html):
+    Create a panel containing an application title.
+:::
+::::::
+
+![Structure of a page with
+sidebar](https://mastering-shiny.org/diagrams/action-layout/sidebar.png){#fig-06-01
+fig-alt="alt-text" fig-align="center" width="70%"}
+
+::::::::::::::::: column-body-outset
+:::::::::::::::: my-code-collection
+::::: my-code-collection-header
+::: my-code-collection-icon
+:::
+
+::: {#exm-06-page-sidebar}
+: Page with sidebar layout
+:::
+:::::
+
+:::::::::::: my-code-collection-container
+::::::::::: panel-tabset
+###### Empty Layout
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-06-page-sidebar-empty}
+: Page with sidebar
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 200
+#| components: [editor, viewer]
+#| layout: vertical
+
+# Define UI
+ui <- fluidPage(
+
+    titlePanel("Hello Shiny!"),
+
+    sidebarLayout(
+        sidebarPanel("sidebarPanel"),
+        mainPanel("mainPanel")
+    )
+)
+
+# Server logic
+server <- function(input, output) {}
+
+# Complete app with UI and server components
+shinyApp(ui, server)
+
+```
+
+------------------------------------------------------------------------
+
+I had to choose a slightly wider page width. Otherwise Shiny would have
+stacked the two panels.
+:::
+::::::
+
+###### Example
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-06-page-sidebar-example}
+: Layout example: Page with sidebar
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 500
+#| components: [editor, viewer]
+#| layout: vertical
+
+
+ui <- fluidPage(
+  titlePanel("Central limit theorem"),
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("m", "Number of samples: (1-100)", 2, min = 1, max = 100),
+      "Increase the number of samples to see the distribution become more normal."
+    ),
+    mainPanel(
+      plotOutput("hist")
+    )
+  )
+)
+server <- function(input, output, session) {
+  output$hist <- renderPlot({
+    req("m")
+    means <- replicate(1e4, mean(runif(input$m)))
+    hist(means, breaks = 20)
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+------------------------------------------------------------------------
+
+Rendering the app (or reloading the web page) results for a moment with
+the error message "figure margins too large". I do not know why this
+happens and how to prevent it.
+:::
+::::::
+:::::::::::
+::::::::::::
+::::::::::::::::
+:::::::::::::::::
+
+### Multi-row
+
+Under the hood, `sidebarLayout()` is built on top of a flexible
+multi-row layout, which you can use directly to create more visually
+complex apps. As usual, you start with `fluidPage()`. Then you create
+rows with `fluidRow()`, and columns with `column()`.
+
+:::::: my-resource
+:::: my-resource-header
+::: {#lem-06-multi-row-layout}
+: Multi-row functions
+:::
+::::
+
+::: my-resource-container
+
+A fluid page layout consists of rows which in turn include columns.
+
+-   [fluidRow()](https://shiny.posit.co/r/reference/shiny/latest/fluidpage.html): Rows exist for the purpose of making sure their elements appear on the same line (if the browser has adequate width).
+-   [column()](https://shiny.posit.co/r/reference/shiny/latest/column.html): Columns exist for the purpose of defining how much horizontal space within a 12-unit wide grid it's elements should occupy.
+:::
+::::::
+
+
+Each row is made up of 12 columns and the first argument to `column()` gives how many of those columns to occupy. A 12 column layout gives you substantial flexibility because you can easily create 2-, 3-, or 4-column layouts, or use narrow columns to create spacers. You can see an example of this layout in @XXX_4.4.
+
+If you’d like to learn more about designing using a grid system, I highly recommend the classic text on the subject: “Grid systems in graphic design” by Josef Müller-Brockman [-@mueller-brockmann-1998].
+
+
+![The structure underlying a simple multi-row app](https://mastering-shiny.org/diagrams/action-layout/multirow.png){#fig-06-02
+fig-alt="alt-text" fig-align="center" 
+width="70%"}
+
+### Exercises
+
+#### `sidebarLayout()`
+
+Read the documentation of `sidebarLayout()` to determine the width (in columns) of the sidebar and the main panel. Can you recreate its appearance using `fluidRow()` and `column()`? What are you missing?
+
+::: column-body-outset
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-06-ex-01-sidebarlayout}
+: `sidebarLayout()`
+::::::
+:::
+::::{.my-exercise-container}
+
+The `sidbarbarPanel()` has a width of 4 columns and the `mainPanel()` is eight columns wide. The 12 column grid of the standard page is divided 1/3 (controls) : 2/3 (output).
+
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 100
+#| components: [editor, viewer]
+#| layout: vertical
+
+ui <- fluidPage(
+  fluidRow(
+    column(
+      width = 4, 
+      "place for the controls: 4 columns"
+      ),
+    column(
+      width = 8, 
+      "place for the output: 8 columns"
+    )
+  )
+
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+***
+
+Missing is the `titlePanel()`.
+::::
+:::::
+
+
+
+
+#### Change panel positions
+
+Modify the Central Limit Theorem app from @exm-06-page-sidebar to put the sidebar on the right instead of the left.
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-sidebar-right}
+: Central Limit Theorem with the sidebar on the right
+::::::
+:::
+::::{.my-exercise-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 500
+#| components: [editor, viewer]
+#| layout: vertical
+
+ui <- fluidPage(
+  titlePanel("Central limit theorem"),
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("m", "Number of samples: (1-100)", 2, min = 1, max = 100),
+      "Increase the number of samples to see the distribution become more normal."
+    ),
+    mainPanel(
+      plotOutput("hist")
+    ),
+    position = "right"
+  )
+)
+server <- function(input, output, session) {
+  output$hist <- renderPlot({
+    req("m")
+    means <- replicate(1e4, mean(runif(input$m)))
+    hist(means, breaks = 20)
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+
+
+#### Stacked `sidebarLayout()`
+
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-06-ex-03}
+: Main panel divided 50:50 with sidebar below
+::::::
+:::
+::::{.my-exercise-container}
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 500
+#| components: [editor, viewer]
+#| layout: vertical
+
+ui <- fluidPage(
+  title = "Central limit theorem",
+  fluidRow(
+    column(width = 6, 
+           plotOutput("hist1")
+           ),
+    column(width = 6,
+           plotOutput("hist2")
+           ),
+  ),
+  fluidRow(
+    column(width = 6,
+           numericInput("m1", "Number of samples: (1-100)", 2, min = 1, max = 100)
+           ),
+    column(width = 6,
+           numericInput("m2", "Number of samples: (1-100)", 2, min = 1, max = 100)
+           )
+  )
+)
+
+
+server <- function(input, output, session) {
+  output$hist1 <- renderPlot({
+    means <- replicate(1e4, mean(runif(input$m1)))
+    hist(means, breaks = 20)
+  }, res = 96)
+  
+  output$hist2 <- renderPlot({
+    means <- replicate(1e4, mean(runif(input$m2)))
+    hist(means, breaks = 20)
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+
+
+::::
+:::::
+
+:::
+
+## Multi-page layout
+
+As your app grows in complexity, it might become impossible to fit everything on a single page. In this section you’ll learn various uses of `tabPanel()` that create the illusion of multiple pages. This is an illusion because you’ll still have a single app with a single underlying HTML file, but it’s now broken into pieces and only one piece is visible at a time.
+
+Multi-page apps pair particularly well with modules, which you’ll learn about in @XXX_19. Shiny modules allow you to partition up the server function in the same way you partition up the user interface, creating independent components that only interact through well defined connections.
+
+### Tabsets
+
+The simple way to break up a page into pieces is to use `tabsetPanel()` and its close friend `tabPanel()`. As you can see in the code below, `tabsetPanel()` creates a container for any number of `tabPanels()`, which can in turn contain any other HTML components.
+
+`tabsetPanel()` can be used anywhere in your app; it’s totally fine to nest tabsets inside of other components (including tabsets!) if needed.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-06-tabsets}
+: Using tabsets: `tabsetPanel()` and `tabPanels()`
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Simple example
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-tabset-simple-example}
+: A simple tabset example
+::::::
+:::
+::::{.my-r-code-container}
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+#| layout: vertical
+
+ui <- fluidPage(
+  tabsetPanel(
+    tabPanel("Data", 
+      fileInput("file", "Data", buttonLabel = "Upload..."),
+      textInput("delim", "Delimiter (leave blank to guess)", ""),
+      numericInput("skip", "Rows to skip", 0, min = 0),
+      numericInput("rows", "Rows to preview", 10, min = 1)
+    ),
+    tabPanel("Parameters"),
+    tabPanel("Results")
+  )
+)
+
+server <- function(input, output, session) {}
+
+shinyApp(ui, server)
+```
+
+
+
+
+
+::::
+:::::
+
+
+###### With ID
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-06-tabset-with-id}
+: Tabset with location detection (via ID)
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 200
+#| components: [editor, viewer]
+#| layout: vertical
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      textOutput("panel")
+    ),
+    mainPanel(
+      tabsetPanel(
+        id = "tabset",
+        tabPanel("panel 1", "one"),
+        tabPanel("panel 2", "two"),
+        tabPanel("panel 3", "three")
+      )
+    )
+  )
+)
+
+
+server <- function(input, output, session) {
+  output$panel <- renderText({
+    paste("Current panel: ", input$tabset)
+  })
+}
+
+
+shinyApp(ui, server)
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-06-tabsets}
+: Using tabsets
+::::::
+:::
+::::{.my-r-code-container}
+
+
+
+::::
+:::::
+
+
+### Navlist and navbars
+
+Because tabs are displayed horizontally, there’s a fundamental limit to how many tabs you can use, particularly if they have long titles. `navbarPage()` and `navbarMenu()` provide two alternative layouts that let you use more tabs with longer titles.
+
+`navlistPanel()` is similar to `tabsetPanel()` but instead of running the tab titles horizontally, it shows them vertically in a sidebar. It also allows you to add headings with plain strings, as shown in the code below.
+
+Another approach is the use of `navbarPage()`: it still runs the tab titles horizontally, but you can use `navbarMenu()` to add drop-down menus for an additional level of hierarchy.
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-06-navbar}
+: Navlist and navbars
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### `navlistPanel()`
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-06-navlist-panel}
+: `navlistPanel()`: Tabs horizontally
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage(
+  navlistPanel(
+    id = "tabset",
+    "Heading 1",
+    tabPanel("panel 1", "Panel one contents"),
+    "Heading 2",
+    tabPanel("panel 2", "Panel two contents"),
+    tabPanel("panel 3", "Panel three contents")
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+
+::::
+:::::
+
+
+###### navbarPage()
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-06-navbar-page}
+: `navbarPage()` with `navbarMenu()` for submenues
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- navbarPage(
+  "Page title",   
+  tabPanel("panel 1", "one"),
+  tabPanel("panel 2", "two"),
+  tabPanel("panel 3", "three"),
+  navbarMenu("subpanels", 
+    tabPanel("panel 4a", "four-a"),
+    tabPanel("panel 4b", "four-b"),
+    tabPanel("panel 4c", "four-c")
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+

@@ -3,19 +3,16 @@
 ::: {.callout-note style="color: blue;"}
 #### This is work in progress
 
-I have finished about 29%. Currently I am working on Exercises for chapter 4 and taking notes for chapter 9 (Chapter 6, 7, and 8 are still empty.
+I have finished about 32%. Currently I am working on chapter 6.
 
 :::
 
-
-
-::: my-watch-out
-::: my-watch-out-header
-WATCH OUT: This is my personal learning material and is therefore
-neither an accurate replication nor an authoritative textbook.
+:::::{.my-watch}
+:::{.my-watch-header}
+WATCH OUT: This is neither an accurate replication nor an authoritative textbook.
 :::
+::::{.my-watch-container}
 
-::: my-watch-out-container
 I am writing this book as a text for others to read because that forces me to
 become explicit and explain all my learning outcomes more carefully.
 Please keep in mind that this text is not written by an expert but by a
@@ -28,8 +25,10 @@ elaborated and added my own comments resulted from my personal research.
 Be warned! In spite of replicating most of the content this Quarto book
 may contain many mistakes. All the misapprehensions and errors are of
 course my own responsibility.
-:::
-:::
+::::
+:::::
+
+
 
 ## Content and Goals of this Book {.unnumbered}
 

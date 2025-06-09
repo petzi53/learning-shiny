@@ -97,6 +97,7 @@ iframe {
 .my-check-container {
   padding-top: 5px;
   padding-left: 10px;
+  padding-right: 10px;
   color: black;
   background-color: white;
   border-bottom-right-radius: 10px;
@@ -809,6 +810,7 @@ iframe {
 .my-watch-container {
   padding-top: 5px;
   padding-left: 10px;
+  padding-right: 10px;
   color: black;
   background-color: white;
   border-bottom-right-radius: 10px;
@@ -902,6 +904,7 @@ iframe {
 .my-bullet-container {
   padding-top: 5px;
   padding-left: 10px;
+  padding-right: 10px;
   color: black;
   background-color: white;
   border-bottom-right-radius: 10px;
