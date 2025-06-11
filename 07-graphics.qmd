@@ -1,4 +1,4 @@
-# Graphics (empty) {#sec-chap07}
+# Graphics {#sec-chap07}
 
 
 ```{r}

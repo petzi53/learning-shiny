@@ -1,3 +1,8 @@
+---
+execute:
+  cache: true
+---
+
 # Layouts, themes, HTML {#sec-chap06}
 
 ```{r}
@@ -24,50 +29,6 @@ Chapter section list
 :::
 :::::
 ::::::
-
-:::::{.my-watch}
-:::{.my-watch-header}
-Is the chapter outdated because of {bslib}?
-:::
-::::{.my-watch-container}
-I am not sure if the following explanations are still the best
-way to create layouts for Shiny. It seems to me, that with the
-{**bslib**}[^06-layouts-1] package a more modern toolkit based on
-[Bootstrap](https://getbootstrap.com/) is now available.
-
-{**bslib**} has several advantages:
-
-- It is designed not only to work for Shiny but also for other contexts, like R Markdown.
-- It provides [custom theming](https://rstudio.github.io/bslib/articles/theming/index.html), even interactively in real-time.
-- It uses newer versions of `r glossary("Bootstrap")` and `r glossary("Bootswatch")`, whereas Shiny and `r glossary("R Markdown")` currently default to Bootstrap 3 and may continue to do so to maintain backwards compatibility.
-
-[^06-layouts-1]: Therefore the name: bslib is an acronym for
-    **b**oot**s**trap **lib**rary.
-::::
-:::::
-
-
-
-
-    
-
-    
-:::::{.my-resource}
-:::{.my-resource-header}
-:::::: {#lem-06-bslib-layout-design}
-: {bslib} layout design
-::::::
-:::
-::::{.my-resource-container}
-
-- {**bslib**} [package documentation](https://rstudio.github.io/bslib/index.html) for custom bootstrap `r glossary("SASS")` themes for Shiny and R Markdown
-- New Shiny [application layout guide](https://shiny.posit.co/r/articles/build/layout-guide/) based on {**bslib**}
-- [Bootstrap](https://getbootstrap.com/) is a free and open-source CSS framework designed for responsive, mobile-first front-end web development.
-- [Bootswatch](https://bootswatch.com/) is a collection of pre-built themes that can be easily applied to a Bootstrap project, simplifying the process of achieving a polished and professional look.
-
-:::
-:::::
-
 
 ## Single page layout
 
@@ -318,44 +279,51 @@ rows with `fluidRow()`, and columns with `column()`.
 ::::
 
 ::: my-resource-container
-
 A fluid page layout consists of rows which in turn include columns.
 
--   [fluidRow()](https://shiny.posit.co/r/reference/shiny/latest/fluidpage.html): Rows exist for the purpose of making sure their elements appear on the same line (if the browser has adequate width).
--   [column()](https://shiny.posit.co/r/reference/shiny/latest/column.html): Columns exist for the purpose of defining how much horizontal space within a 12-unit wide grid it's elements should occupy.
+-   [fluidRow()](https://shiny.posit.co/r/reference/shiny/latest/fluidpage.html):
+    Rows exist for the purpose of making sure their elements appear on
+    the same line (if the browser has adequate width).
+-   [column()](https://shiny.posit.co/r/reference/shiny/latest/column.html):
+    Columns exist for the purpose of defining how much horizontal space
+    within a 12-unit wide grid it's elements should occupy.
 :::
 ::::::
 
+Each row is made up of 12 columns and the first argument to `column()`
+gives how many of those columns to occupy. A 12 column layout gives you
+substantial flexibility because you can easily create 2-, 3-, or
+4-column layouts, or use narrow columns to create spacers. You can see
+an example of this layout in @XXX_4.4.
 
-Each row is made up of 12 columns and the first argument to `column()` gives how many of those columns to occupy. A 12 column layout gives you substantial flexibility because you can easily create 2-, 3-, or 4-column layouts, or use narrow columns to create spacers. You can see an example of this layout in @XXX_4.4.
+If you’d like to learn more about designing using a grid system, I
+highly recommend the classic text on the subject: “Grid systems in
+graphic design” by Josef Müller-Brockman [-@mueller-brockmann-1998].
 
-If you’d like to learn more about designing using a grid system, I highly recommend the classic text on the subject: “Grid systems in graphic design” by Josef Müller-Brockman [-@mueller-brockmann-1998].
-
-
-![The structure underlying a simple multi-row app](https://mastering-shiny.org/diagrams/action-layout/multirow.png){#fig-06-02
-fig-alt="alt-text" fig-align="center" 
-width="70%"}
+![The structure underlying a simple multi-row
+app](https://mastering-shiny.org/diagrams/action-layout/multirow.png){#fig-06-02
+fig-alt="alt-text" fig-align="center" width="70%"}
 
 ### Exercises
 
 #### `sidebarLayout()`
 
-Read the documentation of `sidebarLayout()` to determine the width (in columns) of the sidebar and the main panel. Can you recreate its appearance using `fluidRow()` and `column()`? What are you missing?
+Read the documentation of `sidebarLayout()` to determine the width (in
+columns) of the sidebar and the main panel. Can you recreate its
+appearance using `fluidRow()` and `column()`? What are you missing?
 
-::: column-body-outset
-
-:::::{.my-exercise}
-:::{.my-exercise-header}
-:::::: {#exr-06-ex-01-sidebarlayout}
+::::::::::::::: column-body-outset
+:::::: my-exercise
+:::: my-exercise-header
+::: {#exr-06-ex-01-sidebarlayout}
 : `sidebarLayout()`
-::::::
 :::
-::::{.my-exercise-container}
+::::
 
-The `sidbarbarPanel()` has a width of 4 columns and the `mainPanel()` is eight columns wide. The 12 column grid of the standard page is divided 1/3 (controls) : 2/3 (output).
-
-
-
+::: my-exercise-container
+The `sidbarbarPanel()` has a width of 4 columns and the `mainPanel()` is
+eight columns wide. The 12 column grid of the standard page is divided
+1/3 (controls) : 2/3 (output).
 
 ```{shinylive-r}
 #| standalone: true
@@ -384,27 +352,25 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-***
+------------------------------------------------------------------------
 
 Missing is the `titlePanel()`.
-::::
-:::::
-
-
-
+:::
+::::::
 
 #### Change panel positions
 
-Modify the Central Limit Theorem app from @exm-06-page-sidebar to put the sidebar on the right instead of the left.
+Modify the Central Limit Theorem app from @exm-06-page-sidebar to put
+the sidebar on the right instead of the left.
 
-:::::{.my-exercise}
-:::{.my-exercise-header}
-:::::: {#exr-sidebar-right}
+:::::: my-exercise
+:::: my-exercise-header
+::: {#exr-sidebar-right}
 : Central Limit Theorem with the sidebar on the right
-::::::
 :::
-::::{.my-exercise-container}
+::::
 
+::: my-exercise-container
 ```{shinylive-r}
 #| standalone: true
 #| viewerHeight: 500
@@ -434,24 +400,19 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
-
-::::
-:::::
-
-
+:::
+::::::
 
 #### Stacked `sidebarLayout()`
 
-
-:::::{.my-exercise}
-:::{.my-exercise-header}
-:::::: {#exr-06-ex-03}
+:::::: my-exercise
+:::: my-exercise-header
+::: {#exr-06-ex-03}
 : Main panel divided 50:50 with sidebar below
-::::::
 :::
-::::{.my-exercise-container}
+::::
 
-
+::: my-exercise-container
 ```{shinylive-r}
 #| standalone: true
 #| viewerHeight: 500
@@ -493,51 +454,57 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
-
-
-
-::::
-:::::
-
 :::
+::::::
+:::::::::::::::
 
 ## Multi-page layout
 
-As your app grows in complexity, it might become impossible to fit everything on a single page. In this section you’ll learn various uses of `tabPanel()` that create the illusion of multiple pages. This is an illusion because you’ll still have a single app with a single underlying HTML file, but it’s now broken into pieces and only one piece is visible at a time.
+As your app grows in complexity, it might become impossible to fit
+everything on a single page. In this section you’ll learn various uses
+of `tabPanel()` that create the illusion of multiple pages. This is an
+illusion because you’ll still have a single app with a single underlying
+HTML file, but it’s now broken into pieces and only one piece is visible
+at a time.
 
-Multi-page apps pair particularly well with modules, which you’ll learn about in @XXX_19. Shiny modules allow you to partition up the server function in the same way you partition up the user interface, creating independent components that only interact through well defined connections.
+Multi-page apps pair particularly well with modules, which you’ll learn
+about in @XXX_19. Shiny modules allow you to partition up the server
+function in the same way you partition up the user interface, creating
+independent components that only interact through well defined
+connections.
 
 ### Tabsets
 
-The simple way to break up a page into pieces is to use `tabsetPanel()` and its close friend `tabPanel()`. As you can see in the code below, `tabsetPanel()` creates a container for any number of `tabPanels()`, which can in turn contain any other HTML components.
+The simple way to break up a page into pieces is to use `tabsetPanel()`
+and its close friend `tabPanel()`. As you can see in the code below,
+`tabsetPanel()` creates a container for any number of `tabPanels()`,
+which can in turn contain any other HTML components.
 
-`tabsetPanel()` can be used anywhere in your app; it’s totally fine to nest tabsets inside of other components (including tabsets!) if needed.
+`tabsetPanel()` can be used anywhere in your app; it’s totally fine to
+nest tabsets inside of other components (including tabsets!) if needed.
 
-::: {.my-code-collection}
-:::: {.my-code-collection-header}
-::::: {.my-code-collection-icon}
-:::::
-:::::: {#exm-06-tabsets}
+:::::::::::::::: my-code-collection
+::::: my-code-collection-header
+::: my-code-collection-icon
+:::
+
+::: {#exm-06-tabsets}
 : Using tabsets: `tabsetPanel()` and `tabPanels()`
-::::::
+:::
+:::::
 
-::::
-
-::::{.my-code-collection-container}
-
-::: {.panel-tabset}
-
+:::::::::::: my-code-collection-container
+::::::::::: panel-tabset
 ###### Simple example
 
-:::::{.my-r-code}
-:::{.my-r-code-header}
-:::::: {#cnj-tabset-simple-example}
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-tabset-simple-example}
 : A simple tabset example
-::::::
 :::
-::::{.my-r-code-container}
+::::
 
-
+::: my-r-code-container
 ```{shinylive-r}
 #| standalone: true
 #| viewerHeight: 400
@@ -561,24 +528,19 @@ server <- function(input, output, session) {}
 
 shinyApp(ui, server)
 ```
-
-
-
-
-
-::::
-:::::
-
+:::
+::::::
 
 ###### With ID
 
-:::::{.my-r-code}
-:::{.my-r-code-header}
-:::::: {#cnj-06-tabset-with-id}
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-06-tabset-with-id}
 : Tabset with location detection (via ID)
-::::::
 :::
-::::{.my-r-code-container}
+::::
+
+::: my-r-code-container
 ```{shinylive-r}
 #| standalone: true
 #| viewerHeight: 200
@@ -611,64 +573,50 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
-
-::::
-:::::
-
 :::
-
-::::
-:::::
-
-
-
-
-:::::{.my-r-code}
-:::{.my-r-code-header}
-:::::: {#cnj-06-tabsets}
-: Using tabsets
 ::::::
-:::
-::::{.my-r-code-container}
-
-
-
-::::
-:::::
-
+:::::::::::
+::::::::::::
+::::::::::::::::
 
 ### Navlist and navbars
 
-Because tabs are displayed horizontally, there’s a fundamental limit to how many tabs you can use, particularly if they have long titles. `navbarPage()` and `navbarMenu()` provide two alternative layouts that let you use more tabs with longer titles.
+Because tabs are displayed horizontally, there’s a fundamental limit to
+how many tabs you can use, particularly if they have long titles.
+`navbarPage()` and `navbarMenu()` provide two alternative layouts that
+let you use more tabs with longer titles.
 
-`navlistPanel()` is similar to `tabsetPanel()` but instead of running the tab titles horizontally, it shows them vertically in a sidebar. It also allows you to add headings with plain strings, as shown in the code below.
+`navlistPanel()` is similar to `tabsetPanel()` but instead of running
+the tab titles horizontally, it shows them vertically in a sidebar. It
+also allows you to add headings with plain strings, as shown in the code
+below.
 
-Another approach is the use of `navbarPage()`: it still runs the tab titles horizontally, but you can use `navbarMenu()` to add drop-down menus for an additional level of hierarchy.
+Another approach is the use of `navbarPage()`: it still runs the tab
+titles horizontally, but you can use `navbarMenu()` to add drop-down
+menus for an additional level of hierarchy.
 
-::: {.my-code-collection}
-:::: {.my-code-collection-header}
-::::: {.my-code-collection-icon}
-:::::
-:::::: {#exm-06-navbar}
+:::::::::::::::: my-code-collection
+::::: my-code-collection-header
+::: my-code-collection-icon
+:::
+
+::: {#exm-06-navbar}
 : Navlist and navbars
-::::::
+:::
+:::::
 
-::::
-
-::::{.my-code-collection-container}
-
-::: {.panel-tabset}
-
+:::::::::::: my-code-collection-container
+::::::::::: panel-tabset
 ###### `navlistPanel()`
 
-:::::{.my-r-code}
-:::{.my-r-code-header}
-:::::: {#cnj-06-navlist-panel}
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-06-navlist-panel}
 : `navlistPanel()`: Tabs horizontally
-::::::
 :::
-::::{.my-r-code-container}
+::::
 
+::: my-r-code-container
 ```{shinylive-r}
 #| standalone: true
 #| viewerHeight: 400
@@ -693,22 +641,19 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
-
-
-::::
-:::::
-
+:::
+::::::
 
 ###### navbarPage()
 
-:::::{.my-r-code}
-:::{.my-r-code-header}
-:::::: {#cnj-06-navbar-page}
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-06-navbar-page}
 : `navbarPage()` with `navbarMenu()` for submenues
-::::::
 :::
-::::{.my-r-code-container}
+::::
 
+::: my-r-code-container
 ```{shinylive-r}
 #| standalone: true
 #| viewerHeight: 400
@@ -734,15 +679,487 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
+:::
+::::::
+:::::::::::
+::::::::::::
+::::::::::::::::
 
+## Bootstrap
 
+`r glossary("Bootstrap")` is a collection of HTML conventions, CSS
+styles, and JS snippets bundled up into a convenient form.
+
+It’s good to know that Bootstrap exists because then:
+
+-   You can use `bslib::bs_theme()` to customize the visual appearance
+    of your code, @XXX_6.5.
+-   You can use the `class` argument to customize some layouts, inputs,
+    and outputs using Bootstrap class names, as you saw in
+    @sec-action-buttons.
+-   You can make your own functions to generate Bootstrap components
+    that Shiny doesn’t provide, as explained in “[Utility
+    classes](https://rstudio.github.io/bslib/articles/utility-classes/index.html)”.
+
+:::::: my-resource
+:::: my-resource-header
+::: {#lem-shiny-css-frameworks}
+: Shiny CSS frameworks
+:::
 ::::
-:::::
 
+::: my-resource-container
+-   [{**bslib**}](https://rstudio.github.io/bslib/index.html) by
+    `r glossary("Positx", "Posit")` based on
+    [Bootstrap](https://getbootstrap.com/) [@bslib].
+-   [{**shiny.semantics**}](https://appsilon.github.io/shiny.semantic/)
+    by `r glossary("Appsilon")`, builds on top of [Fomantic
+    UI](https://fomantic-ui.com/) [@shiny.semantic]. Appsilon also
+    developed
+    [{**rhino**}](https://appsilon.github.io/rhino/index.html), an R
+    package designed for professional developers to help building high
+    quality, enterprise-grade Shiny applications at speed [@rhino].
+-   [{**shinyMobile**}](https://shinymobile.rinterface.com/) by
+    `r glossary("RInteRface")`, builds on top of [framework
+    7](https://framework7.io/), and is specifically designed for mobile
+    apps [@shinyMobile].
+-   [{**shinymaterial**}](https://ericrayanderson.github.io/shinymaterial/)
+    by [Eric Anderson,](https://github.com/ericrayanderson) is built on
+    top of [Google’s Material design
+    framework](https://m3.material.io/).
+-   [{**shinydashboard**}](https://rstudio.github.io/shinydashboard/)
+    also by Posit, provides a layout system designed to create
+    dashboards.
+
+You can find a fuller, and actively maintained, list at [Awesome Shiny
+Extension](https://github.com/nanxstats/awesome-shiny-extensions).
+:::
+::::::
+
+## Themes
+
+Bootstrap is so ubiquitous within the R community that it’s easy to get
+style fatigue: after a while every Shiny app and Rmd start to look the
+same. The solution is theming with the {**bslib**} package.
+{**bslib**}[^06-layouts-1] is a relatively new package that allows you
+to override many Bootstrap defaults in order to create an appearance
+that is uniquely yours.
+
+[^06-layouts-1]: Therefore the name: `bslib` is an acronym for
+    **b**oot**s**trap **lib**rary.
+
+{**bslib**} has several advantages:
+
+-   It is designed not only to work for Shiny but also for other
+    contexts, like R Markdown.
+-   It provides [custom
+    theming](https://rstudio.github.io/bslib/articles/theming/index.html),
+    even interactively in real-time.
+-   It uses newer versions of `r glossary("Bootstrap")` and
+    `r glossary("Bootswatch")`, whereas Shiny and
+    `r glossary("R Markdown")` currently default to Bootstrap 3 and may
+    continue to do so to maintain backwards compatibility.
+
+:::::: my-resource
+:::: my-resource-header
+::: {#lem-06-bslib-layout-design}
+: {bslib} layout design
+:::
+::::
+
+::: my-resource-container
+-   {**bslib**} [package
+    documentation](https://rstudio.github.io/bslib/index.html) for
+    custom bootstrap `r glossary("SASS")` themes for Shiny and R
+    Markdown
+-   New Shiny [application layout
+    guide](https://shiny.posit.co/r/articles/build/layout-guide/) based
+    on {**bslib**}
+-   [Bootstrap](https://getbootstrap.com/) is a free and open-source CSS
+    framework designed for responsive, mobile-first front-end web
+    development.
+-   [Bootswatch](https://bootswatch.com/) is a collection of pre-built
+    themes that can be easily applied to a Bootstrap project,
+    simplifying the process of achieving a polished and professional
+    look.
+:::
+::::::
+
+### Getting started
+
+Create a theme with `bslib::bs_theme()` then apply it to an app with the
+theme argument of the page layout function:
+
+``` markdown
+fluidPage(
+  theme = bslib::bs_theme(...)
+)
+```
+
+If not specified, Shiny will use the classic Bootstrap v3 theme that it
+has used basically since it was created. By default,
+`bslib::bs_theme()`, will use Bootstrap v5. Using Bootstrap v5 instead
+of v3 will not cause problems if you only use built-in components. There
+is a possibility that it might cause problems if you’ve used custom
+HTML, so you can force it to stay with v3 with `version = 3`.
+
+### Shiny themes
+
+The easiest way to change the overall look of your app is to pick a
+premade “bootswatch” theme using the bootswatch argument to
+`bslib::bs_theme()`.
+
+::::::::::::::::::: my-code-collection
+::::: my-code-collection-header
+::: my-code-collection-icon
 :::
 
-::::
+::: {#exm-06-shiny-themes}
+: Title for code collection
+:::
 :::::
 
+::::::::::::::: my-code-collection-container
+:::::::::::::: panel-tabset
+###### predefined theme
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-06-bslib-predefined-theme}
+: Shiny with a `bslib` predefined theme
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 450
+#| components: [editor, viewer]
 
 
+ui <- fluidPage(
+  theme = bslib::bs_theme(bootswatch = "darkly"),
+  sidebarLayout(
+    sidebarPanel(
+      textInput("txt", "Text input:", "text here"),
+      sliderInput("slider", "Slider input:", 1, 100, 30)
+    ),
+    mainPanel(
+      h1(paste0("Theme: darkly")),
+      h2("Header 2"),
+      p("Some text")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+:::
+::::::
+
+###### custom changes
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-bslib-with-custom-appearance}
+: Shiny with custom theme changes
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 450
+#| components: [editor, viewer]
+#| error: true
+
+ui <- fluidPage(
+  theme = bslib::bs_theme(
+  bg = "#0b3d91", 
+  fg = "white", 
+  base_font = "Source Sans Pro"
+  ),
+  sidebarLayout(
+    sidebarPanel(
+      textInput("txt", "Text input:", "text here"),
+      sliderInput("slider", "Slider input:", 1, 100, 30)
+    ),
+    mainPanel(
+      h1(paste0("Theme: darkly")),
+      h2("Header 2"),
+      p("Some text")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+
+}
+
+shinyApp(ui, server)
+```
+:::
+::::::
+
+In my first trials I got always the error message "Text to be written
+must be a length-one character vector". After googling the error message
+I found out that the error message comes from {**htmltools**}:
+
+> This error occurs in htmltools::WSTextWriter (see
+> [here](https://rdrr.io/cran/htmltools/src/R/utils.R) and CTRL+F to
+> look for "writeImpl"). This function is in charge of properly writing
+> text to your display when you display a raw text in any UI function.
+> It raises the mentioned error when the `writeImpl()` function receives
+> more than one character string (aka element of a `character()`
+> vector). To correct this, make sure you never provide two character
+> strings to a Shiny UI function asking for only one character argument.
+> (From Eli Ker Ano, the first comment under the StackOverflow question
+> [Text to be written must be a length-one character
+> vector](https://stackoverflow.com/questions/58608109/text-to-be-written-must-be-a-length-one-character-vector)).
+
+I tried to follow this advice but to no avail. Even if I deleted all
+lines between `sidebarPanel()` and `mainPanel()` the error persisted.
+Could it be that {**bslib**} has changed in the meanwhile and requires
+other layout commands? This means that it would not be fully compatible
+with Shiny anymore. That seems unlikely.
+
+::::: my-important
+::: my-important-header
+`=`instead of `<-` required for `theme = bslib::bs_theme()`
+:::
+
+::: my-important-container
+After several hours I finally found the problem. The `<-` operator works
+fine without additional parameters (allowed is only
+`bootswatch = "<theme name>"`) but with (additional) other arguments you
+have to use the `=` operator.
+
+I copied the code snippet from the book and that was wrong! In the code
+chunk of `6.5.1 Shiny Themes` is the correct `=` operator used, but in
+the code snippet below not.
+
+With `shinylive` in the Quarto document it works with the `<-` operator
+as well!
+:::
+:::::
+::::::::::::::
+:::::::::::::::
+:::::::::::::::::::
+
+### Plot themes
+
+If you’ve heavily customized the style of your app, you may want to also
+customize your plots to match. Luckily, this is really easy thanks to
+the {**thematic**} package which automatically themes {**ggplot2**},
+{**lattice**}, and base plots. Just call `thematic::thematic_shiny()` in
+your server function. This will automatically determine all of the
+settings from your app theme.
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-ID-text}
+: Numbered R Code Title
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+#| layout: vertical
+
+library(shiny)
+library(ggplot2)
+
+ui <- fluidPage(
+  theme = bslib::bs_theme(bootswatch = "darkly"),
+  titlePanel("A themed plot"),
+  plotOutput("plot"),
+)
+
+server <- function(input, output, session) {
+  thematic::thematic_shiny()
+  
+  output$plot <- renderPlot({
+    ggplot(mtcars, aes(wt, mpg)) +
+      geom_point() +
+      geom_smooth()
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+:::
+::::::
+
+### Exercises {#sec-chap06-5_4_exercises}
+
+## Under the hood
+
+There’s no magic behind all the input, output, and layout functions:
+they just generate HTML. (The magic is done by JavaScript, which is
+outside the scope of the book.)
+
+You can see that HTML by executing UI functions directly in the console:
+
+``` markdown
+shiny::fluidPage(
+  shiny::textInput("name", "What's your name?")
+)
+
+<div class="container-fluid">
+  <div class="form-group shiny-input-container">
+    <label for="name">What's your name?</label>
+    <input id="name" type="text" class="form-control" value=""/>
+  </div>
+</div>
+```
+
+Note that this is the contents of the `<body>` tag; other parts of Shiny
+take care of generating the `<head>`. If you want to include additional
+CSS or JS dependencies you’ll need to learn
+`htmltools::htmlDependency()`. Two good places to start are
+https://blog.r-hub.io/2020/08/25/js-r/#web-dependency-management and
+https://unleash-shiny.rinterface.com/htmltools-dependencies.html.
+
+It’s possible to add your own HTML to the ui. There are two different
+ways:
+
+-   One way to do so is by including literal HTML with the
+    `htmltools::HTML()` function. In the example below, the “[raw
+    character
+    constant](https://josiahparry.com/posts/2023-01-19-raw-strings-in-r.html)”,
+    `r"()"` is used, to make it easier to include quotes in the string.
+    You can even skip `fluidPage()` altogether and supply raw HTML for
+    the whole UI. See [Build your entire UI with
+    HTML](https://shiny.posit.co/r/articles/build/html-ui/) for more
+    details.
+-   Alternatively, you can make use of the HTML helper that Shiny
+    provides via import of {**htmltools**} functions. There are regular
+    functions for the most important elements like `h1()` and `p()`, and
+    all others can be accessed via the other `tags`
+    helper[^06-layouts-2]. Named arguments become attributes and unnamed
+    arguments become children, so we can recreate the above HTML with these regular functions.
+
+[^06-layouts-2]: Because Shiny imports {**htmltools**} **it** is
+    therefore not necessary to write `htmltools::h1()`,
+    `htmltools::p()` etc. When `library(shiny)` is loaded just
+    `h1() or`, `p()` is enough.
+
+:::::::::::::::: my-code-collection
+::::: my-code-collection-header
+::: my-code-collection-icon
+:::
+
+::: {#exm-06-html-ui}
+: Raw HTML for the UI
+:::
+:::::
+
+:::::::::::: my-code-collection-container
+::::::::::: panel-tabset
+###### Raw HTML for UI
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-06-html-ui-raw}
+: Add HTML raw code snippets to the Shiny UI
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+
+
+ui <- shiny::fluidPage(
+  htmltools::HTML(r"(
+    <h1>This is a heading</h1>
+    <p class="my-class">This is some text!</p>
+    <ul>
+      <li>First bullet</li>
+      <li>Second bullet</li>
+    </ul>
+  )")
+)
+
+server <- function(input, output, session) {}
+
+shinyApp(ui, server)
+```
+:::
+::::::
+
+###### HTML with functions
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-06-using-html-ui-helper}
+: Numbered R Code Title (Tidyverse)
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+
+ui <- fluidPage(
+  h1("This is a heading"),
+  p("This is some text", class = "my-class"),
+  tags$ul(
+    tags$li("First bullet"), 
+    tags$li("Second bullet")
+  )
+)
+
+server <- function(input, output, session) {}
+
+shinyApp(ui, server)
+```
+:::
+::::::
+:::::::::::
+::::::::::::
+::::::::::::::::
+
+One advantage of generating HTML with code is that you can interweave existing Shiny components into a custom structure. For example, the code below makes a paragraph of text containing two outputs, one which is bold:
+
+```markdown
+tags$p(
+  "You made ", 
+  tags$b("$", textOutput("amount", inline = TRUE)),
+  " in the last ", 
+  textOutput("days", inline = TRUE),
+  " days " 
+)
+```
+Note the use of `inline = TRUE`; the `textOutput()` default is to produce a complete paragraph.
+
+To learn more about using HTML, CSS, and JavaScript to make compelling user interfaces, I highly recommend David Granjon’s Outstanding User Interfaces with Shiny.
+
+:::::: my-resource
+:::: my-resource-header
+::: {#lem-06-html-css-js-for-shiny-ui}
+: HTML, CSS, and JavaScript to make compelling user interfaces
+:::
+::::
+
+::: my-resource-container
+-   [Handle HTML dependencies with
+    {**htmltools**}](https://unleash-shiny.rinterface.com/htmltools-dependencies.html)
+-   [Web dependency
+    management](https://blog.r-hub.io/2020/08/25/js-r/#web-dependency-management)
+-   [Build your entire UI with
+    HTML](https://shiny.posit.co/r/articles/build/html-ui/)
+-   [JavaScript for R](https://book.javascript-for-r.com/)
+:::
+::::::

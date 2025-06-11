@@ -33,6 +33,7 @@ book:
   appendices:
     - 50-packages-used.qmd
     - 60-whr-exercises.qmd
+    - 99-todo-list.qmd
 
 bibliography:
     - references.bib

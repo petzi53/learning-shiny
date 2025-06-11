@@ -806,7 +806,7 @@ shinyApp(ui, server)
 :::::
 
 
-### Action buttons
+### Action buttons {#sec-action-buttons}
 
 Let the user perform an action with `shiny::actionButton()` or `shiny::actionLink()`: Actions links and buttons are most naturally paired with `shiny::observeEvent()` or `shiny::eventReactive()` in your server function. You haven’t learned about these important functions yet, but we’ll come back to them in @sec-03-control-timing.
 

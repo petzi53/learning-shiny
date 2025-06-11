@@ -899,3 +899,6 @@ shinyApp(ui, server)
 :::::
 
 :::
+
+
+## Exercises {#sec-chap04_8_exercises}

@@ -1,0 +1,93 @@
+---
+execute:
+  cache: true
+---
+
+# ToDo List {#sec-annex-todo}
+
+
+```{r}
+#| label: setup
+#| results: hold
+#| include: false
+
+base::source(file = "R/helper.R")
+ggplot2::theme_set(ggplot2::theme_bw())
+options(show.signif.stars = FALSE)
+
+```
+
+
+::::: {#obj-todo-list}
+:::: {.my-objectives}
+::: {.my-objectives-header}
+
+Objectives
+:::
+
+::: {.my-objectives-container}
+
+
+In this chapter I will collect all the tasks still to do. 
+
+The lists will not only cover things to do for this book, but also other more general issues I came about working on this book. The task list will be divided into different subjects:
+
+- **Book content**: ToDo list for this book covering all content tasks, like missing chapters, text modules, bibliographies, references, links etc. This section also includes the polishing of text passages in grammar and style, improving arguments with a better text structure, more understandable graphics, etc.
+- **Book appearance**: Creating colored and numbered textboxes for different subjects by adapting the `r glossary("CSS")` for this book and/or using Quartos layout facilities.
+- **Shiny**: List of things to learn even if those subjects are not the scope of this book. This includes also the `shinylive` extension and the {**shinylive**} package.
+- **Quarto**: Researching Quarto functionality to enhance this book but also more general to improve my knowledge about Quarto. This includes Quarto extension, static and dynamic formats for [Quarto](https://r4ds.hadley.nz/quarto-formats), [R Markdown](https://rmarkdown.rstudio.com/), including {{< latex >}} with type setting systems like [Typst](https://typst.app/)/[TyX](https://tyx-editor.com/) or [LyX](https://www.lyx.org/). Applying interactivity and animation with other packages like {**leaflet**}, {**plotly**}, {**htmlwidgets**}, but also using JavaScript, JavaScript frameworks like [Observable JS](https://quarto.org/docs/interactive/ojs/) and more.
+- **R**: Last but not least I stumble often over new R functions and packages that I should investigate more in detail.
+- **Miscellaneous**:If I sometimes do not know definitely in which category one task belongs I will guess it and add it to the miscellaneous task list. This duplicate will get a reference to the subject oriented lists and vice versa. 
+
+::: {.callout-important #imp-annex-todo-objective}
+My aim is to clean up all tasks under Book content and Book appearance and to transfer the other todo list to my other relevant note-books.
+:::
+
+
+
+
+
+:::
+::::
+:::::
+
+
+## Book content {#sec-annex-todo-book-content}
+
+- clean `citeproc` in "Packages used" (@sec-annex-package-used)
+- annex chapter "package used": Clean it from previous note book
+- annex chapter "package used": Update it to contain all the packages already mentioned or used
+- check always internal links/references if a chapter is finished
+- use [Grammarly App](https://www.grammarly.com/desktop/mac) and [Grammarly browser extension](https://www.grammarly.com/browser) to get better English text
+- delete in the code chunks all lines with `library(shiny)` and add it for each chapter only once in the setup chunk.
+- delete all `shiny::<function()>` references but keep or add all the other package references
+- **update the index file** with
+    - describe method for `<package>::<function()>` references
+    - describe method to develop Shiny apps and their usage in the Quarto code chunks
+    - explain external functions used in "R/helper"
+- **missing exercises**
+    - @sec-chap04_8_exercises, 
+    - @sec-chap06-5_4_exercises
+
+
+## Book appearance {#sec-annex-todo-book-appearance}
+
+- resource box needs more space at the top (padding-top)
+- how to show small check mark boxes at the beginning of the line
+- how to put ticks in these check mark boxes interactively
+- better font for plot axes
+- how to limit right margin of boxes inside boxes (example see @imp-annex-todo-objective)
+
+## Quarto {#sec-annex-todo-quarto}
+
+- how and when to use screenshots / graphics with 3D-margin but still working with [lightbox](https://quarto.org/docs/output-formats/html-lightbox-figures.html)
+
+## Shiny {#sec-annex-todo-shiny}
+
+- How to source external files for `shinylive` extension
+
+
+## R {#sec-annex-todo-r}
+
+- solve {**glossary**} issue when content of a term is part of another term
+
