@@ -476,14 +476,17 @@ iframe {
   border-bottom-right-radius: 10px;
 }
 
-.my-num-packagebox {
+/*  ##########  numbered packagebox ############# */
+
+
+.my-packagebox {
   margin: 1em 0;
   border: 2px solid #8B668B;
   border-left: 10px solid #8B668B;
   border-radius: 10px;
 }
 
-.my-num-packagebox-header {
+.my-packagebox-header {
   margin-left: 0;
   padding-left:  60px;
   padding-top:  15px;
@@ -499,13 +502,14 @@ iframe {
   background-image: url("img/icons8/package-48.png");
 }
 
-.my-num-packagebox-container {
+.my-packagebox-container {
   padding-top: 5px;
   padding-left: 10px;
   color: black;
   background-color: white;
   border-bottom-right-radius: 10px;
 }
+
 
 
 /* ##############   Procedure   ############# */

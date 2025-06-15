@@ -1,8 +1,8 @@
 {
-  "hash": "93431bd3004273073bfb6743ea755f5b",
+  "hash": "d6b32b844a28c3bb482fb9ae56b39804",
   "result": {
     "engine": "knitr",
-    "markdown": "# User Feedback {#sec-chap08}\n\n\n\n\n## Table of content for chapter 04 {.unnumbered}\n\n::::: {#obj-chap03}\n:::: {.my-objectives}\n::: {.my-objectives-header}\nChapter section list\n:::\n\n::: {.my-objectives-container}\n\n\n\n\n:::\n::::\n:::::\n",
+    "markdown": "# User Feedback {#sec-chap08}\n\n\n\n\n::::: {#obj-chap08}\n:::: {.my-objectives}\n::: {.my-objectives-header}\nChapter section list\n:::\n\n::: {.my-objectives-container}\n\n- **Validation**, informing the user when an input (or combination of inputs) is in an invalid state. \n- **Notification**, sending general messages to the user, and progress bars, which give details for time consuming operations made up of many small steps.\n- **Confirmation** dialogs or the ability to undo an action to give users peace of mind in dangerous situations. \n\n\n\n:::\n::::\n:::::\n\n:::::{.my-resource}\n:::{.my-resource-header}\n:::::: {#lem-08-packages}\n: Packages used in this chapter\n::::::\n:::\n::::{.my-resource-container}\n- {**shinyFeedback**}, by Andy Merlin [@shinyFeedback]\n- {**waiter**}, by John Coene  [@waiter]\n- {**shinyvalidate**}, by Joe Cheng [@shinyvalidate].\n\n::::\n:::::\n",
     "supporting": [
       "08-user-feedback_files"
     ],

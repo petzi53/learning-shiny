@@ -1,23 +1,43 @@
 # Packages used {#sec-annex-package-used}
 
-```{r}
-#| label: setup
-#| results: hold
-#| include: false
+## bslib {#sec-annex-bslib}
 
-base::source(file = paste0(here::here(), "/R/helper.R"))
-```
-
-## dplyr {#sec-96-dplyr}
-
-:::::: my-num-packagebox
-::: my-num-packagebox-header
-Package Profile: dplyr
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: bslib
 :::
 
 ------------------------------------------------------------------------
 
-:::: my-num-packagebox-container
+:::: my-packagebox-container
+<center>[Custom 'Bootstrap' 'Sass' Themes for 'shiny' and 'rmarkdown'](	https://rstudio.github.io/bslib/) [@bslib]</center>
+
+------------------------------------------------------------------------
+
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-bslib-min.png){width="176"}
+
+
+Simplifies custom 'CSS' styling of both 'shiny' and 'rmarkdown' via 'Bootstrap' 'Sass'. Supports 'Bootstrap' 3, 4 and 5 as well as their various 'Bootswatch' themes. An interactive widget is also provided for previewing themes in real time.
+
+:::
+
+
+::::
+::::::
+
+## dplyr {#sec-annex-dplyr}
+
+:::::: my-package
+::: my-package-header
+Package Profile: dplyr
+:::
+
+:::: my-package-container
+
+***
+
 <center>[A Grammar of Data Manipulation](https://dplyr.tidyverse.org/) [@dplyr]</center>
 
 ------------------------------------------------------------------------
@@ -25,230 +45,1033 @@ Package Profile: dplyr
 ::: {layout="[10, 30]" layout-valign="center"}
 ![](img/logoi/logo-dplyr-min.png){width="176"}
 
-A fast, consistent tool for working with data frame like objects, both in memory and out of memory. {**dplyr**} is a grammar of data manipulation, providing a consistent set of verbs that help you solve the most common data manipulation challenges: 
-
+{**dplyr**} is a grammar of data manipulation, providing a consistent set of verbs that help you solve the most common data manipulation challenges: - mutate() adds new variables that are functions of existing variables - select() picks variables based on their names. - filter() picks cases based on their values. - summarise() reduces multiple values down to a single summary. - arrange() changes the ordering of the rows.
 :::
 
 ------------------------------------------------------------------------
 
-- `dplyr::mutate()` adds new variables that are functions of existing variables 
-- `dplyr::select()` picks variables based on their names.
-- `dplyr::filter()` picks cases based on their values. 
-- `dplyr::slice()`  subsets rows using their positions.
-- `dplyr::summarise()` reduces multiple values down to a single summary. 
-- `dplyr::arrange()` changes the ordering of the rows.
-
+These all combine naturally with `group_by()` which allows you to perform any operation “by group”. You can learn more about them in [vignette("dplyr")](https://dplyr.tidyverse.org/articles/dplyr.html). As well as these single-table verbs, dplyr also provides a variety of two-table verbs, which you can learn about in [vignette("two-table")](https://dplyr.tidyverse.org/articles/two-table.html). [@dplyr]
 ::::
 ::::::
 
 
-## s2 {#sec-96-s2}
+## DT {#sec-annex-DT}
 
-:::::: my-num-packagebox
-::: my-num-packagebox-header
-Package Profile: S2
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: DT
 :::
 
 ------------------------------------------------------------------------
 
-:::: my-num-packagebox-container
-<center>[Spherical Geometry Operators Using the S2 Geometry Library](https://r-spatial.github.io/s2/) [@s2]</center>
+:::: my-packagebox-container
+<center>[A Wrapper of the JavaScript Library 'DataTables'](https://github.com/rstudio/DT) [@DT]</center>
 
 ------------------------------------------------------------------------
 
-<center>(*There is no hexagon sticker available for {**S2**}.*)</center>  
-
-Provides R bindings for Google's s2 library for geometric calculations on the sphere. High-performance constructors and exporters provide high compatibility with existing spatial packages, transformers construct new geometries from existing geometries, predicates provide a means to select geometries based on spatial relationships, and accessors extract information about geometries.
-
- S2 is perhaps best known as an example of a Discrete Global Grid System (`r glossary("DGGS")`)
-
-------------------------------------------------------------------------
-
-:::::{.my-resource}
-:::{.my-resource-header}
-Other S2 resources
-:::
-::::{.my-resource-container}
-
-- [Welcome to the S2 Geometry Library!](http://s2geometry.io/)
-- {**sf**}-vignette [7. Spherical geometry in sf using s2geometry](https://r-spatial.github.io/sf/articles/sf7.html)
-- [Geometry on the Sphere: Google's S2 Library](https://docs.google.com/presentation/d/1Hl4KapfAENAOf4gv-pSngKwvS_jwNVHRPZTTDzXXn6Q/edit#slide=id.i143): Slides
-::::
-:::::
-
-
-::::
-::::::
-
-## sf {#sec-96-sf}
-
-:::::: my-num-packagebox
-::: my-num-packagebox-header
-Package Profile: sf
-:::
-
-------------------------------------------------------------------------
-
-:::: my-num-packagebox-container
-<center>[Simple Features for R](https://r-spatial.github.io/sf/) [@sf]</center>
-
-------------------------------------------------------------------------
-
-::: {layout="[10, 30]" layout-valign="center"}
-![](img/logoi/logo-sf-min.png){width="176"}
-
-Support for simple features, a standardized way to encode spatial vector data. Binds to 'GDAL' for reading and writing data, to 'GEOS' for geometrical operations, and to 'PROJ' for projection conversions and datum transformations. Uses by default the 's2' package for spherical geometry operations on ellipsoidal (long/lat) coordinates.
-:::
-
-------------------------------------------------------------------------
-
-::: {#nte-importance-sf .callout-note}
-###### {**sf**} is now the go-to package for analysis of spatial vector data in R
-
-**Simple feature objects in R are stored in a data frame, with geographic
-data occupying a special column, usually named ‘geom’ or ‘geometry’.
-Simple features are, in essence, data frames with a spatial extension.**
-
-:::
-
-{**sf**} provides the same functionality (and more) previously provided
-in three (now deprecated) packages:
-
--   {**sp**} for data classes
--   {**rgdal**} for data read/write via an interface to GDAL and PROJ
-    and
--   {**rgeos**} for spatial operations via an interface to GEOS.
-
-:::::{.my-resource}
-:::{.my-resource-header}
-:::::: {#lem-02-sf-documentation}
-: {**sf**} documentation
-::::::
-:::
-::::{.my-resource-container}
-sf’s functionality is well documented on its website at
-[r-spatial.github.io/sf/](https://r-spatial.github.io/sf/) which contains [seven
-vignettes](https://r-spatial.github.io/sf/articles/).
-
-1. [Simple Features for R](https://r-spatial.github.io/sf/articles/sf1.html)
-2. [Reading, Writing and Converting Simple Features](https://r-spatial.github.io/sf/articles/sf2.html)
-3. [Manipulating Simple Feature Geometries](https://r-spatial.github.io/sf/articles/sf3.html)
-4. [Manipulating Simple Features](https://r-spatial.github.io/sf/articles/sf4.html)
-5. [Plotting Simple Features](https://r-spatial.github.io/sf/articles/sf5.html)
-6. [Miscellaneous](https://r-spatial.github.io/sf/articles/sf6.html)
-7. [Spherical geometry in sf using s2geometry](https://r-spatial.github.io/sf/articles/sf1.html)
-::::
-:::::
-
-
-
-
-Most of the book notes are a tutorial how to use the {**sf**} package. I will therefore abstain here from additonal comments.
-::::
-::::::
-
-
-
-## sfheaders {#sec-96-sfheaders}
-
-:::::: my-num-packagebox
-::: my-num-packagebox-header
-Package Profile: sfheaders
-:::
-
-:::: my-num-packagebox-container
+<center>(There is no hexagon sticker available for {DT}.)</center>
 
 ***
 
-<center>[Converts Between R Objects and Simple Feature Objects](https://dcooley.github.io/sfheaders/index.html) [@sfheaders]</center>
-
-------------------------------------------------------------------------
-
-<center>(*There is no hexagon sticker available for {**sfheaders**}.*)</center>    
+Data objects in R can be rendered as HTML tables using the JavaScript library 'DataTables' (typically via R Markdown or Shiny). The 'DataTables' library has been included in this R package. The package name 'DT' is an abbreviation of 'DataTables'.
 
 
-Converts between R and Simple Feature `sf` objects, without depending on the ‘heavy’ Simple Feature library. Conversion functions are available at both the R level, and through {**Rcpp**}.
 
 ::::
 ::::::
 
-## stars {#sec-96-stars}
+## forcats {#sec-annex-forcats}
 
-:::::: my-num-packagebox
-::: my-num-packagebox-header
-Package Profile: stars
+:::::: my-package
+::: my-package-header
+Package Profile: forcats
 :::
 
-------------------------------------------------------------------------
+:::: my-package-container
 
-:::: my-num-packagebox-container
-<center>[Spatiotemporal Arrays, Raster and Vector Data Cubes](	https://r-spatial.github.io/stars/) [@stars]</center>
+***
 
-------------------------------------------------------------------------
-
-<center>(*There is no hexagon sticker available for {**Package**}.*)</center>  
-
-
-Reading, manipulating, writing and plotting spatiotemporal arrays (raster and vector data cubes) in 'R', using `r glossary("GDAL")` bindings provided by {**sf**}, and `r glossary("NetCDF")` bindings by {**ncmeta**} and {**RNetCDF**}.
-
-------------------------------------------------------------------------
-
-Read [@pebesma-2023] to learn more about {**stars**}.
-::::
-::::::
-
-
-## terra {#sec-96-terra}
-
-:::::: my-num-packagebox
-::: my-num-packagebox-header
-Package Profile: terra
-:::
-
-------------------------------------------------------------------------
-
-:::: my-num-packagebox-container
-<center>[Spatial Data Analysis](https://rspatial.github.io/terra/) [@terra]</center>
+<center>[Tools for Working with Categorical Variables (Factors)](https://forcats.tidyverse.org/) [@forcats]</center>
 
 ------------------------------------------------------------------------
 
 ::: {layout="[10, 30]" layout-valign="center"}
-![](img/logoi/logo-terra-min.png){width="176"}
+![](img/logoi/logo-forcats-min.png){width="176"}
 
-Methods for spatial data analysis with vector (points, lines, polygons) and raster (grid) data. Methods for vector data include geometric operations such as intersect and buffer. Raster methods include local, focal, global, zonal and geometric operations. The predict and interpolate methods facilitate the use of regression type (interpolation, machine learning) models for spatial prediction, including with satellite remote sensing data. Processing of very large files is supported. 
+Provides tools for working with categorical variables, also known as factors. It offers functions for reordering factor levels, such as moving specified levels to the front, ordering by first appearance, reversing, and randomly shuffling. Additionally, it includes tools for modifying factor levels, including collapsing rare levels into a single category, anonymizing, and manually recoding. "Forcats" is an anagram of "factors" and part of the {**tidyverse**} suite of packages.
 :::
 
-------------------------------------------------------------------------
-
-::: {.callout-note }
-{**terra**} replaces the {**raster**} package ({**terra**} can do more, and it is faster and easier to use).
-:::
-
-
-- See the manual and tutorials on [https://rspatial.org/](https://rspatial.org/) to get started. 
-- Read additionally information about {**terra**} from the package author [@hijmans-2023; @hijmans-2025].
 ::::
 ::::::
 
-## units {#sec-96-units}
+## ggplot2 {#sec-annex-ggplot2}
 
-:::::: my-num-packagebox
-::: my-num-packagebox-header
-Package Profile: units
+:::::: my-package
+::: my-package-header
+Package Profile: ggplot2
+:::
+
+:::: my-package-container
+***
+
+<center>[Create Elegant Data Visualisations Using the Grammar of Graphics](https://ggplot2.tidyverse.org/) [@ggplot2]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-ggplot2-min.png){width="176"}
+
+{**ggplot2**} is a system for declaratively' creating graphics, based on "The Grammar of Graphics" [@wilkinson2005] — a general scheme for data visualization which breaks up graphs into semantic components such as scales and layers. It allows users to create graphs from composable elements instead of being limited to a predefined set of charts. You provide the data, tell {**ggplot2**} how to map variables to aesthetics, what graphical primitives to use, and it takes care of the details.
+
+:::
+
+::::
+::::::
+
+
+## glossary {#sec-annex-glossary}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: glossary
 :::
 
 ------------------------------------------------------------------------
 
-:::: my-num-packagebox-container
-<center>[Measurement Units for R Vectors](	https://r-quantities.github.io/units/) [@units]</center>
+:::: my-packagebox-container
+<center>[Glossaries for Markdown and Quarto Documents](https://debruine.github.io/glossary/) [@glossary]</center>
 
 ------------------------------------------------------------------------
 
-<center>(*There is no hexagon sticker available for {**units**}.*)</center>  
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-glossary-min.png){width="176"}
 
-Support for measurement units in R vectors, matrices and arrays: automatic propagation, conversion, derivation and simplification of units; raising errors in case of unit incompatibility. Compatible with the POSIXct, Date and difftime classes. Uses the UNIDATA udunits library and unit database for unit compatibility checking and conversion. Documentation about 'units' is provided in the paper by [@pebesma-2016] included as [package vignette](https://r-quantities.github.io/units/).
+Add glossaries to markdown and quarto documents by tagging individual words. Definitions can be provided inline or in a separate file. The goal of this glossary is to provide a lightweight solution for making glossaries in educational materials written in quarto or R Markdown.
+
+:::
+
+
+::::
+::::::
+
+## glue {#sec-annex-glue}
+
+:::::: my-package
+::: my-package-header
+Package Profile: glue
+:::
+
+:::: my-package-container
+
+***
+
+<center>[Interpreted String Literals](https://glue.tidyverse.org/) [@glue]</center>
 
 ------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-glue-min.png){width="176"}
+
+An implementation of interpreted string literals, inspired by Python's Literal String Interpolation. Glue offers interpreted string literals that are small, fast, and dependency-free. Glue does this by embedding R expressions in curly braces which are then evaluated and inserted into the argument string.
+
+:::
+
+
+::::
+::::::
+
+## htmltools {#sec-annex-htmltools}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: htmltools
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Tools for HTML](https://rstudio.github.io/htmltools/) [@htmltools]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-htmltools-min.png){width="176"}
+
+
+Tools for HTML generation and output. {**htmltools**} makes it easy to customize the user interface (UI) of any Shiny or R Markdown project by using R code to generate custom HTML (including JavaScript and CSS).
+
+:::
+
+
+::::
+::::::
+
+## knitr {#sec-annex-knitr}
+
+::::: my-package
+::: my-package-header
+Package Profile: knitr
+:::
+
+::: my-package-container
+
+------------------------------------------------------------------------
+
+<center>[A General-Purpose Package for Dynamic Report Generation in R](https://yihui.org/knitr/) [@xie-2014; @xie-2024; @xie2015]</center>
+
+------------------------------------------------------------------------
+
+<center>(*There is no hexagon sticker available for {**knitr**}.*)</center>
+
+***
+
+Provides a general-purpose tool for dynamic report generation in R using Literate Programming techniques. a general-purpose tool for dynamic report generation in R using Literate Programming techniques. It allows integrating R code into various document formats such as LaTeX, LyX, HTML, Markdown, AsciiDoc, and reStructuredText and especially R Markdown and Quarto. The package enables reproducible research by allowing users to combine code, results, and narrative text in a single document. It supports multiple output formats including PDF, HTML, Word, and more.
+:::
+:::::
+
+## lattice {#sec-annex-lattice}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: lattice
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Trellis Graphics for R](https://lattice.r-forge.r-project.org/) [@lattice]</center>
+
+------------------------------------------------------------------------
+
+<center>(There is no hexagon sticker available for {**lattice**}.)</center>
+
+***
+
+An implementation of Trellis graphics for R. It is a powerful and elegant high-level data visualization system with an emphasis on multivariate data. It is designed to meet most typical graphics needs with minimal tuning, but can also be easily extended to handle most nonstandard requirements.
+
+
+
+::::
+::::::
+
+## leaflet {#sec-annex-leaflet}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: leaflet
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Create Interactive Web Maps with the JavaScript 'Leaflet' Library](	https://rstudio.github.io/leaflet/) [@leaflet]</center>
+
+------------------------------------------------------------------------
+
+<center>(There is no hexagon sticker available for {**leaflet**}.)</center>
+
+***
+
+
+
+powerful tool for creating interactive web maps in R. It serves as an interface to the popular open-source [JavaScript library Leaflet](https://leafletjs.com/), which is widely used for building dynamic and mobile-friendly maps. The leaflet R package allows users to leverage the capabilities of Leaflet directly from R, making it accessible for data scientists, analysts, and researchers who want to visualize spatial data interactively.
+
+
+::::
+::::::
+
+## plotly {#sec-annex-plotly}
+
+:::::: my-package
+::: my-package-header
+Package Profile: plotly
+:::
+
+:::: my-package-container
+<center>[Create Interactive Web Graphics via 'plotly.js'](https://plotly.com/r/) [@plotly]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-plotly-min.png){width="176"}
+
+Create interactive web graphics from 'ggplot2' graphs and/or a custom interface to the (MIT-licensed) JavaScript library 'plotly.js' inspired by the grammar of graphics.
+:::
+
+------------------------------------------------------------------------
+
+Plotly.js is a standalone Javascript data visualization library, and it also powers the Python and R modules named plotly in those respective ecosystems (referred to as Plotly.py and Plotly.R).
+
+Plotly.js can be used to produce dozens of chart types and visualizations, including statistical charts, 3D graphs, scientific charts, SVG and tile maps, financial charts and more.
+::::
+::::::
+
+## purrr {#sec-annex-purrr}
+
+:::::: my-package
+::: my-package-header
+Package Profile: purrr
+:::
+
+:::: my-package-container
+
+***
+
+<center>[Functional Programming Tools](https://purrr.tidyverse.org/) [@purrr]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-purrr-min.png){width="176"}
+
+{**purrr**} enhances R’s functional programming (FP) toolkit by providing a complete and consistent set of tools for working with functions and vectors. It offers a family of `map()` functions that allow users to replace many for loops with more succinct and readable code. The package is part of the tidyverse and is designed to work naturally with the pipe operator.
+:::
+
+------------------------------------------------------------------------
+
+
+::: {.callout-note}
+
+If you’ve never heard of FP before, the best place to start is the family of `purrr::map()` functions which allow you to replace many for loops with code that is both more succinct and easier to read. The best place to learn about the `purrr::map()` functions is the [iteration chapter](https://r4ds.had.co.nz/iteration.html) in R for data science.
+
+:::
+
+
+::::
+::::::
+
+## ragg {#sec-annex-ragg}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: ragg
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Graphic Devices Based on AGG](	https://ragg.r-lib.org) [@ragg]</center>
+
+------------------------------------------------------------------------
+
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-ragg-min.png){width="176"}
+
+
+Anti-Grain Geometry (AGG) is a high-quality and high-performance 2D drawing library. The 'ragg' package provides a set of graphic devices based on AGG to use as alternative to the raster devices provided through the 'grDevices' package
+
+:::
+
+::::
+::::::
+
+
+## reactable {#sec-annex-reactable}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: reactable
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Interactive Data Tables for R](https://glin.github.io/reactable/) [@reactable]</center>
+
+------------------------------------------------------------------------
+
+<center>(There is no hexagon sticker available for {**reactable**}.)</center>
+
+***
+
+An interactive data table library that allows users to create dynamic and customizable tables in R. It is based on the ["React Table" JavaScript library](https://react-table-library.com/) and provides an HTML widget that can be used in R Markdown documents, Shiny applications, or viewed directly from an R console. 
+
+The package offers features such as sorting, pagination, filtering, and searching, making it suitable for data exploration and visualization. The main function of the package is `reactable()`, which takes a data frame as input and returns an interactive table.
+
+
+
+
+::::
+::::::
+
+## reactlog {#sec-annex-reactlog}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: reactlog
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Reactivity Visualizer for 'shiny'](Reactivity Visualizer for 'shiny') [@reactlog]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-reactlog-min.png){width="176"}
+
+
+Building interactive web applications with R is incredibly easy with 'shiny'. Behind the scenes, 'shiny' builds a reactive graph that can quickly become intertwined and difficult to debug. 'reactlog' provides a visual insight into that black box of 'shiny' reactivity by constructing a directed dependency graph of the application's reactive state at any time point in a reactive recording
+
+:::
+
+::::
+::::::
+
+
+## readr {#sec-annex-readr}
+
+:::::: my-package
+::: my-package-header
+Package Profile: readr
+:::
+
+:::: my-package-container
+
+***
+
+<center>[Read Rectangular Text Data](https://readr.tidyverse.org/) [@readr]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-readr-min.png){width="176"}
+
+The goal of readr is to provide a fast and friendly way to read rectangular data from delimited files, such as comma-separated values (CSV) and tab-separated values (TSV). It is designed to parse many types of data found in the wild, while providing an informative problem report when parsing leads to unexpected results. [@readr]
+:::
+
+------------------------------------------------------------------------
+
+{**readr**} supports the following formats:
+
+-   read_csv(): comma-separated values (CSV)
+-   read_tsv(): tab-separated values (TSV)
+-   read_csv2(): semicolon-separated values with , as the decimal mark
+-   read_delim(): delimited files (CSV and TSV are important special cases)
+-   read_fwf(): fixed-width files
+-   read_table(): whitespace-separated files
+-   read_log(): web log files
+::::
+::::::
+
+
+## reprex {#sec-annex-reprex}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: reprex
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Prepare Reproducible Example Code via the Clipboard](https://reprex.tidyverse.org/) [@reprex]</center>
+
+------------------------------------------------------------------------
+
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-reprex-min.png){width="176"}
+
+
+Convenience wrapper that uses the 'rmarkdown' package to render small snippets of code to target formats that include both code and output. The goal is to encourage the sharing of small, reproducible, and runnable examples on code-oriented websites, such as https://stackoverflow.com and https://github.com, or in email. The user's clipboard is the default source of input code and the default target for rendered output. 'reprex' also extracts clean, runnable R code from various common formats, such as copy/paste from an R session.
+
+:::
+
+
+::::
+::::::
+
+## rhino {#sec-annex-rhino}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: rhino
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[A Framework for Enterprise Shiny Applications](https://appsilon.github.io/rhino/) [@rhino]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-rhino-min.png){width="176"}
+
+
+A framework that supports creating and extending enterprise Shiny applications using best practices. Apply best software engineering practices, modularize your code, test it well, make UI beautiful, and think about user adoption from the very beginning. Rhino is an opinionated framework with a focus on software engineering practices and development tools.
+
+
+
+:::
+
+::::
+::::::
+
+## rlang {#sec-annex-rlang}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: rlang
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Functions for Base Types and Core R and 'Tidyverse' Features](https://rlang.r-lib.org) [@rlang]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-rlang-min.png){width="176"}
+
+
+The {**rlang**} package is a toolkit for working with core R and {**tidyverse**} features like tidy evaluation and is providing various interfaces for working with R and R objects. The package offers tools for handling the R session, environments, evaluation, calls and symbols, and functions. Additionally, it provides error handling tools, such as `rlang::abort()` for creating errors with bullet lists, structured metadata, and error chaining support.
+
+:::
+
+
+::::
+::::::
+
+## shiny {#sec-annex-shiny}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: shiny
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Web Application Framework for R](https://shiny.posit.co) [@shiny]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-shiny-min.png){width="176"}
+
+Makes it incredibly easy to build interactive web applications with R. Automatic "reactive" binding between inputs and outputs and extensive prebuilt widgets make it possible to build beautiful, responsive, and powerful applications with minimal effort.
+
+:::
+
+
+::::
+::::::
+
+## shinydashboard {#sec-annex-shinydashboard}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: shinydashboard
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Create Dashboards with 'Shiny'](https://rstudio.github.io/shinydashboard/) [@shinydashboard]</center>
+
+------------------------------------------------------------------------
+
+<center>(There is no hexagon sticker available for {**shinydashboard**}.)</center>
+
+***
+
+This package provides a theme on top of 'Shiny', making it easy to create attractive dashboards. The package allows users to build dashboards with a three-panel layout, including a header, sidebar, and body. It includes functions for creating various components such as headers, sidebars, and body elements, which help in structuring the dashboard. Additionally, {**shinydashboard**} supports the integration of various data visualization libraries like {**ggplot2**}, {**plotly**}, and {**leaflet**} to enhance interactivity and data representation.
+
+
+::::
+::::::
+
+## shinyFeedback {#sec-annex-shinyFeedback}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: shinyFeedback
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Display User Feedback in Shiny Apps](https://github.com/merlinoa/shinyFeedback) [@shinyFeedback]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-shinyFeedback-min.png){width="176"}
+
+
+Easily display user feedback in Shiny apps. {**shinyFeedback**} currently works with the following {**shiny**} inputs: `dateInput()`; `dateRangeInput()`; `fileInput()`; `numericInput()`; `passwordInput()`; `selectInput()`;  `sliderInput()`; `textAreaInput()`; `textInput()`: <br /><br/>Additionally it support also the {**shinyWidgets**} package with `shinyWidgets::airDatepickerInput()` and `shinyWidgets::pickerInput()`.
+
+
+:::
+
+
+::::
+::::::
+
+## shinylive {#sec-annex-shinylive}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: shinylive
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Run 'shiny' Applications in the Browser](	https://posit-dev.github.io/r-shinylive/) [@shinylive]</center>
+
+------------------------------------------------------------------------
+
+<center>(There is no hexagon sticker available for {**shinylive**}.)</center>
+
+***
+
+Exporting 'shiny' applications with 'shinylive' allows you to run them entirely in a web browser, without the need for a separate R server. The traditional way of deploying 'shiny' applications involves in a separate server and client: the server runs R and 'shiny', and clients connect via the web browser. 
+
+When an application is deployed with 'shinylive', R and 'shiny' run in the web browser (via [webR](https://docs.r-wasm.org/webr/latest/)): the browser is effectively both the client and server for the application. This allows for your 'shiny' application exported by 'shinylive' to be hosted by a static web server or to run inside Quarto documents as I have extensively used in this book.
+
+
+::::
+::::::
+
+## shinymaterial {#sec-annex-shinymaterial}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: shinymaterial
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Implement Material Design in Shiny Applications](	https://ericrayanderson.github.io/shinymaterial/) [@shinymaterial]</center>
+
+------------------------------------------------------------------------
+
+<center>(There is no hexagon sticker available for {**shinymaterial**}.)</center>
+
+***
+
+An R package that allows developers to implement Google's Material Design <https://m2.material.io/design> in Shiny applications. It provides a set of UI elements and functions that enable the creation of visually appealing and modern web applications using R code. The package includes various components such as buttons, cards, dropdowns, and tabs, which are styled according to Material Design principles.
+
+
+
+
+::::
+::::::
+
+## shinyMobile {#sec-annex-shinyMobile}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: shinyMobile
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Mobile Ready 'shiny' Apps with Standalone Capabilities](https://rinterface.github.io/shinyMobile/) [@shinyMobile]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-shinyMobile-min.png){width="176"}
+
+
+Develop outstanding 'shiny' apps for 'iOS' and 'Android' as well as beautiful 'shiny' gadgets. 'shinyMobile' is built on top of the latest 'Framework7' template <https://framework7.io>. Discover 14 new input widgets (sliders, vertical sliders, stepper, grouped action buttons, toggles, picker, smart select, ...), 2 themes (light and dark), 12 new widgets (expandable cards, badges, chips, timelines, gauges, progress bars, ...) combined with the power of server-side notifications such as alerts, modals, toasts, action sheets, sheets (and more) as well as 3 layouts (single, tabs and split).
+
+:::
+
+::::
+::::::
+
+## shinysnippets {#sec-annex-shinysnippets}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: shinysnippets
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[RStudio Snippets for Shiny Devs](	https://github.com/Thinkr-open/shinysnippets) [@shinysnippets]</center>
+
+------------------------------------------------------------------------
+
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-shinysnippets-min.png){width="176"}
+
+
+A series of shiny related RStudio Snippets. The goal of shinysnippets is to save development time while taking advantage of Rstudio snippets for Shiny applications.
+
+:::
+
+::::
+::::::
+
+## shinyvalidate {#sec-annex-shinyvalidate}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: shinyvalidate
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Input Validation for Shiny Apps](https://rstudio.github.io/shinyvalidate/) [@shinyvalidate]</center>
+
+------------------------------------------------------------------------
+
+<center>(There is no hexagon sticker available for {**shinyvalidate**}.)</center>
+
+***
+
+Improves the user experience of Shiny apps by helping to provide feedback when required inputs are missing, or input values are not valid. It allows developers to add validation rules to their Shiny applications to ensure that user inputs meet certain criteria before processing. It aims to provide minimalist feedback that supports a larger set of components and is extensible for custom inputs.
+
+
+
+
+::::
+::::::
+
+## shiny.semantic {#sec-annex-shiny.semantic}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: shiny.semantic
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Semantic UI Support for Shiny](https://appsilon.github.io/shiny.semantic/) [@shiny.semantic]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-shiny.semantic-min.png){width="176"}
+
+
+Creating a great user interface for your Shiny apps can be a hassle, especially if you want to work purely in R and don't want to use, for instance HTML templates. This package adds support for a powerful UI library Fomantic UI - <https://fomantic-ui.com/> (before Semantic). It also supports universal UI input binding that works with various DOM elements.
+
+:::
+
+
+
+::::
+::::::
+
+
+## showtext {#sec-annex-showtext}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: showtext
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Using Fonts More Easily in R Graphs](https://github.com/yixuan/showtext) [@showtext]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-showtext-min.png){width="176"}
+
+
+Making it easy to use various types of fonts ('TrueType', 'OpenType', Type 1, web fonts, etc.) in R graphs, and supporting most output formats of R graphics including PNG, PDF and SVG. Text glyphs will be converted into polygons or raster images, hence after the plot has been created, it no longer relies on the font files. No external software such as 'Ghostscript' is needed to use this package.
+
+:::
+
+::::
+::::::
+
+## stringi {#sec-annex-stringi}
+
+:::::: my-package
+::: my-package-header
+Package Profile: stringi
+:::
+
+:::: my-package-container
+
+***
+
+<center>[Fast and Portable Character String Processing Facilities](https://stringi.gagolewski.com/) [@stringi]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-stringi-min.png){width="176"}
+
+A collection of character string/text/natural language processing tools for pattern searching (e.g., with 'Java'-like regular expressions or the 'Unicode' collation algorithm), random string generation, case mapping, string transliteration, concatenation, sorting, padding, wrapping, Unicode normalization, date-time formatting and parsing, and many more.
+:::
+
+------------------------------------------------------------------------
+
+The {**stringi**} tools are fast, consistent, convenient, and - thanks to `r glossary("ICU")` ([International Components for Unicode](https://icu.unicode.org/home)) - portable across all locales and platforms. Documentation about {**stringi**} is provided via its website at <https://stringi.gagolewski.com/> and the paper by Gagolewski [-@gagolewski2022].
+::::
+::::::
+
+
+## stringr {#sec-annex-stringr}
+
+::::::::: my-package
+::: my-package-header
+Package Profile: stringr
+:::
+
+::::::: my-package-container
+
+***
+
+<center>[Simple, Consistent Wrappers for Common String Operations](https://stringr.tidyverse.org) [@stringr]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-stringr-min.png){width="176"}
+
+A consistent, simple and easy to use set of wrappers around the fantastic 'stringi' package. All function and argument names (and positions) are consistent, all functions deal with "NA"'s and zero length vectors in the same way, and the output from one function is easy to feed into the input of another.
+:::
+
+------------------------------------------------------------------------
+
+Strings are not glamorous, high-profile components of R, but they do play a big role in many data cleaning and preparation tasks. The {**stringr**} package provides a cohesive set of functions designed to make working with strings as easy as possible. If you’re not familiar with strings, the best place to start is the [chapter on strings](https://r4ds.hadley.nz/strings) in R for Data Science.
+
+::::
+:::::::
+
+
+
+## styler {#sec-annex-styler}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: styler
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Non-Invasive Pretty Printing of R Code](	https://github.com/r-lib/styler) [@styler]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-styler-min.png){width="176"}
+
+
+The R package styler is a tool for non-invasive pretty printing of R code, allowing users to format their code according to a style guide without altering the original formatting intent.
+ It helps maintain consistent coding styles across projects and facilitates collaboration.
+ The package defaults to the [tidyverse style guide](https://style.tidyverse.org/index.html) but also allows for custom style guides.
+
+:::
+
+::::
+::::::
+
+
+
+## testthat {#sec-annex-testthat}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: testthat
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Unit Testing for R](https://testthat.r-lib.org) [@testthat]</center>
+
+------------------------------------------------------------------------
+
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-testthat-min.png){width="176"}
+
+
+Software testing is important, but, in part because it is frustrating and boring, many of us avoid it. 'testthat' is a testing framework for R that is easy to learn and use, and integrates with your existing 'workflow'.
+
+:::
+
+
+::::
+::::::
+
+## thematic {#sec-annex-thematic}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: thematic
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Unified and Automatic 'Theming' of 'ggplot2', 'lattice', and 'base' R Graphics](https://rstudio.github.io/thematic/) [@thematic]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-thematic-min.png){width="176"}
+
+
+Theme 'ggplot2', 'lattice', and 'base' graphics based on a few choices, including foreground color, background color, accent color, and font family. Fonts that aren't available on the system, but are available via download on 'Google Fonts', can be automatically downloaded, cached, and registered for use with the {**showtext**} and {**ragg**} packages.
+
+:::
+
+
+::::
+::::::
+
+## tibble {#sec-annex-tibble}
+
+:::::: my-package
+::: my-package-header
+Package Profile: tibble
+:::
+
+:::: my-package-container
+
+***
+
+<center>[Simple Data Frames](https://tibble.tidyverse.org/) [@tibble]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-tibble-min.png){width="176"}
+
+A tibble, or `tbl_df`, is a modern reimagining of the data.frame, keeping what time has proven to be effective, and throwing out what is not.
+:::
+
+------------------------------------------------------------------------
+
+Tibbles are data.frames that are lazy and surly: they do less (i.e. they don’t change variable names or types, and don’t do partial matching) and complain more (e.g. when a variable does not exist). This forces you to confront problems earlier, typically leading to cleaner, more expressive code. Tibbles also have an enhanced `print()` method which makes them easier to use with large datasets containing complex objects.
+::::
+::::::
+
+## tidyr {#sec-annex-tidyr}
+
+:::::: my-package
+::: my-package-header
+Package Profile: tidyr
+:::
+
+:::: my-package-container
+
+***
+
+<center>[Tidy Messy Data](https://tidyr.tidyverse.org/) [@tidyr]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-tidyr-min.png){width="176"}
+
+The goal of {**tidyr**} is to help you create tidy data. Tidy data describes a standard way of storing data that is used wherever possible throughout the {**tidyverse**}. If you ensure that your data is tidy, you’ll spend less time fighting with the tools and more time working on your analysis.
+:::
+
+------------------------------------------------------------------------
+
+Tidy data is data where: - Every column is a variable. - Every row is an observation. - Every cell is a single value.
+::::
+::::::
+
+
+## tidyverse {#sec-annex-tidyverse}
+
+::::::::: my-package
+::: my-package-header
+Package Profile: tidyverse
+:::
+
+::::::: my-package-container
+
+***
+
+<center>[Easily Install and Load the 'Tidyverse'](https://www.tidyverse.org/) [@tidyverse]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-tidyverse-min.png){width="176"}
+
+The {**tidyverse**} is an opinionated [collection of R packages](https://www.tidyverse.org/packages/) designed for data science. It includes a set of packages that work in harmony because they share common data representations and API design. The core tidyverse packages include {**dplyr**}, {**ggplot2**}, {**tidyr**}, {**readr**}, {**purrr**}, {**tibble**}, {**stringr**}, and {**forcats**}. These packages provide functionality to model, transform, and visualize data.
+
+:::
+
+------------------------------------------------------------------------
+
+
+::: {.callout-note}
+In this book I am not going to load {**tidyverse**} with all its packages. Instead I am using the `<package>::<function>` format to access the commands. Explicitly mentioned the used packages with every function call helps me to learn which package is responsible for which function.
+:::
+
+:::::::
+:::::::::
+
+
+
+
+## vroom {#sec-annex-vroom}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: vroom
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Read and Write Rectangular Text Data Quickly](https://vroom.r-lib.org) [@vroom]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-vroom-min.png){width="176"}
+
+
+The goal of 'vroom' is to read and write data (like 'csv', 'tsv' and 'fwf') quickly. When reading it uses a quick initial indexing step, then reads the values lazily , so only the data you actually use needs to be read. The writer formats the data in parallel and writes to disk asynchronously from formatting.
+
+:::
+
+
+::::
+::::::
+
+
+## waiter {#sec-annex-waiter}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: waiter
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Loading Screen for 'Shiny'](https://waiter.john-coene.com/) [@waiter]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-waiter-min.png){width="176"}
+
+
+Provides functionality for adding loading screens and progress bars to Shiny applications. It allows developers to show partial or full-page loading screens with spinners or loading bars to inform users that the application is processing data or performing computations.
+:::
 
 ::::
 ::::::
