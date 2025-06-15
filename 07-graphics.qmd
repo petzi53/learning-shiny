@@ -1,30 +1,976 @@
+---
+execute:
+  cache: true
+---
+
 # Graphics {#sec-chap07}
 
+## Introduction
 
-```{r}
-#| label: setup
-#| results: hold
-#| include: false
-
-base::source(file = "R/helper.R")
-ggplot2::theme_set(ggplot2::theme_bw())
-options(show.signif.stars = FALSE)
-
-```
-
-## Table of content for chapter 04 {.unnumbered}
-
-::::: {#obj-chap03}
-:::: {.my-objectives}
-::: {.my-objectives-header}
+:::::: {#obj-chap07}
+::::: my-objectives
+::: my-objectives-header
 Chapter section list
 :::
 
-::: {.my-objectives-container}
+::: my-objectives-container
+1.  Using `renderPlot()` to create interactive plots, plots that respond
+    to mouse events.
+2.  Couple of other useful techniques, including
+    -   making plots with dynamic width and height and
+    -   displaying images with `renderImage()`.
+:::
+:::::
+::::::
+
+## Introduction
+
+One of the coolest things about `plotOutput()` is that as well as being
+an output that displays plots, it can also be an input that responds to
+pointer events. That allows you to create interactive graphics where the
+user interacts directly with the data on the plot.
+
+### Basics
+
+A plot can respond to four different mouse events:
+
+1.  `click`,
+2.  `dblclick`: double click,
+3.  `hover`: the mouse stays in the same place for a little while, and
+4.  `brush`: a rectangular selection tool
+
+To turn these events into Shiny inputs, you supply a string to the
+corresponding `plotOutput()` argument, e.g.
+`plotOutput("plot", click = "plot_click")`. This creates an
+`input$plot_click` that you can use to handle mouse clicks on the plot.
+
+::::::: column-body-outset
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-07-plot-click-basics}
+: Click inside the image to get mouse coordinates
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 500
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage(
+  plotOutput("plot", click = "plot_click"),
+  verbatimTextOutput("info")
+)
+
+server <- function(input, output) {
+  output$plot <- renderPlot({
+    plot(mtcars$wt, mtcars$mpg)
+  }, res = 96)
+
+  output$info <- renderPrint({
+    req(input$plot_click)
+    x <- round(input$plot_click$x, 2)
+    y <- round(input$plot_click$y, 2)
+    cat("[", x, ", ", y, "]", sep = "")
+  })
+}
+
+shinyApp(ui, server)
+```
+:::
+::::::
+:::::::
+
+Note the use of `req()`, to make sure the app doesn’t do anything before
+the first click, and that the coordinates are in terms of the underlying
+`wt` and `mpg` variables.
+
+::::: my-procedure
+::: my-procedure-header
+Structure of the following sections
+:::
+
+::: my-procedure-container
+The following sections describe the events in more details.
+
+-   `click` events
+-   other point events (`dblclick`, `hover`)
+-   `brush` event (defining a rectangular area: `xmin`, `xmax`, `ymin`,
+    and `ymax`)
+-   examples of plot updating events
+-   limitation of interactive graphics in Shiny
+:::
+:::::
+
+### Clicking {#sec-07-clicking}
+
+The point events return a relatively rich list containing a lot of
+information. The most important components are `x` and `y`, which give
+the location of the event in data coordinates.
+
+I’m not going to talk about this data structure, since you’ll only need
+it in relatively rare situations.
+
+:::::: my-resource
+:::: my-resource-header
+::: {#lem-07-list-point-events}
+: List of point events
+:::
+::::
+
+::: my-resource-container
+Learn about the complex details for point events using an [app in the
+Shiny
+gallery](https://gallery.shinyapps.io/095-plot-interaction-advanced/).
+
+If you want to see just the returned values for the input click in
+@cnj-07-plot-click-basics replace the last line with the
+`cat()`arguments to `input$plot_click`.
+:::
+::::::
+
+Instead of explaining all the details, we’ll use the `nearPoints()`
+helper, which returns a data frame containing rows near the click,
+taking care of a bunch of fiddly details. You have to click near a point
+otherwise the function would do nothing because it's name is
+`nearPoints()` and **not** `nearestPoint()`.
+
+Another way to use `nearPoints()` is with `allRows = TRUE` and
+`addDist = TRUE`. That will return the original data frame with two new
+columns:
+
+-   `dist_` gives the distance between the row and the event (in
+    pixels).
+-   `selected_` says whether or not it’s near the click event (i.e.
+    whether or not its a row that would be returned when
+    `allRows = FALSE`).
+
+::::::::::::::::::::: column-page-inset
+:::::::::::::::::::: my-code-collection
+::::: my-code-collection-header
+::: my-code-collection-icon
+:::
+
+::: {#exm-07-plot-click}
+: Using nearPoints()
+:::
+:::::
+
+:::::::::::::::: my-code-collection-container
+::::::::::::::: panel-tabset
+###### `plot()`
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-07-near-points-plot}
+: `nearPoints()` example with `base::plot()`
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 650
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage(
+  plotOutput("plot", click = "plot_click"),
+  tableOutput("data")
+)
+server <- function(input, output, session) {
+  output$plot <- renderPlot({
+    plot(mtcars$wt, mtcars$mpg)
+  }, res = 96)
+  
+  output$data <- renderTable({
+     nearPoints(mtcars, input$plot_click, 
+                xvar = "wt", yvar = "mpg")
+  })
+}
+
+shinyApp(ui, server)
+```
+:::
+::::::
+
+###### `ggplot()`
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-07-near-points-ggplot}
+: `nearPoints()` example with `ggplot2::ggplot()`
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 650
+#| components: [editor, viewer]
+
+library(shiny)
+library(ggplot2)
+ggplot2::theme_set(ggplot2::theme_bw())
+
+ui <- fluidPage(
+  plotOutput("plot", click = "plot_click"),
+  tableOutput("data")
+)
+server <- function(input, output, session) {
+  output$plot <- renderPlot({
+    ggplot(mtcars, aes(wt, mpg)) + geom_point()
+  }, res = 96)
+  
+  output$data <- renderTable({
+    req(input$plot_click)
+    nearPoints(mtcars, input$plot_click)
+  })
+}
+
+shinyApp(ui, server)
+```
+:::
+::::::
+
+###### `ggplot()` with `allRows = TRUE` and `addDist = TRUE`
+
+:::::: my-r-code
+:::: my-r-code-header
+<div>
+
+: `nearPoints()` example as a `ggplot2::ggplot()` with `allRows = TRUE`
+and `addDist = TRUE`
+
+</div>
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 1600
+#| components: [editor, viewer]
+
+library(shiny)
+library(ggplot2)
+ggplot2::theme_set(ggplot2::theme_bw())
+
+ui <- fluidPage(
+  plotOutput("plot", click = "plot_click"),
+  tableOutput("data")
+)
+server <- function(input, output, session) {
+  output$plot <- renderPlot({
+    ggplot(mtcars, aes(wt, mpg)) + geom_point()
+  }, res = 96)
+  
+  output$data <- renderTable({
+    req(input$plot_click)
+    nearPoints(mtcars, input$plot_click,
+               allRows = TRUE,
+               addDist = TRUE)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+------------------------------------------------------------------------
+
+------------------------------------------------------------------------
+
+You may experiment and try a different (combination of) arguments, for
+instance changing the `threshold` and / or `maxpoints`, turning
+`addDist` and / or `allRows` on or off.
+:::
+::::::
+:::::::::::::::
+::::::::::::::::
+::::::::::::::::::::
+:::::::::::::::::::::
+
+You might wonder exactly what `nearPoints()` returns. This is a good
+place to use `base::browser()`, which was discussed in
+@sec-05-interactive-debugger.
+
+1.  Replace the `outputoutput$data <- renderTable()` function with:
+
+``` markdown
+
+  output$data <- renderTable({
+    req(input$plot_click)
+    browser()
+    nearPoints(mtcars, input$plot_click)
+  })
+```
+
+2.  Restart the app.
+3.  Click inside the plot in the resulted web page.
+4.  Then you will see in the console the following text:
+
+``` console
+> runApp('apps-07/click-browser')
+Listening on http://127.0.0.1:5962
+Called from: eval(expr, p)
+Browse[1]> n
+debug at /Users/petzi/Documents/Meine-Repos/learning-shiny/apps-07/click-browser/app.R#16: nearPoints(mtcars, input$plot_click)
+Browse[1]>
+```
+
+5.  Continue in the second `Browse[1]>` line, where the cursor stops,
+    with
+
+``` console
+Browse[1]> nearPoints(mtcars, input$plot_click)
+               mpg cyl  disp hp drat    wt  qsec vs am gear carb
+Toyota Corona 21.5   4 120.1 97  3.7 2.465 20.01  1  0    3    1
+```
+
+6.  The last line will differ depending where the mouse click occurred.
+
+::: callout-important
+![Debugging works only in the Shiny app (not in `shinylive`) and must
+run in console mode (not in a background
+job).](img/run-app-window-chap07-min.png){#fig-07-01
+fig-alt="alt-text" fig-align="center" width="30%"}
+:::
+
+### Other point events
+
+The same approach works equally well with `click`, `dblclick`, and
+`hover`: just change the name of the argument. If needed, you can get
+additional control over the events by supplying `clickOpts()`,
+`dblclickOpts()`, or `hoverOpts()` instead of a string giving the input
+id. These are rarely needed, so I won’t discuss them here; see the
+documentation for details.
+
+You can use multiple interactions types on one plot. Just make sure to
+explain to the user what they can do: one downside of using mouse events
+to interact with an app is that they’re not immediately discoverable.
+
+### Brushing
+
+Another way of selecting points on a plot is to use a brush, a
+rectangular selection defined by four edges. In Shiny, using a brush is
+straightforward once you’ve mastered `click` and `nearPoints()`: you
+just switch to `brush` argument and the `brushedPoints()` helper.
+
+::::::::::::::::::::: column-page-inset
+:::::::::::::::::::: my-code-collection
+::::: my-code-collection-header
+::: my-code-collection-icon
+:::
+
+::: {#exm-07-brush-examples}
+: Brush examples
+:::
+:::::
+
+:::::::::::::::: my-code-collection-container
+::::::::::::::: panel-tabset
+###### Basic brush
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-07-basic-brush}
+: Draggable ‘brush’ to draw a box around a rectangular area
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+#| components: [editor, viewer]
+
+library(shiny)
+library(ggplot2)
+ggplot2::theme_set(ggplot2::theme_bw())
+
+ui <- fluidPage(
+  plotOutput("plot", brush = "plot_brush"),
+  tableOutput("data")
+)
+server <- function(input, output, session) {
+  output$plot <- renderPlot({
+    ggplot(mtcars, aes(wt, mpg)) + geom_point()
+  }, res = 96)
+  
+  output$data <- renderTable({
+    brushedPoints(mtcars, input$plot_brush)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+------------------------------------------------------------------------
+
+Play around with this app. Use for instance `brushOpts()` to control the
+color (fill and stroke). You will find an example solution in the next
+tab. Or restrict brushing to a single dimension with direction = "x" or
+"y" (useful, e.g., for brushing time series).
+:::
+::::::
+
+###### Using `brushOpts()`
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-07-using-brush-opts}
+: Using `brushOpts()` to define the brushing options
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+#| components: [editor, viewer]
+
+library(shiny)
+library(ggplot2)
+ggplot2::theme_set(ggplot2::theme_bw())
+
+ui <- fluidPage(
+  plotOutput("plot", brush = brushOpts(
+        id = "plot_brush",
+        fill = "yellow",
+        stroke = "darkblue",
+        opacity = .25)
+    ),
+  tableOutput("data")
+)
+server <- function(input, output, session) {
+  output$plot <- renderPlot({
+    ggplot(mtcars, aes(wt, mpg)) + geom_point()
+  }, res = 96)
+  
+  output$data <- renderTable({
+    brushedPoints(mtcars, input$plot_brush)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+------------------------------------------------------------------------
+
+This example demonstrates how to use `brushOpts()` to enable brushing on
+plots. The `brushOpts()` function is used to define the brushing
+options, such as the `id` for the brush, and other parameters like
+`fill`, `stroke`, and `opacity` to customize the appearance of the brush
+:::
+::::::
+
+###### Linking plots
+
+:::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-07-linking-plots}
+: Use `brushOpts()` to enable brushing on plots and link multiple plots
+together.
+:::
+::::
+
+::: my-r-code-container
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+#| layout: vertical
+
+library(shiny)
+library(ggplot2)
+library(Cairo)   # For nicer ggplot2 output when deployed on Linux
+
+ui <- fluidPage(
+  fluidRow(
+    column(width = 4, class = "well",
+      h4("Brush and double-click to zoom"),
+      plotOutput("plot1", height = 300,
+        dblclick = "plot1_dblclick",
+        brush = brushOpts(
+          id = "plot1_brush",
+          resetOnNew = TRUE
+        )
+      )
+    ),
+    column(width = 8, class = "well",
+      h4("Left plot controls right plot"),
+      fluidRow(
+        column(width = 6,
+          plotOutput("plot2", height = 300,
+            brush = brushOpts(
+              id = "plot2_brush",
+              resetOnNew = TRUE
+            )
+          )
+        ),
+        column(width = 6,
+          plotOutput("plot3", height = 300)
+        )
+      )
+    )
+
+  )
+)
+
+server <- function(input, output) {
+
+  # ---- Single zoomable plot  ---------------------------------
+  # on the left side
+  ranges <- reactiveValues(x = NULL, y = NULL)
+
+  output$plot1 <- renderPlot({
+    ggplot(mtcars, aes(wt, mpg)) +
+      geom_point() +
+      coord_cartesian(xlim = ranges$x, ylim = ranges$y, expand = FALSE)
+  })
+
+  # ------ double-click single --------
+  # When a double-click happens, check if there's a brush on the plot.
+  # If so, zoom to the brush bounds; if not, reset the zoom.
+  observeEvent(input$plot1_dblclick, {
+    brush <- input$plot1_brush
+    if (!is.null(brush)) {
+      ranges$x <- c(brush$xmin, brush$xmax)
+      ranges$y <- c(brush$ymin, brush$ymax)
+
+    } else {
+      ranges$x <- NULL
+      ranges$y <- NULL
+    }
+  })
+
+  # -------- Linked plots --------------------------------------
+  #  (middle and right)
+  ranges2 <- reactiveValues(x = NULL, y = NULL)
+
+  output$plot2 <- renderPlot({
+    ggplot(mtcars, aes(wt, mpg)) +
+      geom_point()
+  })
+
+  output$plot3 <- renderPlot({
+    ggplot(mtcars, aes(wt, mpg)) +
+      geom_point() +
+      coord_cartesian(xlim = ranges2$x, ylim = ranges2$y, expand = FALSE)
+  })
+
+  # --------- Double click linked --------
+  # When a double-click happens, check if there's a brush on the plot.
+  # If so, zoom to the brush bounds; if not, reset the zoom.
+  observe({
+    brush <- input$plot2_brush
+    if (!is.null(brush)) {
+      ranges2$x <- c(brush$xmin, brush$xmax)
+      ranges2$y <- c(brush$ymin, brush$ymax)
+
+    } else {
+      ranges2$x <- NULL
+      ranges2$y <- NULL
+    }
+  })
+
+}
+
+shinyApp(ui, server)
+```
+
+------------------------------------------------------------------------
+
+This example demonstrates how to use `brushOpts()` to enable brushing on
+plots and link multiple plots together. Here on of the arguments of the
+`brushOpts()` function is `resetOnNew` to reset the brush when the plot
+is updated. It uses `observeEvent()` and `observe()` to link two actions
+(here brushing and double clicking) in the left panel and linking the
+two plots in the middle and right panel.
+:::
+::::::
+:::::::::::::::
+::::::::::::::::
+::::::::::::::::::::
+:::::::::::::::::::::
+
+### Modifying the plot
+
+So far we’ve displayed the results of the interaction in another output.
+But the true beauty of interactivity comes when you display the changes
+in the same plot you’re interacting with. Unfortunately this requires an
+advanced reactivity technique that you have not yet learned about:
+`reactiveVal()`. We’ll come back to `reactiveVal()` in @XXX_16, but I
+wanted to show it here because it’s such a useful technique. You’ll
+probably need to re-read this section after you’ve read @XXX_16, but
+hopefully even without all the theory you’ll get a sense of the
+potential applications[^07-graphics-1].
+
+[^07-graphics-1]: I have already used `reactiveValues` in my own summary in @sec-chap03 as a solution for my practice example that was for me easier to understand than the `reactive()` function. I took the idea from a [StackOverflow question]https://stackoverflow.com/questions/71367314/extract-a-value-from-reactive-data-frame-in-shiny (and the answer).
+
+As you might guess from the name, `reactiveVal()` is rather similar to
+`reactive()`. You create a reactive value by calling `reactiveVal()`
+with its initial value, and retrieve that value in the same way as a
+reactive:
+
+````markdown
+val <- reactiveVal(10)
+val()
+#> [1] 10
+
+````
+
+The big difference is that
+you can also update a reactive value, and all reactive consumers that
+refer to it will recompute. A reactive value uses a special syntax for
+updating — you call it like a function with the first argument being the
+new value:
+
+````markdown
+val(20)
+val()
+#> [1] 20
+
+````
+That means updating a reactive value using
+its current value looks something like this:
+
+````markdown
+val(val() + 1)
+val()
+#> [1] 21
+
+````
+
+Unfortunately if you actually try to
+run this code in the console you’ll get an error because it has to be
+run in an reactive environment. That makes experimentation and debugging
+more challenging because you’ll need to use `browser()` or something
+similar to pause execution within the call to `shinyApp()`. This is one of
+the challenges we’ll come back to later in @XXX_16.
+
+For now, let’s put the challenges of learning `reactiveVal()` aside, and
+show you why you might bother. Imagine that you want to visualize the
+distance between a click and the points on the plot. In the app below,
+we start by creating a reactive value to store those distances,
+initializing it with a constant that will be used before we click
+anything. Then we use `observeEvent()` to update the reactive value when
+the mouse is clicked, and a `ggplot()` that visualizes the distance with
+point size.
+
+::: {.column-page-inset}
+
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-07-modifying-plot}
+: Modifying plots 
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Visualize click distance
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-07-modifying-plots-distance}
+: Visualize the click distance with different point sizes
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-07-modifying-plots-distance}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 800
+#| components: [editor, viewer]
+
+library(shiny)
+library(ggplot2)
+
+set.seed(1014)
+df <- data.frame(x = rnorm(100), y = rnorm(100))
+
+ui <- fluidPage(
+  plotOutput("plot", click = "plot_click", )
+)
+server <- function(input, output, session) {
+  dist <- reactiveVal(rep(1, nrow(df)))
+  observeEvent(input$plot_click,
+    dist(nearPoints(df, 
+                    input$plot_click, 
+                    allRows = TRUE, 
+                    addDist = TRUE)$dist_
+         )  
+  )
+  
+  output$plot <- renderPlot({
+    df$dist <- dist()
+    ggplot(df, aes(x, y, size = dist)) + 
+      geom_point() + 
+      scale_size_area(limits = 
+                      c(0, 1000), 
+                      max_size = 10, 
+                      guide = NULL
+                      )
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+Point sizes depend from distance to last click
+:::
+::::
+:::::
+
+
+###### Persistent selection
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-07-modifying-plot-selection}
+: Make the selected point(s) of a brushed area persistent
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-07-modifying-plots-selection}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 800
+#| components: [editor, viewer]
+
+library(shiny)
+library(ggplot2)
 
 
 
+ui <- fluidPage(
+  plotOutput("plot", 
+             brush = "plot_brush", 
+             dblclick = "plot_reset"
+             )
+)
+server <- function(input, output, session) {
+  selected <- reactiveVal(rep(FALSE, nrow(mtcars)))
+
+  observeEvent(input$plot_brush, {
+    brushed <- brushedPoints(mtcars, 
+                             input$plot_brush, 
+                             allRows = TRUE)$selected_
+    selected(brushed | selected())
+  })
+  observeEvent(input$plot_reset, {
+    selected(rep(FALSE, nrow(mtcars)))
+  })
+
+  output$plot <- renderPlot({
+    mtcars$sel <- selected()
+    ggplot(mtcars, aes(wt, mpg)) + 
+      geom_point(aes(colour = sel)) +
+      scale_colour_discrete(limits = 
+                              c("TRUE", "FALSE")
+                            ) +
+      theme(legend.position = "bottom")
+  }, res = 96, width = 500)
+}
+
+shinyApp(ui, server)
+```
+
+Colorize points of selected area permanently
 
 :::
 ::::
 :::::
+
+:::
+
+::::
+:::::
+
+:::
+
+
+### Interactivity limitations
+
+It’s important to understand the basic data flow in interactive plots in order to understand their limitations.
+
+:::::{.my-procedure}
+:::{.my-procedure-header}
+:::::: {#prp-07-interactivity-limitations}
+: The basic flow of an interactive action in Shiny
+::::::
+:::
+::::{.my-procedure-container}
+
+1. JavaScript captures the mouse event.
+2. Shiny sends the mouse event data back to R, telling the app that the input is now out of date.
+3. All the downstream reactive consumers are recomputed.
+4. `plotOutput()` generates a new PNG and sends it to the browser.
+::::
+:::::
+
+For local apps, the bottleneck tends to be the time taken to draw the plot. Depending on how complex the plot is, this may take a significant fraction of a second. But for hosted apps, you also have to take into account the time needed to transmit the event from the browser to R, and then the rendered plot back from R to the browser.
+
+::: {.callout-important}
+###### Shiny does not react instantaneous
+
+It’s not possible to create Shiny apps where action and response is perceived as instantaneous (i.e. the plot appears to update simultaneously with your action upon it)
+
+A better interactivity experience is with {**plotly**} [@plotly]. There is also a book by the sam author [-@sievert2019].
+:::
+
+## Dynamic image size
+
+It is possible to make the plot size reactive, so the width and height changes in response to user actions. To do this, supply zero-argument functions to the `width` and `height` arguments of `renderPlot()` — these now must be defined in the server, not the UI, since they can change. These functions should have no argument and return the desired size in pixels. They are evaluated in a reactive environment so that you can make the size of your plot dynamic.
+
+::: {.column-body-outset}
+
+
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-07-image-size}
+: Dynamic width and height of images
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("height", "height", min = 100, max = 500, value = 250),
+  sliderInput("width", "width", min = 100, max = 500, value = 250),
+  plotOutput("plot", width = 250, height = 250)
+)
+server <- function(input, output, session) {
+  output$plot <- renderPlot(
+    width = function() input$width,
+    height = function() input$height,
+    res = 96,
+    {
+      plot(rnorm(20), rnorm(20))
+    }
+  )
+}
+
+shinyApp(ui, server)
+```
+
+***
+
+::: {.callout-note }
+- When you resize the plot, the data stays the same: you don’t get new random numbers.
+- In real apps, you’ll use more complicated expressions in the width and height functions.
+
+
+:::
+
+
+::::
+:::::
+:::
+
+## Images
+
+You can use `renderImage()` if you want to display existing images (not plots). For example, you might have a directory of photographs that you want shown to the user. The following app illustrates the basics of ? by showing cute puppy photos. The photos come from <https://unsplash.com>, my favorite source of royalty free stock photographs.
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-07-render-images}
+: Display existing images (not plots)
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 1000
+#| components: [editor, viewer]
+#| layout: vertical
+
+library(shiny)
+
+## file: eoqnr8ikwFE.jpg
+## type: binary
+{{< include apps-07/display-images/puppy-photos/eoqnr8ikwFE.jpg >}}
+
+puppies <- tibble::tribble(
+    ~breed, ~ id, ~author,
+    "corgi", "eoqnr8ikwFE","alvannee",
+    "labrador", "KCdYn0xu2fU", "shaneguymon",
+    "spaniel", "TzjMd7i5WQI", "_redo_"
+)
+
+ui <- fluidPage(
+    selectInput("id", "Pick a breed", choices = setNames(puppies$id, puppies$breed)),
+    htmlOutput("source"),
+    imageOutput("photo")
+)
+
+server <- function(input, output, session) {
+    output$photo <- renderImage({
+        list(
+            src = base64enc::base64encode(
+                file.path("puppy-photos", paste0(input$id, ".jpg"))
+              ),
+            contentType = "image/jpeg",
+            width = 500,
+            height = 650
+        )
+    }, deleteFile = FALSE)
+
+    output$source <- renderUI({
+        info <- puppies[puppies$id == input$id, , drop = FALSE]
+        HTML(glue::glue("<p>
+      <a href='https://unsplash.com/photos/{info$id}'>original</a> by
+      <a href='https://unsplash.com/@{info$author}'>{info$author}</a>
+    </p>"))
+    })
+}
+
+shinyApp(ui, server)
+
+```
+
+::: {.callout-important }
+####### `renderImage()` not working with shinylive-r
+
+The above code does not work. Hopefully I will learn the solution form the answer to my [Posit post](https://forum.posit.co/t/shinylive-r-with-renderimage/202516).
+:::
+
+::::
+:::::
+
+
+`renderImage()` needs to return a list. The only crucial argument is `src`, a local path to the image file. You can additionally supply:
+
+- A contentType, which defines the MIME type of the image. If not provided, Shiny will guess from the file extension, so you only need to supply this if your images don’t have extensions.
+- The `width` and `height` of the image, if known.
+- Any other arguments, like `class` or `alt` will be added as attributes to the `<img>` tag in the HTML.
+
+You **must** also supply the `deleteFile` argument. Unfortunately `renderImage()` was originally designed to work with temporary files, so it automatically deleted images after rendering them. This was obviously very dangerous, so the behavior changed in Shiny 1.5.0. Now shiny no longer deletes the images, but instead forces you to explicitly choose which behavior you want.
+
+You can learn more about `renderImage()`, and see other ways that you might use it at <https://shiny.rstudio.com/articles/images.html>.
+
+## My Summary
+
+I haven't succeed to display images with `shinlive-r`. Here I am hoping to get an answer to my question posted at the [Posit Forum](https://forum.posit.co/t/shinylive-r-cannot-include-r-file/202123/8).

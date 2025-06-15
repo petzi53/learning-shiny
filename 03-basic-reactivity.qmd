@@ -25,6 +25,9 @@ options(show.signif.stars = FALSE)
 Chapter section list
 :::
 
+
+::: {.my-objectives-container}
+
 This chapter will provide a gentle introduction to reactive programming, teaching you the basics of the most common reactive constructs you’ll use in Shiny apps.
 
 - Survey of the server function in @sec-03-server-function
@@ -33,11 +36,11 @@ This chapter will provide a gentle introduction to reactive programming, teachin
 - Controlling the time of the evaluation @sec-03-control-timing
 - Observers @sec-03-observers
 
-::: {.my-objectives-container}
-
 :::
 ::::
 :::::
+
+
 
 ## The server function {#sec-03-server-function}
 
@@ -2035,6 +2038,523 @@ width="40%"}
 
 ## Summary
 
-This chapter should have improved your understanding of the backend of Shiny apps, the server() code that responds to user actions. You’ve also taken the first steps in mastering the reactive programming paradigm that underpins Shiny.
+::: {.callout-note}
+This is already my third reading of this chapter. Each reading lies about one year apart.
 
-This chapter concludes our overview of the foundations of Shiny. The next chapter will help you practice the material you’ve seen so far by creating a bigger Shiny app designed to support a data analysis.
+The first and second time I thought that each example is easy to understand and that the chapter  as a whole is straightforward. But it turned out that I was wrong!
+
+As a summary I will I will again read the text. But this time I will pay attention to each line of code and write down every tiny example. Additionally I will create my own example and / or invoke the debugger to experiment with the code to understand exactly what is happening inside the server part.
+:::
+
+### Minimal example
+
+A minimal example consists of four lines of code:
+
+::: {.column-body-outset}
+
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-summary-minimal-example}
+: Minimal example
+::::::
+:::
+::::{.my-r-code-container}
+
+:::{#lst-03-summary-minimal-example}
+```{shinylive-r}
+#| standalone: true
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage()
+
+server <- function(input, output, session) {}
+
+shinyApp(ui, server)
+```
+
+Minimal example
+:::
+
+::::
+:::::
+
+:::
+
+There is no error if you run this code. But there is no output as well! The result is an empty white pane.
+
+### Printing messages from ui and server part
+
+The problem in my understanding became obvious, when I tried to display just one text message inside the `ui()` and the other one from inside the `server()` function. To make my difficulties explicit I will separate the task in several steps.
+
+::: {.column-body-outset}
+
+
+:::::{.my-experiment}
+:::{.my-experiment-header}
+:::::: {#def-03-summary-print-ui-server-messages}
+: Printing messages from ui and server part
+::::::
+:::
+::::{.my-experiment-container}
+
+::: {.panel-tabset}
+
+###### comments
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-summary-comments}
+: Minimal example with comments in the code
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage(
+    # front end interface
+)
+
+server <- function(input, output, session) {
+    # back end logic
+}
+
+shinyApp(ui, server)
+```
+
+
+
+::::
+:::::
+
+
+###### print statements
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-summary-print-statements}
+: Minimal example with print statements in UI and server function
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-03-summary-print-statements}
+
+```{shinylive-r}
+#| standalone: true
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage(
+    print("front end interface")
+)
+
+server <- function(input, output, session) {
+    print("back end logic")
+}
+
+shinyApp(ui, server)
+```
+
+Trying to print statements from inside UI and server
+
+:::
+
+***
+
+As you can see only the print statement from the UI is visible. The app does not produce an error and it even produces an output from the server function to the console. But the server print statement does not appear inside the app.
+::::
+:::::
+
+Compare this failed experiment wit the correct solution in @lst-print-reactive-context. 
+
+###### reactive context
+
+::: {#lst-03-summary-reactive-context}
+
+```{shinylive-r}
+#| standalone: true
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage(
+    print("front end interface"),
+    textOutput("my_msg")
+)
+
+server <- function(input, output, session) {
+    output$my_msg <-  renderText(
+        "back end logic"
+    )
+}
+
+shinyApp(ui, server)
+
+```
+
+To print statements that appear inside the app you need to provide a `r glossary("reactive context")`.
+:::
+
+:::
+
+::::
+:::::
+
+:::
+
+
+### Failed approaches
+
+I will now list several approaches that will fail with their error messages. I hope that this would be helpful to understand better the effect of the reactive context.
+
+But I have to fake the error messages as with the `shinylive` extension Shiny will either only produce an empty white pane or display a different error message. I create therefore external Shiny apps, run them with the wrong code snippets and copy the generated error message in this Quarto document.
+
+
+::: {.column-body-outset}
+
+
+:::::{.my-experiment}
+:::{.my-experiment-header}
+:::::: {#def-03-summary-failed-approaches}
+: Why several other approaches will fail?
+::::::
+:::
+::::{.my-experiment-container}
+
+::: {.panel-tabset}
+
+###### input error 1
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-summary-input-error}
+: Assigning values to input objects inside the server function is not allowed
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-03-summary-input-error-1}
+
+
+```{shinylive-r}
+#| standalone: true
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage(
+  textInput("msg", 
+            "front end interface"
+            )
+)
+
+
+server <- function(input, output, server) {
+    input$msg <- "back end logic"
+}
+
+shinyApp(ui, server)
+```
+
+  
+`input` objects are read-only.
+:::
+
+***
+
+> Error in `$<-`(`*tmp*`, msg, value = "back end logic") :      
+> Can't modify read-only reactive value 'msg'
+
+::::
+:::::
+
+
+
+
+The `input` argument is a list-like object, but unlike a typical list, `input` objects are read-only. If you attempt to modify an input inside the server function, you’ll get the above error.
+
+::: {.callout-note}
+This error occurs because input reflects what’s happening in the browser, and the browser is Shiny’s “single source of truth”. If you could modify the value in R, you could introduce inconsistencies, where the input text said one thing in the browser, and `input$msg` said something different in R. That would make programming challenging! Later, in @XXX_8, you’ll learn how to use functions like `updateTextInput()` to modify the value in the browser, and then `input$msg` will update accordingly.
+:::
+
+
+###### input error 2
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-summary-input-error-2}
+: Reading from `input` needs a reactive context
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-03-summary-input-error-2}  
+
+```{shinylive-r}
+#| standalone: true
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage(
+    textInput("msg",
+              "back end logic"
+    )
+)
+
+
+server <- function(input, output, server) {
+    message("This is the ", input$msg)
+}
+
+shinyApp(ui, server)
+
+```
+
+
+To read from an input, you must be in a reactive context.
+:::
+
+***
+> Error in input$msg :      
+> Can't access reactive value 'msg' outside of reactive consumer.       
+> ℹ Do you need to wrap inside reactive() or observe()?
+
+::::
+:::::
+
+`input` is selective about who is allowed to read it. To read from an input, you must be in a reactive context created by a function like `renderText()` or `reactive()`. This is an important constraint that allows outputs to automatically update when an input changes.
+
+###### output error 1
+
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-summary-output-error-1}
+: `output` needs a render function
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-03-summary-output-error-1}
+
+
+```{shinylive-r}
+#| standalone: true
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage(
+    textOutput("msg")
+)
+
+server <- function(input, output, server) {
+    output$msg <-  "back end logic"
+}
+
+shinyApp(ui, server)
+
+```
+
+`output` needs a reactive context, it has to be inside a render function.
+:::
+
+***
+
+> Error in `.subset2(x, "impl")$defineOutput(name, value, label)` :       
+> Unexpected character object for output$msg         
+> ℹ Did you forget to use a render function?
+
+::::
+:::::
+
+Forgetting to put the `output` inside a render function results in the above error.
+
+###### output error 2
+
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-summary-output-error-2}
+: `output` needs a render function
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-03-summary-output-error-2}
+
+
+```{shinylive-r}
+#| standalone: true
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage(
+    textOutput("msg")
+)
+
+
+server <- function(input, output, server) {
+    message("This is the ", output$msg)
+}
+
+shinyApp(ui, server)
+
+```
+
+You can't read from `output` outside a reactive context.
+:::
+
+***
+> Error in `output$msg` : Can't read output 'msg'
+
+::::
+:::::
+
+Reading from the `output` is not allowed
+
+
+:::
+
+
+
+::::
+:::::
+
+:::
+
+### Reactivity template
+
+The most elemental shiny app has just one `r glossary("reactive context")`. It consists of one `output` that is automatically updated whenever its only `input` changes.
+
+The next example implements this minimal reactivity in Shiny. 
+
+
+::: {.column-body-outset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-summary-reactivity-template}
+: Five parts of a reactive context
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-summary-reactivity-template}
+
+```{shinylive-r}
+#| standalone: true
+#| components: [editor, viewer]
+
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+  output$greeting <- renderText({
+    paste0("Hello ", input$name, "!")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+Five parts of a reactive context 
+:::
+::::
+:::::
+
+:::
+
+The above code works for me as a kind of mental device that helps me to remember the five parts of a reactive context:
+
+1. **Input in the UI function**, so that user can provide whatever input they want (but restricted to the list of Shiny input categories.)
+2. **Output in the UI function**, so that the provided input can be transferred to the server logic.
+3. **Input in the server function** with the fixed pattern `input$<inputID>` where `inputID` works as a reference to the front end.
+4. **Output in the server function** with the pattern `output$<outputID>` where `outputID` is a reference to the front end type of output.
+5. **Reactive function** appropriate for the output type which assigns /connect the `input$<inputID>` to the `output$<outputID>`. 
+
+or in a more general form:
+
+1. `<type>Input` with `<type>InputID` (UI)
+2. `<type>Output` with `<type>OutputID` (UI)
+3. `input$<inputID>` (server)
+4. `output$<outputID>` (server)
+5. reactive function
+
+### Reactive expressions
+
+#### Basic principle
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-03-summary-reactive-expression}
+: Reactive Expression
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| components: [editor, viewer]
+
+library(shiny)
+
+ui <- fluidPage(
+    textInput("name", "What's your name?"),
+    textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+    string <- reactive(paste0("Hello ", input$name, "!"))
+    output$greeting <- renderText(string())
+}
+
+shinyApp(ui, server)
+```
+
+***
+
+Compare the code with @lst-summary-reactivity-template.
+::::
+:::::
+
+
+The important point of `r glossary("reactive expressions")` is that they mediate between `input` and `output`. `string` works as an mediator between `input$name` and `output$greeting`. 
+
+We can think of reactive expressions as tools to reduces duplication in the reactive code by introducing additional nodes into the `r glossary("reactive graph")`. Te reactive expression can be used like a function and like a function it is called with `()` at the end of its name. But it never has arguments between its parenthesis. 
+
+
+#### Practical example
+
+In the case above we didn't use the additional node, to simplify the code. In order to understand why we need `r glossary("reactivce epxressions")` we need a more complex example. Hadley offers in the book the comparison of two simulated datasets with a plot and a hypothesis test. 
+
+I am planning to generate a simpler example. STILL TO DO -> @XXX_practical-example
+
+
+```{r}
+#| label: practical-example
+#| eval: false
+#| include: false
+
+x <- round(rnorm(10000, mean = 0, sd = 1), 2)
+y <- round(runif(10000, min = 1, max = 100), 0)
+
+df <- data.frame(x, y)
+
+ggplot2::ggplot(df, ggplot2::aes(x)) +
+  ggplot2::geom_histogram(bins = 30)
+
+
+```
+

@@ -34,7 +34,7 @@ The lists will not only cover things to do for this book, but also other more ge
 
 - **Book content**: ToDo list for this book covering all content tasks, like missing chapters, text modules, bibliographies, references, links etc. This section also includes the polishing of text passages in grammar and style, improving arguments with a better text structure, more understandable graphics, etc.
 - **Book appearance**: Creating colored and numbered textboxes for different subjects by adapting the `r glossary("CSS")` for this book and/or using Quartos layout facilities.
-- **Shiny**: List of things to learn even if those subjects are not the scope of this book. This includes also the `shinylive` extension and the {**shinylive**} package.
+- **Shiny**: List of things to learn even if those subjects are not the scope of this book. This includes not only the `shinylive` extension and the {**shinylive**} package using here in this book, but also the many packages supporting Shiny, helper in the Shiny universe.
 - **Quarto**: Researching Quarto functionality to enhance this book but also more general to improve my knowledge about Quarto. This includes Quarto extension, static and dynamic formats for [Quarto](https://r4ds.hadley.nz/quarto-formats), [R Markdown](https://rmarkdown.rstudio.com/), including {{< latex >}} with type setting systems like [Typst](https://typst.app/)/[TyX](https://tyx-editor.com/) or [LyX](https://www.lyx.org/). Applying interactivity and animation with other packages like {**leaflet**}, {**plotly**}, {**htmlwidgets**}, but also using JavaScript, JavaScript frameworks like [Observable JS](https://quarto.org/docs/interactive/ojs/) and more.
 - **R**: Last but not least I stumble often over new R functions and packages that I should investigate more in detail.
 - **Miscellaneous**:If I sometimes do not know definitely in which category one task belongs I will guess it and add it to the miscellaneous task list. This duplicate will get a reference to the subject oriented lists and vice versa. 
@@ -66,8 +66,13 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
     - describe method to develop Shiny apps and their usage in the Quarto code chunks
     - explain external functions used in "R/helper"
 - **missing exercises**
-    - @sec-chap04_8_exercises, 
-    - @sec-chap06-5_4_exercises
+    - @sec-chap04_8_exercises 4.8, 
+    - @sec-chap06-5_4_exercises 6.5.4
+- check and complement all chapter objectives (overviews)
+- finish my own summary of @sec-chap03 about reactive expressions
+- change the reference to external R file(s) (applying what I have learned from my [Posit post](https://forum.posit.co/t/shinylive-r-cannot-include-r-file/202123/6).
+- wait for an answer to [my question on Posit](https://forum.posit.co/t/shinylive-r-with-renderimage/202516) about displaying images with shinylive.
+- clean up all the test files in the "learning-shiny" directory.
 
 
 ## Book appearance {#sec-annex-todo-book-appearance}
@@ -81,6 +86,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 ## Quarto {#sec-annex-todo-quarto}
 
 - how and when to use screenshots / graphics with 3D-margin but still working with [lightbox](https://quarto.org/docs/output-formats/html-lightbox-figures.html)
+- how to use cache to make der rendering process of this book faster
 
 ## Shiny {#sec-annex-todo-shiny}
 
@@ -90,4 +96,11 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 ## R {#sec-annex-todo-r}
 
 - solve {**glossary**} issue when content of a term is part of another term
+- look into [Posit Connect Cloud](https://connect.posit.cloud/)
 
+## Miscellanoeus
+
+- Hypothes.is preparation to get highlighted data similar to Zotero. Write an R package? (see Hypothes.is T[ools, Plug-ins and Integration](https://web.hypothes.is/tools-plug-ins-and-integrations/))
+  - [{**hypothesis**}](https://r-world-devs.github.io/hypothesis/index.html): add, share and manage annotations for Shiny applications and R Markdown documents. See also [GitHub repo](https://github.com/r-world-devs/hypothesis). Last update 2 years ago.
+  - [{**hypothesisr**}](https://github.com/mdlincoln/hypothesisr): Wrapper for the Hypothes.is API. Last update 6 years ago. Public archived, Aug 30, 2019, no out of date. Recommends {**rapiclient**}.
+  - [{**rapiclient**}](https://github.com/bergant/rapiclient): Dynamic Open API (Swagger) Client for R.

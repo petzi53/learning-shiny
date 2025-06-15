@@ -128,7 +128,7 @@ language:
    crossref-cnj-title: "R Code"             # replaces "Conjecture"
    crossref-cor-title: "Assessment"         # replaces "Corollary"
    crossref-def-title: "Solution"           # replaces "Definition" (needs "num-experiment")
-   crossref-exm-title: "Example"            # remains  "Example"
+   crossref-exm-title: "R Code Collection"  # replaces  "Example"
    crossref-exr-title: "Exercise"           # remains  "Exercise"
    crossref-fig-title: "Screenshot"              # replaces "Figure"
    crossref-lem-title: "Resource"           # replaces "Lemma"

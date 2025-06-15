@@ -3,9 +3,9 @@
 ::: {.callout-note style="color: blue;"}
 #### This is work in progress
 
-I have finished about 33%. Currently I am working on @sec-chap07.
+I have finished about 39%. Currently I am working on @sec-chap08.
 
-Exercises @sec-chap04_8_exercises and @sec-chap06-5_4_exercises are missing.
+@sec-chap04_8_exercises 4.8 and @sec-chap06-5_4_exercises 6.5.4 are missing.
 
 :::
 

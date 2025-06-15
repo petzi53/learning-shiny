@@ -472,7 +472,7 @@ you’re running it from. Other ways of running the app don’t always
 capture the information necessary to make a traceback.
 :::
 
-### The interactive debugger
+### The interactive debugger {#sec-05-interactive-debugger}
 
 Once you’ve located the source of the error and want to figure out
 what’s causing it, the most powerful tool you have at your disposal is
