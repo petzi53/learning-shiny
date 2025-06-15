@@ -12,9 +12,7 @@ options(show.signif.stars = FALSE)
 
 ```
 
-## Table of content for chapter 04 {.unnumbered}
-
-::::: {#obj-chap03}
+::::: {#obj-chap08}
 :::: {.my-objectives}
 ::: {.my-objectives-header}
 Chapter section list
@@ -22,9 +20,26 @@ Chapter section list
 
 ::: {.my-objectives-container}
 
+- **Validation**, informing the user when an input (or combination of inputs) is in an invalid state. 
+- **Notification**, sending general messages to the user, and progress bars, which give details for time consuming operations made up of many small steps.
+- **Confirmation** dialogs or the ability to undo an action to give users peace of mind in dangerous situations. 
 
 
 
 :::
+::::
+:::::
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-08-packages}
+: Packages used in this chapter
+::::::
+:::
+::::{.my-resource-container}
+- {**shinyFeedback**}, by Andy Merlin [@shinyFeedback]
+- {**waiter**}, by John Coene  [@waiter]
+- {**shinyvalidate**}, by Joe Cheng [@shinyvalidate]
+
 ::::
 :::::

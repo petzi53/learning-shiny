@@ -2174,7 +2174,7 @@ As you can see only the print statement from the UI is visible. The app does not
 ::::
 :::::
 
-Compare this failed experiment wit the correct solution in @lst-print-reactive-context. 
+Compare this failed experiment wit the correct solution in @lst-03-summary-reactive-context. 
 
 ###### reactive context
 
