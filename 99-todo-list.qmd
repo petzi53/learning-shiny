@@ -6,12 +6,15 @@ execute:
 # ToDo List {#sec-annex-todo}
 
 
+
+
 ```{r}
 #| label: setup
 #| results: hold
 #| include: false
 
 base::source(file = "R/helper.R")
+library(glosario)
 ggplot2::theme_set(ggplot2::theme_bw())
 options(show.signif.stars = FALSE)
 
@@ -46,61 +49,86 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 
 
-
 :::
 ::::
 :::::
 
-
 ## Book content {#sec-annex-todo-book-content}
 
-- clean `citeproc` in "Packages used" (@sec-annex-package-used)
-- annex chapter "package used": Clean it from previous note book
-- annex chapter "package used": Update it to contain all the packages already mentioned or used
-- check always internal links/references if a chapter is finished
-- use [Grammarly App](https://www.grammarly.com/desktop/mac) and [Grammarly browser extension](https://www.grammarly.com/browser) to get better English text
-- delete in the code chunks all lines with `library(shiny)` and add it for each chapter only once in the setup chunk.
-- delete all `shiny::<function()>` references but keep or add all the other package references
-- **update the index file** with
-    - describe method for `<package>::<function()>` references
-    - describe method to develop Shiny apps and their usage in the Quarto code chunks
-    - explain external functions used in "R/helper"
-- **missing exercises**
-    - @sec-chap04_8_exercises 4.8, 
-    - @sec-chap06-5_4_exercises 6.5.4
-- check and complement all chapter objectives (overviews)
-- finish my own summary of @sec-chap03 about reactive expressions
-- change the reference to external R file(s) (applying what I have learned from my [Posit post](https://forum.posit.co/t/shinylive-r-cannot-include-r-file/202123/6).
-- wait for an answer to [my question on Posit](https://forum.posit.co/t/shinylive-r-with-renderimage/202516) about displaying images with shinylive.
-- clean up all the test files in the "learning-shiny" directory.
+### All chapters
+
+- [ ] add glossary list and sessions_info
+- [ ] revise/write all **chapter objectives** (overviews)
+- [x] ~~delete in the code chunks all lines with `library(shiny)` and add it for each chapter only once in the setup chunk.~~ [setup chunk does not work with shinylive-r standalone = TRUE]{.mark}.  
+- [ ] delete all `shiny::<function()>` references, but keep or add all the other package references. Add/keep `shiny::` if it could be confused with another package just mentioned.
+- [ ] change all code examples in the first three chapters with to see Shiny in a horizontal section and not in an additional tab.
+- [ ] change the reference to external R file(s) (applying what I have learned from my [Posit post](https://forum.posit.co/t/shinylive-r-cannot-include-r-file/202123/6).
+- [ ] wait for an answer to [my question on Posit](https://forum.posit.co/t/shinylive-r-with-renderimage/202516) about displaying images with shinylive.
+- [ ] use [Grammarly App](https://www.grammarly.com/desktop/mac) and [Grammarly browser extension](https://www.grammarly.com/browser) to get better English
+
+### annex chapter "package used"
+
+- [x] `citeproc` in "Packages used" (@sec-annex-package-used)
+- [x] Clean it from previous note book
+- [x] Update it to contain all the packages already mentioned or used
+
+### Chapter 03
+
+- [ ] finish my own summary of `@sec-chap03` about reactive expressions
+
+### Clean & Check
+
+- [ ] internal links/references if a chapter is finished
+- [ ] all the (render) test files in the "learning-shiny" directory resp do not git these folders or files.
+
+### Index file
+
+- [ ] describe method for `<package>::<function()>` references
+- [ ] describe method to develop Shiny apps and their usage in the Quarto code chunks
+- [ ] explain external functions used in "R/helper"
+
+### Missing exercises
+
+- [ ] @sec-chap04_8_exercises, 
+- [ ] @sec-chap06-5_4_exercises
+
 
 
 ## Book appearance {#sec-annex-todo-book-appearance}
 
-- resource box needs more space at the top (padding-top)
-- how to show small check mark boxes at the beginning of the line
-- how to put ticks in these check mark boxes interactively
-- better font for plot axes
-- how to limit right margin of boxes inside boxes (example see @imp-annex-todo-objective)
+### CSS
 
-## Quarto {#sec-annex-todo-quarto}
+- [x] resource box needs more space at the top (padding-top)
+- [x] limit right margin of boxes inside boxes with `padding-right: 10px` in container
+- [ ] get correct header for numbered box without preset theorem variation  (black instead of grey and in line with the number, at the moment the title is one line lower than the number) Ask at StackOverflow
 
-- how and when to use screenshots / graphics with 3D-margin but still working with [lightbox](https://quarto.org/docs/output-formats/html-lightbox-figures.html)
-- how to use cache to make der rendering process of this book faster
+### Quarto {#sec-annex-todo-quarto}
+
+- [x] small check mark boxes at the beginning of the line (See [Markdown Basics: Lists](https://quarto.org/docs/authoring/markdown-basics.html#lists))
+- [x] how to put ticks in these check mark boxes interactively (disappears after page reloading)
+- [ ] better font for plot axes     
+- [ ] use [diagrams](https://quarto.org/docs/authoring/diagrams.html) for developing reactive graphs 
+- [ ] how and when to use screenshots / graphics with 3D-margin but still working with [lightbox](https://quarto.org/docs/output-formats/html-lightbox-figures.html)
 
 ## Shiny {#sec-annex-todo-shiny}
 
-- How to source external files for `shinylive` extension
+- [x] How to source external files for `shinylive` extension (See [Posit answer](https://forum.posit.co/t/shinylive-r-cannot-include-r-file/202123/8))
+- [ ] How to work in `shinylive` with external images
 
 
 ## R {#sec-annex-todo-r}
 
-- solve {**glossary**} issue when content of a term is part of another term
-- look into [Posit Connect Cloud](https://connect.posit.cloud/)
+- [ ] report {**glossary**} issue when [content of a term is part of another term](https://github.com/debruine/glossary/issues/11)
+- [ ] look into [Posit Connect Cloud](https://connect.posit.cloud/)
+
+
+## Quarto computation
+
+- [ ] how to use cache to make the rendering process of this book faster
 
 ## Miscellanoeus
 
-- Hypothes.is preparation to get highlighted data similar to Zotero. Write an R package? (see Hypothes.is T[ools, Plug-ins and Integration](https://web.hypothes.is/tools-plug-ins-and-integrations/))
-  - [{**hypothesis**}](https://r-world-devs.github.io/hypothesis/index.html): add, share and manage annotations for Shiny applications and R Markdown documents. See also [GitHub repo](https://github.com/r-world-devs/hypothesis). Last update 2 years ago.
-  - [{**hypothesisr**}](https://github.com/mdlincoln/hypothesisr): Wrapper for the Hypothes.is API. Last update 6 years ago. Public archived, Aug 30, 2019, no out of date. Recommends {**rapiclient**}.
-  - [{**rapiclient**}](https://github.com/bergant/rapiclient): Dynamic Open API (Swagger) Client for R.
+- [ ] Hypothes.is preparation to get highlighted data similar to Zotero. Write an R package? (see Hypothes.is [Tools, Plug-ins and Integration](https://web.hypothes.is/tools-plug-ins-and-integrations/))
+- [ ] [{**hypothesis**}](https://r-world-devs.github.io/hypothesis/index.html): add, share and manage annotations for Shiny applications and R Markdown documents. See also [GitHub repo](https://github.com/r-world-devs/hypothesis). Last update 2 years ago.
+- [ ] [{**hypothesisr**}](https://github.com/mdlincoln/hypothesisr): Wrapper for the Hypothes.is API. Last update 6 years ago. Public archived, Aug 30, 2019, no out of date. Recommends {**rapiclient**}.
+- [ ] [{**rapiclient**}](https://github.com/bergant/rapiclient): Dynamic Open API (Swagger) Client for R.
