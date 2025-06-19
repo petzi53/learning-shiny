@@ -59,6 +59,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 - [ ] add glossary list and sessions_info
 - [ ] revise/write all **chapter objectives** (overviews)
+- [ ] add references to Hadley live demos (where and how?)
 - [x] ~~delete in the code chunks all lines with `library(shiny)` and add it for each chapter only once in the setup chunk.~~ [setup chunk does not work with shinylive-r standalone = TRUE]{.mark}.  
 - [ ] delete all `shiny::<function()>` references, but keep or add all the other package references. Add/keep `shiny::` if it could be confused with another package just mentioned.
 - [ ] change all code examples in the first three chapters with to see Shiny in a horizontal section and not in an additional tab.
@@ -71,6 +72,8 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [x] `citeproc` in "Packages used" (@sec-annex-package-used)
 - [x] Clean it from previous note book
 - [x] Update it to contain all the packages already mentioned or used
+- [ ] Add {**withr**}, {**progress**} and {**shinycssloaders**}
+- [ ] Mark those package that are essential for learning shiny (and the Mastering Shiny book).
 
 ### Chapter 03
 
@@ -86,6 +89,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [ ] describe method for `<package>::<function()>` references
 - [ ] describe method to develop Shiny apps and their usage in the Quarto code chunks
 - [ ] explain external functions used in "R/helper"
+- [ ] explain text bookmarks like `@XXX_<section_number>`
 
 ### Missing exercises
 
@@ -113,7 +117,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 ## Shiny {#sec-annex-todo-shiny}
 
 - [x] How to source external files for `shinylive` extension (See [Posit answer](https://forum.posit.co/t/shinylive-r-cannot-include-r-file/202123/8))
-- [ ] How to work in `shinylive` with external images
+- [ ] How to work in `shinylive` with external images: via an [URL to an external website](https://forum.posit.co/t/shinylive-r-with-renderimage/202516/10), but I believe there is another solution with local images too. May the problem is related with the {**shinylive**} package (not the extension)
 
 
 ## R {#sec-annex-todo-r}
@@ -125,6 +129,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 ## Quarto computation
 
 - [ ] how to use cache to make the rendering process of this book faster
+- [ ] how about the {**munsell**} package problem with {**ggplot2**}
 
 ## Miscellanoeus
 

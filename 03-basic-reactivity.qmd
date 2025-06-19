@@ -48,7 +48,7 @@ This chapter will provide a gentle introduction to reactive programming, teachin
 
 The `input` argument is a list-like object that contains all the input data sent from the browser, named according to the input ID. Unlike a typical list, `input` objects are read-only. If you attempt to modify an input inside the server function, you’ll get an error.
 
-The error occurs because `input` reflects what’s happening in the browser, and the browser is Shiny’s “single source of truth”. If you could modify the value in R, you could introduce inconsistencies, where the input slider said one thing in the browser, and `input$count` said something different in R. That would make programming challenging! (Later, in @XXX_8, you’ll learn how to use functions like `shiny::updateNumericInput()` to modify the value in the browser, and then `input$count` will update accordingly.)
+The error occurs because `input` reflects what’s happening in the browser, and the browser is Shiny’s “single source of truth”. If you could modify the value in R, you could introduce inconsistencies, where the input slider said one thing in the browser, and `input$count` said something different in R. That would make programming challenging! (Later, in @sec-chap08, you’ll learn how to use functions like `shiny::updateNumericInput()` to modify the value in the browser, and then `input$count` will update accordingly.)
 
 One more important thing about input: it’s selective about who is allowed to read it. To read from an `input`, you must be in a `r glossary("reactive context")` created by a function like `shiny::renderText()` or `shiny::reactive()`.
 

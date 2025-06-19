@@ -723,7 +723,7 @@ New total is 12
 Don’t worry if you find the results a little surprising. 
 
 ::: {.callout-note}
-Yes, in fact, this *is* surprising for me, as I get the new total twice! I’ll will wait to learn more about what’s going on in @XXX_8 with the help of the reactive graph diagrams mentioned in @sec-03-reactive-graph.
+Yes, in fact, this *is* surprising for me, as I get the new total twice! I’ll will wait to learn more about what’s going on in @sec-chap08 with the help of the reactive graph diagrams mentioned in @sec-03-reactive-graph.
 
 In the meanwhile I have in the next tab changed text and place of the messages in this toy example.
 :::

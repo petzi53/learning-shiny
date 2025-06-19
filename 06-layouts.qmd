@@ -30,7 +30,7 @@ Chapter section list
 :::::
 ::::::
 
-## Single page layout
+## Single page layouts {#sec-06-single-page-layouts}
 
 Layout functions provide the high-level visual structure of an app.
 Layouts are created by a hierarchy of function calls, where the
@@ -294,7 +294,7 @@ Each row is made up of 12 columns and the first argument to `column()`
 gives how many of those columns to occupy. A 12 column layout gives you
 substantial flexibility because you can easily create 2-, 3-, or
 4-column layouts, or use narrow columns to create spacers. You can see
-an example of this layout in @XXX_4.4.
+an example of this layout in @sec-04-prototype.
 
 If you’d like to learn more about designing using a grid system, I
 highly recommend the classic text on the subject: “Grid systems in
@@ -693,7 +693,7 @@ styles, and JS snippets bundled up into a convenient form.
 It’s good to know that Bootstrap exists because then:
 
 -   You can use `bslib::bs_theme()` to customize the visual appearance
-    of your code, @XXX_6.5.
+    of your code, @sec-06-themes.
 -   You can use the `class` argument to customize some layouts, inputs,
     and outputs using Bootstrap class names, as you saw in
     @sec-action-buttons.
@@ -736,7 +736,7 @@ Extension](https://github.com/nanxstats/awesome-shiny-extensions).
 :::
 ::::::
 
-## Themes
+## Themes {#sec-06-themes}
 
 Bootstrap is so ubiquitous within the R community that it’s easy to get
 style fatigue: after a while every Shiny app and Rmd start to look the
