@@ -306,6 +306,34 @@ Plotly.js can be used to produce dozens of chart types and visualizations, inclu
 ::::
 ::::::
 
+## progress {#sec-annex-progress}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: progress
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Terminal Progress Bars](https://r-lib.github.io/progress/) [@progress]</center>
+
+------------------------------------------------------------------------
+
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-progress-min.png){width="176"}
+
+
+Configurable Progress bars, they may include percentage, elapsed time, and/or the estimated completion time. They work in terminals, in 'Emacs' 'ESS', 'RStudio', 'Windows' 'Rgui' and the 'macOS' 'R.app'. The package also provides a 'C++' 'API', that works with or without 'Rcpp'.
+
+:::
+
+
+
+::::
+::::::
+
 ## purrr {#sec-annex-purrr}
 
 :::::: my-package
@@ -557,6 +585,32 @@ Package Profile: shiny
 Makes it incredibly easy to build interactive web applications with R. Automatic "reactive" binding between inputs and outputs and extensive prebuilt widgets make it possible to build beautiful, responsive, and powerful applications with minimal effort.
 
 :::
+
+
+::::
+::::::
+
+## shinycssloaders {#sec-annex-shinycssloaders}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: shinycssloaders
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Add Loading Animations to a 'shiny' Output While It's Recalculating](https://github.com/daattali/shinycssloaders) [@shinycssloaders]</center>
+
+------------------------------------------------------------------------
+
+<center>(There is no hexagon sticker available for {**shinycssloaders**}.)</center>
+
+***
+
+When a 'Shiny' output (such as a plot, table, map, etc.) is recalculating, it remains visible but gets greyed out. Using {**shinycssloaders**}, you can add a loading animation ("spinner") to outputs instead. By wrapping a {**shiny**} output in `withSpinner()`, a spinner will automatically appear while the output is recalculating. You can also manually show and hide the spinner, or add a full-page spinner to cover the entire page. See the demo online at <https://daattali.com/shiny/shinycssloaders-demo/>. (The 8 built-in animations are taken from <https://projects.lukehaas.me/css-loaders/>.)
+
+
 
 
 ::::
@@ -1071,6 +1125,33 @@ Package Profile: waiter
 
 Provides functionality for adding loading screens and progress bars to Shiny applications. It allows developers to show partial or full-page loading screens with spinners or loading bars to inform users that the application is processing data or performing computations.
 :::
+
+::::
+::::::
+
+
+## withr {#sec-annex-withr}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: withr
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Run Code 'With' Temporarily Modified Global State](https://withr.r-lib.org) [@withr]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-withr-min.png){width="176"}
+
+
+A set of functions to run code 'with' safely and temporarily modified global state. Many of these functions were originally a part of the {**devtools**} package, this provides a simple package with limited dependencies to provide access to these functions.
+
+:::
+
 
 ::::
 ::::::

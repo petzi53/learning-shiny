@@ -60,6 +60,8 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [ ] add glossary list and sessions_info
 - [ ] revise/write all **chapter objectives** (overviews)
 - [ ] add references to Hadley live demos (where and how?)
+- [ ] revise all apps-XX folders
+- [ ] reference packages to their package profiles
 - [x] ~~delete in the code chunks all lines with `library(shiny)` and add it for each chapter only once in the setup chunk.~~ [setup chunk does not work with shinylive-r standalone = TRUE]{.mark}.  
 - [ ] delete all `shiny::<function()>` references, but keep or add all the other package references. Add/keep `shiny::` if it could be confused with another package just mentioned.
 - [ ] change all code examples in the first three chapters with to see Shiny in a horizontal section and not in an additional tab.
@@ -72,7 +74,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [x] `citeproc` in "Packages used" (@sec-annex-package-used)
 - [x] Clean it from previous note book
 - [x] Update it to contain all the packages already mentioned or used
-- [ ] Add {**withr**}, {**progress**} and {**shinycssloaders**}
+- [x] Add {**withr**}, {**progress**} and {**shinycssloaders**}
 - [ ] Mark those package that are essential for learning shiny (and the Mastering Shiny book).
 
 ### Chapter 03
@@ -87,7 +89,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 ### Index file
 
 - [ ] describe method for `<package>::<function()>` references
-- [ ] describe method to develop Shiny apps and their usage in the Quarto code chunks
+- [ ] describe method to develop Shiny apps and their usage in the Quarto code chunks. This includes also the usage of the apps-XX directories.
 - [ ] explain external functions used in "R/helper"
 - [ ] explain text bookmarks like `@XXX_<section_number>`
 
@@ -95,6 +97,13 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 - [ ] @sec-chap04_8_exercises, 
 - [ ] @sec-chap06-5_4_exercises
+
+### My own challenges
+
+- [ ] experiment with actionButtons in @sec-02-action-buttons
+- [ ] start and reset button @cnj-08-progressive-updates
+- [ ] load multiple file: @cnj-09-file-upload-server
+- [ ] pre-filter the list of datasets to get only data frames in @cnj-09-downloading-data
 
 
 
@@ -104,7 +113,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 - [x] resource box needs more space at the top (padding-top)
 - [x] limit right margin of boxes inside boxes with `padding-right: 10px` in container
-- [ ] get correct header for numbered box without preset theorem variation  (black instead of grey and in line with the number, at the moment the title is one line lower than the number) Ask at StackOverflow
+- [ ] get correct header for numbered box without preset theorem variation  (black instead of grey and in line with the number, at the moment the title is one line lower than the number) Ask at StackOverflow?
 
 ### Quarto {#sec-annex-todo-quarto}
 
@@ -133,6 +142,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 ## Miscellanoeus
 
+- [ ] Look at the [list of awesome shiny extensions](https://github.com/nanxstats/awesome-shiny-extensions)
 - [ ] Hypothes.is preparation to get highlighted data similar to Zotero. Write an R package? (see Hypothes.is [Tools, Plug-ins and Integration](https://web.hypothes.is/tools-plug-ins-and-integrations/))
 - [ ] [{**hypothesis**}](https://r-world-devs.github.io/hypothesis/index.html): add, share and manage annotations for Shiny applications and R Markdown documents. See also [GitHub repo](https://github.com/r-world-devs/hypothesis). Last update 2 years ago.
 - [ ] [{**hypothesisr**}](https://github.com/mdlincoln/hypothesisr): Wrapper for the Hypothes.is API. Last update 6 years ago. Public archived, Aug 30, 2019, no out of date. Recommends {**rapiclient**}.

@@ -399,7 +399,7 @@ selected %>%
 
 Having done this exploration for one product, it would be very nice if we could easily do it for other products, without having to retype the code. So let’s make a Shiny app!
 
-## Prototype {#sec-04-protoype}
+## Prototype {#sec-04-prototype}
 
 ::: {.callout-note}
 When building a complex app, I strongly recommend starting as simple as possible, so that you can confirm the basic mechanics work before you start doing something more complicated.
