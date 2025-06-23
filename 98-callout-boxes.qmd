@@ -1,0 +1,1030 @@
+# Callout boxes {#sec-annex-callout-boxes}
+
+## Introduction
+
+::::: {#obj-annex-callout-boxes}
+:::: {.my-objectives}
+::: {.my-objectives-header}
+Overview
+:::
+
+::: {.my-objectives-container}
+
+I have embedded most of the pre-defined cross-references in callout boxes. The exceptions are figure (`fig`) and table (`tbl`)
+
+What follows is an overview of 
+
+- the cross-reference abbreviation, 
+- the (changed) title and 
+- the appearance of the different callout boxes.
+
+```markdown
+- crossref-cnj-title: "R Code"             # replaces "Conjecture"
+- crossref-cor-title: "Assessment"         # replaces "Corollary"
+- crossref-def-title: "Experiment"         # remains  "Definition"
+- crossref-exm-title: "R Code Collection"  # replaces  "Example"
+- crossref-exr-title: "Exercise"           # remains  "Exercise"
+- crossref-fig-title: "Screenshot"         # replaces "Figure"
+- crossref-rem-title: "Remark  "           # remains  "Remark"
+- crossref-lem-title: "Resource"           # replaces "Lemma"
+- crossref-lst-title: "Listing / Output"   # replaces  "Listing"
+- crossref-prp-title: "Procedure"          # replaces "Proposition"
+- crossref-sol-title: "Solution"           # remains  "Solution"
+- crossref-tbl-title: "Table"              # remains  "Table"
+- crossref-thm-title: "Formula"            # replaces "Theorem" (needs "formula")
+```
+
+The following table lists all callout boxes. Besides of the difference between numbered boxes and unnumbered boxes there are two different types of (numbered) boxes:
+
+- Boxes with cross-references that are pre-defined in Quarto.  They are listed in the Quarto documentation under [Theorems and Proofs](https://quarto.org/docs/authoring/cross-references.html#theorems-and-proofs). Examples are Exercise (`exr`), Definition (`def`) and Conjecture (`con`). 
+    - I have redefined most of the pre-defines labels in `quarto.yml` under the metadata heading `language`. For instance I replaced `Definition` with `Experiment`, `Conjecture` with `R Code`, but kept `Exercise`. 
+    - The first three columns in @tbl--callout-boxes reflect these changes and document the current status. I have sorted the table by my box titles (first column).
+- Boxes that use cross-references defined by me. Examples are Bullet Lists (`bul`) and Checklists (`tdo`).
+
+The fourth column `snippet` shows the shortcut to call the Markdown snippet I have prepared. (Learn more about [RStudio code snippets](https://support.posit.co/hc/en-us/articles/204463668-Code-Snippets-in-the-RStudio-IDE).) For each of these snippets there exist a corresponding `r glossary("CSS")` style. As I am not very experienced in CSS I gratefully adapted code by Andreas Handel [-@handel-2023]. (I just noticed there there was recently an update [-@handel-2025] that I still need to read.)
+
+The fifth column is a reference to an empty example showing just the bones of the callout-boxes. It is not necessary to jump to the location. If you hover with the mouse over the link Quarto will show you a small version of the callout box.
+
+| My Title           | Quarto      | Ref | Snippet             | Reference to example           |
+|:-------------------|:------------|:----|:--------------------|:-------------------------------|
+| Assessment         | Corollary   | --- | my-assessment       | @sec-annex-my-assessment      |
+| Assessment         | Corollary   | cor | num-assessment      | @sec-annex-num-assessment     |
+| Bullet List        | ----------  | --- | my-bullet           | @sec-annex-my-bullet          |
+| Bullet List        | ----------  | bul | num-bullet          | @sec-annex-num-bullet         |
+| Checklist          | ----------  | --- | my-check            | @sec-annex-my-check           |
+| Checklist          | ----------  | tdo | num-check           | @sec-annex-num-check          |
+| Exercise           | Exercise    | --- | my-exercise         | @sec-annex-my-exercise        |
+| Exercise           | Exercise    | exr | num-exercise        | @sec-annex-num-exercise       |
+| Exercise           | Exercise    | exr | ab-exercise         | @sec-annex-ab-exercise        |
+| Exercise           | Exercise    | exr | abc-exercise        | @sec-annex-abc-exercise       |
+| Experiment         | Definition  | --- | my-experiment       | @sec-annex-my-experiment      |
+| Experiment         | Definition  | def | num-experiment      | @sec-annex-num-experiment     |
+| Important          | ----------  | --- | my-important        | @sec-annex-my-important       |
+| Listing / Output   | Listing     | lst | ------------------- | @sec-annex-listing-output     |
+| Objectives         | ----------  | obj | my-objectives       | @sec-annex-my-objectives      |
+| Package Profile    | ----------  | --- | my-package          | @sec-annex-my-package         |
+| Package Profile    | ----------  | --- | packagebox          | @sec-annex-packagebox         |
+| Procedure          | Proposition | --- | my-procedure        | @sec-annex-my-procedure       |
+| Procedure          | Proposition | prp | num-procedure       | @sec-annex-num-procedure      |
+| R Code             | Conjecture  | --- | my-r-code           | @sec-annex-my-r-code          |
+| R Code             | Conjecture  | cnj | num-r-code          | @sec-annex-num-r-code         |
+| R Code             | Conjecture  | cnj | num-r-code-listing  | @sec-annex-num-r-code-listing |
+| R Code Collection  | Example     | exm | ab-code             | @sec-annex-ab-code            |
+| R Code Collection2 | ----------  | col | ab-code2            | @sec-annex-ab-code2           |
+| R Code Shiny       | Conjecture  | cnj | num-r-shiny         | @sec-annex-num-r-shiny        |
+| Remark             | Remark      | --- | my-remark           | @sec-annex-my-remark          |
+| Remark             | Remark      | rem | num-remark          | @sec-annex-num-remark         |
+| Report             | ----------  | rep | num-report          | @sec-annex-num-report         |
+| Resource           | Lemma       |     | my-resource         | @sec-annex-my-resource        |
+| Resource           |             |     | num-resource        | @sec-annex-num-resource       |
+| Screenshot         | Figure      |     | figure              | @sec-annex-figure             |
+| Screenshot         |             |     | figure-border       | @sec-annex-figure-border      |
+| Solution           |             |     | sr2                 | @sec-annex-sr2                |
+| Solution           |             |     | my-solution         | @sec-annex-my-solution        |
+| Solution           |             |     | num-solution        | @sec-annex-num-solution       |
+| Table              | Table       |     | ------------------- | @sec-annex-table              |
+| Tip                | ----------  | --- | my-tip              | @sec-annex-my-tip             |
+| Typo               | ----------  | --- | my-typo             | @sec-annex-my-typo            |
+| Theorem            | Theorem     |     | formula             | @sec-annex-formula            |
+| Theorem            | Theorem     |     | my-theorem          | @sec-annex-my-theorem         |
+| Theorem            | Theorem     |     | num-theorem         | @sec-annex-num-theorem        |
+| Watch Out          | ----------  |     | my-watch            | @sec-annex-my-watch           |
+| Watch Out          | ----------  |     | num-watch           | @sec-annex-num-watch          |
+
+: Overview of call-out boxes metadata used in this book {#tbl-callout-boxes}
+:::
+::::
+:::::
+
+## Assesment
+
+
+### my-assessment {#sec-annex-my-assessment}
+
+:::::{.my-assessment}
+:::{.my-assessment-header}
+Title for assessment comes here
+:::
+::::{.my-assessment-container}
+Here include text for assessment
+::::
+:::::
+
+### num-assessment {#sec-annex-num-assessment}
+:::::{.my-assessment}
+:::{.my-assessment-header}
+:::::: {#cor-assess}
+: Numbered Assessment Title
+::::::
+:::
+::::{.my-assessment-container}
+Here include  assessment text
+::::
+:::::
+
+## Bullet
+
+### my-bullet {#sec-annex-my-bullet}
+
+:::::{.my-bullet}
+:::{.my-bullet-header}
+Title for bullet text
+:::
+::::{.my-bullet-container}
+Here include bullet text
+::::
+:::::
+
+
+### num-bullet {#sec-annex-num-bullet}
+
+:::{.num-bullet}
+
+:::: {.num-bullet-header}
+::::: {.num-bullet-icon}
+:::::
+:::::: {#bul-Bullet-ID}
+::::::
+: Title for bullet text
+::::
+
+:::: {.num-bullet-body}
+Here include bullet text
+::::
+:::
+
+## Check
+
+### my-check {#sec-annex-my-check}
+
+:::::{.my-check}
+:::{.my-check-header}
+Title for checklist text
+:::
+::::{.my-check-container}
+Here include checklist text
+::::
+:::::
+
+### num-check {#sec-annex-num-check}
+
+:::{.num-check}
+
+:::: {.num-check-header}
+::::: {.num-check-icon}
+:::::
+:::::: {#tdo-Checklist-ID}
+::::::
+: Title for checklist text
+::::
+
+:::: {.num-check-body}
+Here include checklist text
+::::
+:::
+
+## Exercise
+
+### my-exercise {#sec-annex-my-exercise}
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+Exercise Title
+:::
+::::{.my-exercise-container}
+Here include exercise text
+::::
+:::::
+
+### num-exercise {#sec-annex-num-exercise}
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-ID-text}
+: Numbered Exercise Title
+::::::
+:::
+::::{.my-exercise-container}
+Here include exercise text
+::::
+:::::
+
+### ab-exercise {#sec-annex-ab-exercise}
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-ID-text}
+: Numbered Exercise Title
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### exercise1
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-code-name}
+: Numbered R Code Title 1
+::::::
+:::
+::::{.my-r-code-container}
+
+```{r}
+#| label: experiment-1
+
+1 + 1
+```
+
+::::
+:::::
+
+
+###### exercise2
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-code-name-b}
+b: Numbered R Code Title (Tidyverse)
+::::::
+:::
+::::{.my-r-code-container}
+
+```{r}
+#| label: experiment-2
+
+1 + 1
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+### abc-exercise {#sec-annex-abc-exercise}
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-ID}
+: Title of abc-exercise
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Challenge
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-ID-WHAT-challenge}
+: Title of code exercise
+::::::
+:::
+::::{.my-r-code-container}
+
+
+```{r}
+#| label: app-challenge
+#| eval: false
+#| code-fold: show
+#| code-summary: "Description of task"
+
+
+```
+
+
+::::
+:::::
+
+
+
+###### Solution (Code)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-ID-WHAT-app-solution}
+: Title of solution
+::::::
+:::
+::::{.my-solution-container}
+
+
+```{r}
+#| label: -app-solution
+#| eval: false
+#| code-fold: show
+
+
+```
+
+::::
+:::::
+
+
+###### Solution (Shiny)
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-ID-WHAT-app-shiny}
+: Title of Shiny app
+::::::
+:::
+::::{.my-solution-container}
+
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+## Experiment
+
+### my-experiment {#sec-annex-my-experiment}
+
+:::::{.my-experiment}
+:::{.my-experiment-header}
+Title of Experiment
+:::
+::::{.my-experiment-container}
+Here include text for experiment
+::::
+:::::
+
+### num-experiment {#sec-annex-num-experiment}
+
+:::::{.my-experiment}
+:::{.my-experiment-header}
+:::::: {#def-experiment-text}
+: Numbered Experiment Title
+::::::
+:::
+::::{.my-experiment-container}
+Here include text for experiment
+::::
+:::::
+
+
+
+## Important
+
+### my-important {#sec-annex-my-important}
+
+:::::{.my-important}
+:::{.my-important-header}
+Important Title
+:::
+::::{.my-important-container}
+Here include text for important box
+::::
+:::::
+
+## Objectives 
+
+### my-objectives {#sec-annex-my-objectives}
+
+:::::{.my-objectives}
+:::{.my-objectives-header}
+Learning Objectives:
+:::
+::::{.my-objectives-container}
+Here include text for objectives
+::::
+:::::
+
+## Package
+
+### my-package {#sec-annex-my-package}
+
+
+:::::{.my-package}
+:::{.my-package-header}
+Package Name
+:::
+::::{.my-package-container}
+Here include package description
+::::
+:::::
+
+### packagebox {#sec-annex-packagebox}
+
+
+
+#### package-name {#sec-annex-package-name}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: package-name
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[title](url) [@dplyr]</center>
+
+------------------------------------------------------------------------
+
+<center>(There is no HEXAGON sticker available for {**package-name**}.)</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-dplyr-min.png){width="176"}
+
+
+short description
+
+:::
+
+------------------------------------------------------------------------
+personal comment
+
+::::
+::::::
+
+This above snippets generates also a level two header and is intended for my annex chapter @sec-annex-packages-used. I have changed the level two header to a level four header, otherwise it would destroy my section structure of this chapter.
+
+Additionally this snippets needs an image (or the deletion of the corresponding code lines) and bibliography (reference tot the author of the package).
+
+
+
+## Proposition / Procedure
+
+### my-procedure {#sec-annex-my-procedure}
+
+:::::{.my-procedure}
+:::{.my-procedure-header}
+Procedure Title
+:::
+::::{.my-procedure-container}
+Here include procedure text
+::::
+:::::
+
+### num-procedure {#sec-annex-num-procedure}
+
+:::::{.my-procedure}
+:::{.my-procedure-header}
+:::::: {#prp-ID-text}
+: Numbered Procedure Title
+::::::
+:::
+::::{.my-procedure-container}
+Here include procedure text
+::::
+:::::
+
+## R Code
+
+
+### my-r-code {#sec-annex-my-r-code}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+Title for R-Code
+:::
+::::{.my-r-code-container}
+Here include code lines
+::::
+:::::    
+
+### num-r-code {#sec-annex-num-r-code}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-ID-text}
+: Numbered R Code Title
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: num-r-code-label
+
+1 + 1
+```
+
+::::
+:::::
+
+
+
+### num-r-code-listing {#sec-annex-num-r-code-listing}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-ID-text}
+: Numbered R Code Listing Title
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-listing-ID}
+```{r}
+#| label: num-r-code-listing-label
+
+1 + 1
+```
+
+Listing title
+:::
+
+::::
+:::::
+
+
+## R Code Collection
+
+
+### my-example {#sec-annex-my-example}
+
+:::::{.my-example}
+:::{.my-example-header}
+Title for my example
+:::
+::::{.my-example-container}
+Here include text
+::::
+:::::
+
+
+### num-example {#sec-annex-num-example}
+
+:::::{.my-example}
+:::{.my-example-header}
+:::::: {#exm-ID-text}
+: Numbered Example Title
+::::::
+:::
+::::{.my-example-container}
+Here include example text
+::::
+:::::
+
+### ab-code {#sec-annex-ab-code}
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-ID}
+: Title for code collection
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### header1
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-code-name-a}
+: Numbered R Code Title (Original)
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: text-a
+
+1 + 1
+```
+
+::::
+:::::
+
+
+###### header2
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-code-name-b}
+: Numbered R Code Title (Tidyverse)
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: text-b
+
+1 + 1
+```
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+### ab-code2 {#sec-annex-ab-code2}
+
+::: {.my-collection}
+:::: {.my-collection-header}
+::::: {.my-collection-icon}
+:::::
+:::::: {#col-ID}
+::::::
+
+::::
+
+::::{.my-collection-body}
+
+::: {.panel-tabset}
+
+###### header1
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-code-name-a}
+: Numbered R Code Title (Original)
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-listing-ID}
+```{r}
+#| label: code-collectin-a
+
+1 + 1
+```
+Listing text
+:::
+
+::::
+:::::
+
+
+###### header2
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-code-name-b}
+: Numbered R Code Title (Tidyverse)
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-listing-ID}    
+```{r}
+#| label: code-collection-b
+
+1 + 1
+```
+
+Listing text
+:::
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+
+
+
+## Screenshot 
+
+### figure {#sec-annex-figure}
+
+![Demonstration](img/invoke-debugger-min.png){#fig-annex-figure
+fig-alt="alt-text" fig-align="center" 
+width="70%"}
+
+
+### figure-border {#sec-annex-figure-border}
+
+<div style="border: 2px solid black; padding: 5px;">
+![title](img/invoke-debugger-min.png){#fig-annex-figure-border
+fig-alt="alt-text" fig-align="center" 
+width="70%"}
+</div>
+
+
+
+
+## Listing / Listing/Output {#sec-annex-listing-output}
+
+There is no snippet for listings. Listings is included in `num-r-code-listing` (see: @sec-annex-num-r-code-listing).
+
+
+
+## Remark
+
+### my-remark {#sec-annex-my-remark}
+
+:::::{.my-remark}
+:::{.my-remark-header}
+Title for remark
+:::
+::::{.my-remark-container}
+Here include remark lines
+::::
+:::::
+
+### num-remark {#sec-annex-num-remark}
+
+
+:::::{.my-remark}
+:::{.my-remark-header}
+:::::: {#rem-remark}
+: Numbered Remark Title
+::::::
+:::
+::::{.my-remark-container}
+Here include remark text
+::::
+:::::
+
+
+
+## Report 
+
+### num-report {#sec-annex-num-report}
+
+::: {.my-reportbox}
+
+::::{.my-reportbox-header} 
+::::: {.my-reportbox-icon}
+:::::
+::::::  {#rep-ID}
+:::::: 
+: Numbered Reportbox Title
+::::
+
+:::: {.my-reportbox-body} 
+Here include report box text
+::::
+
+:::
+
+
+## Resource
+
+### my-resource {#sec-annex-my-resource}
+
+:::::{.my-resource}
+:::{.my-resource-header}
+Title for resource
+:::
+::::{.my-resource-container}
+Here include resource text
+::::
+:::::
+
+### num-resource {#sec-annex-num-resource}
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-resource-text}
+: Numbered Resource Title
+::::::
+:::
+::::{.my-resource-container}
+Here include text for the resource
+::::
+:::::
+
+
+## R Code Shiny
+
+### num-r-shiny {#sec-annex-num-r-shiny}
+
+:::{.column-page}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-ID-text}
+: Numbered R Code Title
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+#| layout: vertical
+
+library(shiny)
+
+start coding here
+```
+::::
+:::::
+
+:::
+
+
+
+## Solution
+
+### sr2 {#sec-annex-sr2}
+
+
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+Exercise ID: Header
+:::
+::::{.my-exercise-container}
+
+Description more in Detail
+
+***
+
+**My Solution**
+
+Here comes the solution
+
+::::
+:::::
+
+The above box is intended for the text description of a task or challenge, followed by the R code as the solution. But it has no numbering!
+
+### my-solution {#sec-annex-my-solution}
+
+
+:::::{.my-solution}
+:::{.my-solution-header}
+Solution:
+:::
+::::{.my-solution-container}
+Here include solution text
+::::
+:::::
+
+### num-solution {#sec-annex-num-solution}
+
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-solution-text}
+: Numbered Solution Title
+::::::
+:::
+::::{.my-solution-container}
+Here include text for the solution
+::::
+:::::
+
+## Table / Table {#sec-annex-table}
+
+No changes, no snippet.
+
+## Tip
+
+### my-tip {#sec-annex-my-tip}
+
+:::::{.my-tip}
+:::{.my-tip-header}
+Title for Tip / Hint
+:::
+::::{.my-tip-container}
+Here include text for tip / hint box
+::::
+:::::
+
+
+
+## Theorem 
+
+### formula {#sec-annex-formula}
+
+
+
+$$
+\begin{align*}
+formula
+\end{align*}
+$$ {#eq-cross-ref-ID}
+
+Read [Mathematics in R Markdown](https://rpruim.github.io/s341/S19/from-class/MathinRmd.html)
+
+The numbering for theorems / formula is different than from the other cross-references / callout boxes.
+
+
+### my-theorem {#sec-annex-my-theorem}
+
+:::::{.my-theorem}
+:::{.my-theorem-header}
+Title of theorem
+:::
+::::{.my-theorem-container}
+Here include theorem text
+::::
+:::::
+
+### num-theorem {#sec-annex-num-theorem}
+
+:::::{.my-theorem}
+:::{.my-theorem-header}
+:::::: {#thm-theorem-text}
+: Numbered Theorem Title
+::::::
+:::
+::::{.my-theorem-container}
+$$
+\begin{align*}
+\text{Here include text for the theorem}
+\end{align*}
+$$ {#eq-chapXY-formula}
+::::
+:::::
+
+
+## Typo 
+
+### my-typo {#sec-annex-my-typo}
+
+
+:::::{.my-typo}
+:::{.my-typo-header}
+Typo Title
+:::
+::::{.my-typo-container}
+Here include typo text
+::::
+:::::
+
+
+
+## Watch
+
+### my-watch {#sec-annex-my-watch}
+
+:::::{.my-watch}
+:::{.my-watch-header}
+Title for watch-out text
+:::
+::::{.my-watch-container}
+Here include watch-out text
+::::
+:::::
+
+### num-watch {#sec-annex-num-watch}
+
+:::{.num-watch}
+
+:::: {.num-watch-header}
+::::: {.num-watch-icon}
+:::::
+:::::: {#wat-Watch-out-ID}
+::::::
+: Title for watch-out text
+::::
+
+:::: {.num-watch-body}
+Here include watch-out text
+::::
+:::
+
+
+
+
+## Glossary Entries {#unnumbered}
+
+```{r}
+#| label: glossary-table
+#| echo: false
+
+glossary_table()
+```
+
+------------------------------------------------------------------------
+
+## Session Info {.unnumbered}
+
+::: my-r-code
+::: my-r-code-header
+Session Info
+:::
+
+::: my-r-code-container
+```{r}
+#| label: session-info
+
+sessioninfo::session_info()
+```
+:::
+:::
+
+
+

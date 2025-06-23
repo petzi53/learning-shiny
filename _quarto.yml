@@ -33,6 +33,7 @@ book:
   appendices:
     - 50-packages-used.qmd
     - 60-whr-exercises.qmd
+    - 98-callout-boxes.qmd
     - 99-todo-list.qmd
 
 bibliography:
@@ -117,6 +118,9 @@ crossref:
     - kind: float
       reference-prefix: Collection Code
       key: col
+    - kind: float
+      reference-prefix: Watch-out
+      key: wat
 
 
 
@@ -127,13 +131,16 @@ bul-cap-location: bottom
 language:
    crossref-cnj-title: "R Code"             # replaces "Conjecture"
    crossref-cor-title: "Assessment"         # replaces "Corollary"
-   crossref-def-title: "Solution"           # replaces "Definition" (needs "num-experiment")
-   crossref-exm-title: "R Code Collection"  # replaces  "Example"
+   crossref-def-title: "Experiment"         # replaces "Definition"
+   crossref-exm-title: "Code Collection"    # replaces "Example"
+#  crossref-exm-title: "Example"            # remains  "Example" (not in use, but snippet + CSS exists)
    crossref-exr-title: "Exercise"           # remains  "Exercise"
-   crossref-fig-title: "Screenshot"              # replaces "Figure"
+   crossref-fig-title: "Screenshot"         # replaces "Figure"
    crossref-lem-title: "Resource"           # replaces "Lemma"
-   crossref-lst-title: "Listing / Output"   # replaces  "Listing"
+   crossref-lst-title: "Listing / Output"   # replaces "Listing"
    crossref-prp-title: "Procedure"          # replaces "Proposition"
+   crossref-rem-title: "Remark"             # remains  "Remark"
+   crossref-sol-title: "Solution"           # remains  "Solution"
    crossref-tbl-title: "Table"              # remains  "Table"
    crossref-thm-title: "Formula"            # replaces "Theorem" (needs "formula")
 #   crossref-int-title: "Interpretation"
