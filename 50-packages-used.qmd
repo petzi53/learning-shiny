@@ -1,4 +1,29 @@
-# Packages used {#sec-annex-package-used}
+# Packages used {#sec-annex-packages-used}
+
+## ambient {#sec-annex-ambient}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: ambient
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[A Generator of Multidimensional Noise](https://ambient.data-imaginist.com) [@ambient]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-ambient-min.png){width="176"}
+
+
+Generation of natural looking noise has many application within simulation, procedural generation, and art, to name a few. The {**ambient**} package provides an interface to the 'FastNoise' C++ library and allows for efficient generation of perlin, simplex, worley, cubic, value, and white noise with optional perturbation in either 2, 3, or 4 (in case of simplex and white noise) dimensions.
+
+:::
+
+::::
+::::::
 
 ## bslib {#sec-annex-bslib}
 
@@ -26,6 +51,34 @@ Simplifies custom 'CSS' styling of both 'shiny' and 'rmarkdown' via 'Bootstrap' 
 
 ::::
 ::::::
+
+## callr {#sec-annex-callr}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: callr
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Call R from R](https://callr.r-lib.org) [@callr]</center>
+
+------------------------------------------------------------------------
+
+<center>(There is no hexagon sticker available for {**callr**}.)</center>
+
+***
+
+
+It is sometimes useful to perform a computation in a separate R process, without affecting the current R process at all. This packages does exactly that.
+
+::::
+::::::
+
+
+
+
 
 ## dplyr {#sec-annex-dplyr}
 
@@ -202,6 +255,31 @@ Tools for HTML generation and output. {**htmltools**} makes it easy to customize
 
 :::
 
+
+::::
+::::::
+
+## janitor {#sec-annex-janitor}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: janitor
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Simple Tools for Examining and Cleaning Dirty Data](https://sfirke.github.io/janitor/) [@janitor]</center>
+
+------------------------------------------------------------------------
+
+::: {layout="[10, 30]" layout-valign="center"}
+![](img/logoi/logo-janitor-min.png){width="176"}
+
+
+The main janitor functions can: perfectly format data.frame column names; provide quick counts of variable combinations (i.e., frequency tables and crosstabs); and explore duplicate records. Other janitor functions nicely format the tabulation results.<br/><br/>These tabulate-and-report functions approximate popular features of SPSS and Microsoft Excel. This package follows the principles of the "tidyverse" and works well with the pipe function %>%. janitor was built with beginning-to-intermediate R users in mind and is optimized for user-friendliness.
+
+:::
 
 ::::
 ::::::
@@ -713,6 +791,37 @@ Package Profile: shinymaterial
 An R package that allows developers to implement Google's Material Design <https://m2.material.io/design> in Shiny applications. It provides a set of UI elements and functions that enable the creation of visually appealing and modern web applications using R code. The package includes various components such as buttons, cards, dropdowns, and tabs, which are styled according to Material Design principles.
 
 
+
+
+::::
+::::::
+
+## shinymeta {#sec-annex-shinymeta}
+
+:::::: my-packagebox
+::: my-packagebox-header
+Package Profile: shinymeta
+:::
+
+------------------------------------------------------------------------
+
+:::: my-packagebox-container
+<center>[Export Domain Logic from Shiny using Meta-Programming](	https://rstudio.github.io/shinymeta/) [@shinymeta]</center>
+
+------------------------------------------------------------------------
+
+<center>(There is no hexagon sticker available for {**shinymeta**}.)</center>
+
+***
+
+
+Provides tools for capturing logic in a Shiny app and exposing it as code that can be run outside of Shiny (e.g., from an R console). It also provides tools for bundling both the code and results to the end user.
+
+::: {.callout-note}
+Learn more about the {**shinymeta**} package in Joe Cheng’s useR! 2019 keynote, “[Shiny’s holy grail](https://www.youtube.com/watch?v=5KByRC6eqC8)^[Attention: The video starts at minute 11:20.]: Interactivity with reproducibility”. The code for the example Shiny app is available at GitHub. The sample code is useful in its own. It features package download data from `r glossary("CRAN")`.
+
+Keep in mind that there were [breaking changes](https://github.com/rstudio/shinymeta/wiki/Syntax-changes-for-shinymeta-0.2.0) in the meantime by replacing bang-bang (`!!`) with the dot-dot operator (`..()`). 
+:::
 
 
 ::::
