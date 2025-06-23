@@ -911,7 +911,7 @@ library(shiny)
 
 ## file: eoqnr8ikwFE.jpg
 ## type: binary
-{{< include apps-07/display-images/puppy-photos/eoqnr8ikwFE.jpg >}}
+{{< include apps_07/display-images/puppy-photos/eoqnr8ikwFE.jpg >}}
 
 puppies <- tibble::tribble(
     ~breed, ~ id, ~author,

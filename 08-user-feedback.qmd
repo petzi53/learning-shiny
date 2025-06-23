@@ -20,9 +20,9 @@ Chapter section list
 
 ::: {.my-objectives-container}
 
-- **Validation**, informing the user when an input (or combination of inputs) is in an invalid state. 
-- **Notification**, sending general messages to the user, and progress bars, which give details for time consuming operations made up of many small steps.
-- **Confirmation** dialogs or the ability to undo an action to give users peace of mind in dangerous situations. 
+- **Validation**, informing the user when an input (or combination of inputs) is in an invalid state. See @sec-08-validation. 
+- **Notification**, sending general messages to the user, and progress bars, which give details for time consuming operations made up of many small steps. See @sec-08-notification.
+- **Confirmation** dialogs or the ability to undo an action to give users peace of mind in dangerous situations. See @sec-08-confirmation.
 
 
 :::
@@ -36,14 +36,14 @@ Chapter section list
 ::::::
 :::
 ::::{.my-resource-container}
-- {**shinyFeedback**}, by Andy Merlin [@shinyFeedback]
-- {**waiter**}, by John Coene  [@waiter]
-- {**shinyvalidate**}, by Joe Cheng [@shinyvalidate]
+- {**shinyFeedback**} [@shinyFeedback]
+- {**waiter**}  [@waiter]
+- {**shinyvalidate**} [@shinyvalidate]
 
 ::::
 :::::
 
-## Validation
+## Validation {#sec-08-validation}
 
 ### Validating input {#sec-08-validating-input}
 
@@ -1121,7 +1121,7 @@ This package is part of a larger ecosystem of packages with a shared vision: sol
 :::::
 
 
-## Confirming and undoing
+## Confirming and undoing {#sec-08-confirmation}
 
 Sometimes an action is potentially dangerous, and you either want to make sure that the user really wants to do it, or you want to give them the ability to back out before it’s too late. Of the three options (explicit confirmation, undoing an action and trash) the last one is a complex strategy difficult to realize in Shiny and therefore out of scope of this book.
 
