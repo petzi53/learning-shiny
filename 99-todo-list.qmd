@@ -35,7 +35,7 @@ In this chapter I will collect all the tasks still to do.
 
 The lists will not only cover things to do for this book, but also other more general issues I came about working on this book. The task list will be divided into different subjects:
 
-- **Book content**: ToDo list for this book covering all content tasks, like missing chapters, text modules, bibliographies, references, links etc. This section also includes the polishing of text passages in grammar and style, improving arguments with a better text structure, more understandable graphics, etc.
+- **Book content**: ToDo list for this book covering all content tasks, like missing chapters, text modules, bibliographies, references, links etc. This section also includes the polishing of text passages in grammar and style, improving arguments with a better text structure, more understandable graphics, etc. I have also edited a section with my own challenges, i.e., exercises their idea came up when I worked with an example.
 - **Book appearance**: Creating colored and numbered textboxes for different subjects by adapting the `r glossary("CSS")` for this book and/or using Quartos layout facilities.
 - **Shiny**: List of things to learn even if those subjects are not the scope of this book. This includes not only the `shinylive` extension and the {**shinylive**} package using here in this book, but also the many packages supporting Shiny, helper in the Shiny universe.
 - **Quarto**: Researching Quarto functionality to enhance this book but also more general to improve my knowledge about Quarto. This includes Quarto extension, static and dynamic formats for [Quarto](https://r4ds.hadley.nz/quarto-formats), [R Markdown](https://rmarkdown.rstudio.com/), including {{< latex >}} with type setting systems like [Typst](https://typst.app/)/[TyX](https://tyx-editor.com/) or [LyX](https://www.lyx.org/). Applying interactivity and animation with other packages like {**leaflet**}, {**plotly**}, {**htmlwidgets**}, but also using JavaScript, JavaScript frameworks like [Observable JS](https://quarto.org/docs/interactive/ojs/) and more.
@@ -60,7 +60,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [ ] add glossary list and sessions_info
 - [ ] revise/write all **chapter objectives** (overviews)
 - [ ] add references to Hadley live demos (where and how?)
-- [ ] revise all apps-XX folders
+- [ ] revise all apps-XX folders: rename folder and add comments (name, purpose etc.) An example can be found in "apps09/download-report-github/app.R"
 - [ ] reference packages to their package profiles
 - [x] ~~delete in the code chunks all lines with `library(shiny)` and add it for each chapter only once in the setup chunk.~~ [setup chunk does not work with shinylive-r standalone = TRUE]{.mark}.  
 - [ ] delete all `shiny::<function()>` references, but keep or add all the other package references. Add/keep `shiny::` if it could be confused with another package just mentioned.
@@ -85,6 +85,12 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 - [ ] internal links/references if a chapter is finished
 - [ ] all the (render) test files in the "learning-shiny" directory resp do not git these folders or files.
+
+### Errors to investigate
+
+- [ ] Downloading reports: {#sec-09downloading-reports-standard}
+- [ ] Downloading reports: {#sec-09downloading-reports-callr}
+
 
 ### Index file
 
@@ -114,6 +120,8 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [x] resource box needs more space at the top (padding-top)
 - [x] limit right margin of boxes inside boxes with `padding-right: 10px` in container
 - [ ] get correct header for numbered box without preset theorem variation  (black instead of grey and in line with the number, at the moment the title is one line lower than the number) Ask at StackOverflow?
+- [ ] reorganize my callout boxes
+- [x] create annex about all my boxes
 
 ### Quarto {#sec-annex-todo-quarto}
 
@@ -147,3 +155,5 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [ ] [{**hypothesis**}](https://r-world-devs.github.io/hypothesis/index.html): add, share and manage annotations for Shiny applications and R Markdown documents. See also [GitHub repo](https://github.com/r-world-devs/hypothesis). Last update 2 years ago.
 - [ ] [{**hypothesisr**}](https://github.com/mdlincoln/hypothesisr): Wrapper for the Hypothes.is API. Last update 6 years ago. Public archived, Aug 30, 2019, no out of date. Recommends {**rapiclient**}.
 - [ ] [{**rapiclient**}](https://github.com/bergant/rapiclient): Dynamic Open API (Swagger) Client for R.
+
+
