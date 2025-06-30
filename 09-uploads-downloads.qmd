@@ -177,11 +177,11 @@ shinyApp(ui, server)
 Note that since `multiple = FALSE` (the default), `input$file` will be a single row data frame, and `input$file$name` and `input$file$datapath` will be a length-1 character vector.
 :::
 
-## Donwloads
+## Downloads
 
 ### Basics
 
-- Again, the UI is straightforward: use either `downloadButton(id)` or `downloadLink(id)` to give the user something to click to download a file. You can customise their appearance using the same class and icon arguments as for `actionButtons()`, as described in @sec-02-action-buttons.
+- Again, the UI is straightforward: use either `downloadButton(id)` or `downloadLink(id)` to give the user something to click to download a file. You can customize their appearance using the same class and icon arguments as for `actionButtons()`, as described in @sec-02-action-buttons.
 - Unlike other outputs, `downloadButton()` is not paired with a render function. Instead, you use `downloadHandler()`.
 
 `downloadHandler()` has two arguments, both functions:
@@ -595,7 +595,7 @@ In the current code version I got an error message whenever I try to include the
 
 
 
-## Case study
+## Case study {#sec-09-case-study}
 
 To finish up, we’ll work through a small case study where we upload a file (with user supplied separator), preview it, perform some optional transformations using the {**janitor**} package [@janitor], and then let the user download it as a `.tsv`.
 
@@ -715,9 +715,22 @@ shinyApp(ui, server)
 
 ## Exercises
 
+### Multidimensional noise {#sec-09-ex-01}
+
+#### Task description
+
 Use the {**ambient**} package [@ambient] to generate [worley noise](https://ambient.data-imaginist.com/reference/noise_worley.html) and download a PNG of it.
 
 
+
+#### Solution
+
+::: {.callout-important #imp-09-conflict}
+There is a conflict between the two versions. The first one (Shiny) does not work correctly at the beginning. One has to restart the app (clicking the right top arrow in the code window). The drop down menu changes it form and the reactive values work as intended. (The same problem occurs with the {**bslib**} version if it is the first one. There is no problem if there is only one version of the app.)
+:::
+
+
+::: {.column-screen-inset}
 :::::{.my-exercise}
 :::{.my-exercise-header}
 :::::: {#exr-09-exercise-01}
@@ -728,39 +741,40 @@ Use the {**ambient**} package [@ambient] to generate [worley noise](https://ambi
 
 ::: {.panel-tabset}
 
-###### Simple version
+###### Shiny UI version
 
 :::::{.my-r-code}
 :::{.my-r-code-header}
-:::::: {#cnj-09-exercise-01-simple}
+:::::: {#cnj-exercise-01-shiny}
 : Generate noise with two variable parameters
 ::::::
 :::
 ::::{.my-r-code-container}
 
+
 ```{shinylive-r}
 #| standalone: true
-#| viewerHeight: 1000
+#| viewerHeight: 700
 #| components: [editor, viewer]
-#| layout: vertical
-
 
 ## file: app.R
-{{< include apps_09/ex_01/app.R >}}
+{{< include apps_09/ex_01_shiny/app.R >}}
 
-## file: shinylive.R
+## file: R/shinylive.R
 {{< include R/shinylive.R >}}
+
 ```
+
 
 ::::
 :::::
 
 
-###### Complex version
+###### bslib UI version
 
 :::::{.my-r-code}
 :::{.my-r-code-header}
-:::::: {#cnj-09-exercise01-complex}
+:::::: {#cnj-09-exercise-01-bslib}
 : Generate noise with eight variable parameters
 ::::::
 :::
@@ -771,99 +785,12 @@ Use the {**ambient**} package [@ambient] to generate [worley noise](https://ambi
 #| standalone: true
 #| viewerHeight: 700
 #| components: [editor, viewer]
-#| layout: vertical
 
-library(shiny)
-library(ambient)
+## file: app.R
+{{< include apps_09/ex_01_bslib/app.R >}}
 
-ui <- fluidPage(
-    titlePanel("Generate Worley Noise"),
-    sidebarLayout(
-        sidebarPanel(width = 4,
-            fluidRow(
-                column(6,
-                    numericInput("height", "Height (1-20)",
-                            min = 1, max = 20, value = 10),
-                       ),
-                column(6,
-                    numericInput("length_x", "Length Height (100-5000)",
-                            min = 100, max = 10000, value = 1000),
-                       )
-            ),
-            fluidRow(
-                column(6,
-                       numericInput("width", "Width (1-20)",
-                                    min = 1, max = 20, value = 10),
-                ),
-                column(6,
-                       numericInput("length_y", "Length Width (100-5000)",
-                                    min = 100, max = 10000, value = 1000),
-                )
-            ),
-            fluidRow(
-                column(12,
-                    selectInput("distance", "Select distance",
-                                list("Euclidean" = "euclidean",
-                                     "Manhattan" = "manhattan",
-                                     "Natural" = "natural"
-                                     )
-                                ),
-                       )
-            ),
-            fluidRow(
-                column(12,
-            selectInput("value", "Select noise value",
-                        list("Distance" = "distance",
-                             "Distance2" = "distance2",
-                             "Distance2add" = "distance2add",
-                             "Distance2sub" = "distance2sub",
-                             "Distance2mul" = "distance2mul",
-                             "Distance2div" = "distance2div",
-                             "Cell" = "cell"
-                            )
-                       )
-                )
-            ),
-            fluidRow(
-                column(12,
-            sliderInput("seed", "Seed for replication",
-                        min = 1000,
-                        max = 1100,
-                        value = 1042
-                        )
-                    )
-            )
-        ),
-        mainPanel(width = 8,
-          plotOutput("plot")
-        )
-    )
-)
-
-server <- function(input, output) {
-    grid1 <-  reactive({
-        long_grid(seq(1, input$height, length.out = input$length_x),
-                  seq(1, input$width, length.out = input$length_y)
-                  )
-    })
-
-    grid2 <-  reactive({
-        grid1() |>
-            dplyr::mutate(noise = gen_worley(
-                grid1()$x, grid1()$y,
-                value = input$value,
-                distance = input$distance,
-                seed = input$seed)
-            )
-    })
-
-    output$plot <- renderPlot({
-        plot(grid2(), noise)
-    })
-
-}
-
-shinyApp(ui, server)
+## file: R/shinylive.R
+{{< include R/shinylive.R >}}
 
 ```
 
@@ -876,4 +803,804 @@ shinyApp(ui, server)
 ::::
 :::::
 
+:::
 
+::: {.callout-note #nte-09-bslib-version}
+
+I was surprised how easy the sidebar layout was created with {**bslib**}. The only issue I discovered so far: The default layout is much bigger and therefore not so convenient as in the {**shiny**} layout version. But I assume that there are option to change the overall appearance easily.
+
+See [Dashboards](https://rstudio.github.io/bslib/articles/dashboards/index.html), an article that shows using {**bslib**} to create the user interface (UI) for Shiny dashboards.
+
+:::
+
+
+
+In this exercise I had to overcome several difficulties:
+
+1. **Exercise interpretation**: First of all I had to interpret the challenge. I don't now anything about multidimensional noise generator. So I had to use the two provided examples to play around. Soon I learned that there are several parameters that change the resulting noise picture. I concluded that it would be nice to have an environment where you could experiment with the different parameters. This would be a really advantage of a Shiny app in contrast to pages with fixed parameters. <br/><br />
+I learned that [Solution to Mastering Shiny](https://mastering-shiny-solutions.netlify.app/) and [Mastering Shiny Solution](https://mastering-shiny-solutions.org/) did not capture this idea. The first one skipped this exercise, the second one provided a solution without Shiny.
+
+2. **content(file) function**: My biggest problem was to download the `r glossary("PNG")`. I didn't understand that the argument `file` for the function `content()` is only the way of Shiny to save the file internally. So the app author must not assign a value to `file`.
+
+3. **PNG function**: I never used so far the `png()` function with the `dev.off()` command at the end of the transaction.
+
+Not knowing about `png()` with my `content(file)` misunderstanding it took me several hours to find the solution.
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-09-png-function}
+: PNG and other graphic devices
+::::::
+:::
+::::{.my-resource-container}
+ - [BMP, JPEG, PNG and TIFF graphics devices](https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/png.html)
+ - [Saving plots to a file with pdf(), jpeg() and png()](https://bookdown.org/ndphillips/YaRrr/saving-plots-to-a-file-with-pdf-jpeg-and-png.html).
+
+::::
+:::::
+
+
+### Upload CSV & t-test
+
+#### Task description
+
+Create an app that lets you upload a `r glossary("CSV")` file, select a variable, and then perform a `t.test()` on that variable. After the user has uploaded the csv file, you’ll need to use `updateSelectInput()` to fill in the available variables. See @XXX_10.1 for details.
+
+::: {.callout-note #nte-upload-file-and-t-test}
+I have extended the task with three more options:
+
+- Not only CSV but also `r glossary("TSV")` files are allowed.
+- Because `t.test()` requires numeric data, load only columns with numeric data into `updateSelectInput()`.
+- Add input for the hypothesized mean, otherwise the one same t test will always use `0`.
+:::
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-09-t-test}
+: How to calculate and report a t test?
+::::::
+:::
+::::{.my-resource-container}
+
+- [One-Sample T-test in R](https://www.sthda.com/english/wiki/one-sample-t-test-in-r)
+- [How to Do a T-test in R: Calculation and Reporting](https://www.datanovia.com/en/lessons/how-to-do-a-t-test-in-r-calculation-and-reporting/)
+- [Complete Guide: How to Interpret t-test Results in R](https://www.statology.org/interpret-t-test-results-in-r/)
+- [T-Tests](https://bookdown.org/pbaumgartner/swr-harris/06-t-test.html) from Notes on Statistics with R [@harris2020]
+
+::::
+:::::
+
+#### Solution
+
+
+
+::: {.column-screen-inset}
+
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-09-exercise-02}
+: Upload file, select a variable and perform a t test
+::::::
+:::
+::::{.my-exercise-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_09/ex_02/app.R >}}
+```
+
+::::
+:::::
+
+:::
+
+### Download histogram
+
+#### Task description
+
+
+Create an app that lets the user upload a csv file, select one variable, draw a histogram, and then download the histogram. For an additional challenge, allow the user to select from `.png`, `.pdf`, and `.svg` output formats.
+
+I have developed several version of this exercise provided in different tabs:
+
+(1) **base R plot**: This is the minimum solution using base R plot. It took my a long time to learn and understand how to reference a specific column for the plot. The `$` does not work, you have to use `[[` like `data()[[input$my_column]]`. See [SO: Shiny R Histogram](https://stackoverflow.com/a/52612138/7322615). <br/><br/>
+I used to replicate the code for plotting the histogram in `renderPlot()` and `downloadHandler()`.  By creating a reactive for the plot code I could prevent duplication. See: [SO: How to avoid code duplication in a render() function in Shiny for R](https://stackoverflow.com/questions/35246256/how-to-avoid-code-duplication-in-a-render-function-in-shiny-for-r).
+
+(2) **ggplot**: This is the minimal solution with {**ggplot2**}. The reference to a column with {**ggplot2**} is even more complicated with `.data[[input$my_column]]`. The `.data` part is the tidy eval pronoun. See: [SO: What is the difference between `.` and `.data`](https://stackoverflow.com/questions/63399011/what-is-the-difference-between-and-data). <br/><br/>
+  Tidy evaluation is a concept used in the tidyverse, particularly in packages like dplyr and ggplot2, to handle the evaluation of expressions in a way that allows for more flexible and powerful programming. It is especially useful when you want to build functions that can take column names as arguments and use them within dplyr verbs.<br/><br/> 
+  It is a very complex topic and I will not open this Pandora box here, but these two references might provide a good start: [Programming with {dplyr}](https://dplyr.tidyverse.org/articles/programming.html) and [Evaluate an expression with quosures and pronoun support](https://rlang.r-lib.org/reference/eval_tidy.html) from the {**rlang**} package. (The {**rlang**} package is in this context important as it collects functions for the core {**tidyverse**} features like tidy evaluation.)
+  
+(3) **Hist button**: In the previous versions the histogram graphics appeared automatically with the first column in the `selectInput()` menu. In this version I have added a button to start drawing the histogram explicitly.
+
+(4) **shinyjs**: In all the previous trials was the `downloadButton()` active, even if there was nothing to download. I learned that I could prevent this easily with {**shinyjs**}. See [SO: shiny app: disable downloadbutton](https://stackoverflow.com/a/31719056/7322615)
+
+(5) **dynamic-UI**: With a dynamic UI there is another solution to present an active `downloadButton()`. The user only get the button when there is something to download. (It seems to me that this will be covered in the next book chapter on [Dynamic UI](https://mastering-shiny.org/action-dynamic.html). See @XXX_10.) But here I have used [SO: Display download button in Shiny R only when output appears in Main Panel](https://stackoverflow.com/a/51041905/7322615)<br/><br/> 
+I do not know what is the better UI alternative. To have an inactive button that changes or appearing a complete new UI element during the processing.
+
+(6) **radioButtons**: In this exercise the user can decide if (s)he wants the graphic as base R plot or with {**ggplot2**}. <br/><br/>
+I personally prefer the `ggplot()` version for two reasons: (**ggplot2**) is the modern plotting variant and has in the meanwhile a huge ecosystem on supporting packages and I am more experienced with {**ggplot2**} than with base R graphic.
+
+::: {.callout-important #imp-09-plot-dimension}
+###### Provide plot dimensions and set resolution to 96
+
+
+The first time I selected a tab of @exr-09-exercise-03 I got briefly `error: figure margin too large`. The problem is that the reserved plotting error is in the beginning too small. To prevent this error message I had to change `plotOutput("hist")` to `plotOutput("hist", width = '600px', height = '400px')`.
+
+By this occasion I also changed the resolution in `renderPlot()` from the standard 72 to the better resolution of 96. For instance: `renderPlot(my_hist(), res = 96)`. If there is a function with several lines (and not one liner function `my_hist()` as in the just mentioned example), then you have to include the `res = 96` addition between the ending `})` like `}, res = 96)`.
+:::
+
+#### Solution
+
+
+::: {.column-screen-inset}
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-09-exercise-03}
+: Upload file, draw histogram and download in different formats
+::::::
+:::
+::::{.my-exercise-container}
+
+::: {.panel-tabset}
+
+###### Base R plot
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-exercise-03-01-base-r-plot}
+: Minimal version with base R plot
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 680
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_09/ex_03_01_minimal_base_plot/app.R >}}
+
+## file: R/shinylive.R
+{{< include R/shinylive.R >}}
+```
+
+
+::::
+:::::
+
+
+###### ggplot
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-exercise-03-02-ggplot}
+: Minimal version with {**ggplot2**}
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 680
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_09/ex_03_02_minimal_ggplot/app.R >}}
+
+## file: R/shinylive.R
+{{< include R/shinylive.R >}}
+```
+
+::::
+:::::
+
+###### Hist button
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-exercise-03-03-hist-button}
+: Using button to start drawing the histogram
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 680
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_09/ex_03_03_draw_hist_button/app.R >}}
+
+## file: R/shinylive.R
+{{< include R/shinylive.R >}}
+```
+
+
+::::
+:::::
+
+
+
+###### shinyjs
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-exercise-03-04-shiny}
+: Enable download button with {**shinyjs**}
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 680
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_09/ex_03_04_shinyjs/app.R >}}
+
+## file: R/shinylive.R
+{{< include R/shinylive.R >}}
+```
+
+
+::::
+:::::
+
+###### Dynamic UI
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-exercise-03-05-dynamic-ui}
+: Dynamic UI: Display download button only when there is something to download
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 680
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_09/ex_03_05_dynamic_UI/app.R >}}
+
+## file: R/shinylive.R
+{{< include R/shinylive.R >}}
+```
+
+
+::::
+:::::
+
+###### Radiobuttons
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-exercise-03-06-radiobuttons}
+: Radio buttons to choose whether base R or ggplot graphic
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 680
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_09/ex_03_06_radiobuttons/app.R >}}
+
+## file: R/shinylive.R
+{{< include R/shinylive.R >}}
+```
+
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+:::
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-09-exercise-03}
+: Used resources to solve exercise 3: Download plot with shiny
+::::::
+:::
+::::{.my-resource-container}
+- [Shiny download with `ggplot2()`](https://forum.posit.co/t/shiny-download-ggplot/90532/2): Posit forum.
+- [How to avoid code duplication in a render() function in Shiny for R](https://stackoverflow.com/a/35246347/7322615): StackOverflow.
+- [What is the difference between `.` and `.data`](https://stackoverflow.com/a/63407353/7322615): StackOverflow
+- [Programming with {dplyr}](https://dplyr.tidyverse.org/articles/programming.html): Vignette 'programming' from the {**dplyr**} package. 
+- [Evaluate an expression with quosures and pronoun support](https://rlang.r-lib.org/reference/eval_tidy.html) and many more articles on the website for the {**rlang**} package.
+- [shiny app: disable downloadbutton](https://stackoverflow.com/a/31719056/7322615): StackOverflow.
+- [Display download button in Shiny R only when output appears in Main Panel](https://stackoverflow.com/a/51041905/7322615): StackOverflow.
+
+I also used two GitHub Gist articles, even if there were not decisive for my solution they provided general background to work with shiny plots:
+
+- [R Shiny Download ggplot() demo](https://gist.github.com/aagarw30/87c14725be815f9fd038).
+- [Shiny data upload and different plot options](https://gist.github.com/dgrapov/dfcf6ab2339b1cf19b090cfb8dadc855).
+
+::::
+:::::
+
+### LEGO bricks
+
+#### Task description
+
+Write an app that allows the user to create a Lego mosaic from any `.png` file using [Ryan Timpe’s {**brickr**} package](https://brickr.org/index.html). Once you’ve completed the basics, add controls to allow the user to select the size of the mosaic (in bricks), and choose whether to use “universal” or “generic” color palettes.
+
+#### Solution
+
+::: {.callout-warning #wrn-09-ex-04-lego-bricks}
+##### Compiled {**brickr**} package WebAssembly not available
+
+It turned out, that I couldn't run my solution because the {**brickr**} was not available for `shinylive` (`r glossary("webR")` / `r glossary("WebAssembly")`). I think the reason is that the current version of the package is neither on `r glossary("CRAN")` anymore (it was until the [previous version 0.3.5](https://cran.r-project.org/src/contrib/Archive/brickr/)) nor is there a [GitHub release](https://github.com/ryantimpe/brickr/) available.
+
+```{block2, label='ex-09-03-brickr-not-available', type='rmddanger'}
+
+Error in `get_github_wasm_assets()`:    
+! Can't find GitHub release for github::ryantimpe/brickr@HEAD   
+! Ensure a GitHub release exists for the package repository reference: "HEAD".       
+ℹ Alternatively, install a CRAN version of this package to use the default Wasm      
+  binary repository.     
+Caused by error in `gh::gh()`:       
+! GitHub API error (404): Not Found         
+✖ URL not found:         
+  <https://api.github.com/repos/ryantimpe/brickr/releases/tags/HEAD>     
+ℹ Read more at     
+  <https://docs.github.com/rest/releases/releases#get-a-release-by-tag-name>
+
+```
+:::
+
+I have therefore only the app source code provided. To run the apps, copy it form the code chunks below or fork this repo and run the provided apps.
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-compiling-packages-for-wasm}
+: Compiling packages for Webassembly and webR
+::::::
+:::
+::::{.my-resource-container}
+
+About providing / compiling R packages there is a daunting amount of literature available. I do not understand the connection of all of these resources and therefore is it extremely difficult for me to compile the {**bricksr**} package for WebAssembly myself.
+
+Nonetheless I have collected links to the (presumed) most important resources to solve my problem:
+
+
+**rwasm**
+
+- {**rwasm**}: [Build R Packages for WebAssembly](https://r-wasm.github.io/rwasm/)
+- [Get started with WASM: Compiling R packages for WebAssembly](https://r-wasm.github.io/rwasm/articles/rwasm.html)
+- [Build one or more R packages for WebAssembly](https://r-wasm.github.io/rwasm/reference/build.html)
+- [R-universe now builds WASM binaries for all R packages](https://ropensci.org/blog/2023/11/17/runiverse-wasm/)
+- [Building R Packages for Webassembly (WASM)](https://docs.r-wasm.org/webr/latest/building.html)
+- [WebR - R in the Browser](https://github.com/r-wasm/webr/)
+- [The WebAssembly Binary Toolkit](https://github.com/WebAssembly/wabt)
+
+**V8**
+
+- {**V8**}: [Embedded JavaScript and WebAssembly Engine for R](https://jeroen.r-universe.dev/V8)
+- [What is V8?](https://v8.dev/)
+- [Introduction to V8 for R](https://jeroen.r-universe.dev/articles/V8/v8_intro.html)
+
+**webR** 
+
+```{block2, label='webR-no-package', type='rmdattention'}
+There is a package {**webr**}. It is about "Data and Functions for Web-Based Analysis" and has therefore nothing to do with the open-source R interpreter webR compiled for WebAssembly,
+```
+
+- [WebR - R in the Browser](https://docs.r-wasm.org/webr/latest/)
+- [webR REPL app](https://webr.r-wasm.org/latest/). `r glossary("REPL")` stands for Read-Eval-Print Loop.
+- [Shiny Without a Server: webR & Shinylive](https://georgestagg.github.io/shiny-without-a-server-2023/): Slides
+
+**YouTube Videos by Geroge Stagg**
+  
+- [webR 0.2 Overview: R in the browse](brave://bookmarks/?id=7496)
+- [webR 0.2: R Packages and Shiny for WebAssembly](https://www.youtube.com/watch?v=CRKuH3ISPgI)
+- [Reproducible data science with webR and Shinylive](https://www.youtube.com/watch?v=wK3vPbcSoFE)
+- [webR 0.2: Updates to webRs developer API](https://www.youtube.com/watch?v=6b2EYmgObXc)
+
+
+::::
+:::::
+
+
+
+:::::{.my-procedure}
+:::{.my-procedure-header}
+:::::: {#prp-09-lego-bricks-exercise}
+: Exercise 4 of chapter 9: LEGO bricks
+::::::
+:::
+::::{.my-procedure-container}
+
+1. **Understanding {brickr}**: My first step to solve the exercise was to get an understanding what the {**brickr**} package does. I copied the demo code from the website [Emulate LEGO Bricks in 2D and 3D](https://brickr.org/index.html) and experimented with different pictures and parameters. Tab @lst-09-ex-04-understand-demo-code.
+2. **Implementing the basics**: My second step was to replicate the demo code with fixed values. See: @lst-ex-09-04-replicate-bricksr-demo-code-with-shiny.
+3. **Interactive functionality**: Third step was to take advantage of Shiny provide an interactive version. (See: @lst-09-ex-04-provide-bricksr-funktionality-with-shiny)
+4. **Improving the UI**: A last step was to disable/enable the `Process` button and to provide a spinning wheel provided by {**waiter**}. See @lst-09-ex-04-improving-shiny-ui-for-bricks-emulating.
+
+I've got several more ideas to improve the app. 
+
+- Display original image and LEGO bricks image side by side.
+- Provide a download button.
+- Another more challenging option would be to suggest height and width of the LEGO output in relation to the uploaded image. This would require to detect the dimension of the original image and to find an optimal conversion rule for the number of LEGO bricks.
+- To output the numbers of LEGO bricks sorted by size and colors.
+- To generate a 3D picture.
+
+::::
+:::::
+
+::: {.my-code-collection}
+:::: {.my-code-collection-header}
+::::: {.my-code-collection-icon}
+:::::
+:::::: {#exm-09-ex-04}
+: Build LEGO mosaics from any `.png` file using {**bricksr**} 
+::::::
+
+::::
+
+::::{.my-code-collection-container}
+
+::: {.panel-tabset}
+
+###### Demo R code
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-ex-04-understand-demo-code}
+: Play with the demo code to understand the core functionality of {**bricksr**}
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-09-ex-04-understand-demo-code}
+```{r}
+#| label: ex-09-04-bricksr-01-demo-r-code
+
+library(brickr)
+
+demo_img = tempfile()
+download.file("http://ryantimpe.com/files/mf_unicorn.PNG", demo_img, mode = "wb")
+
+(
+    mosaic1 <- png::readPNG(demo_img)  |>
+        image_to_mosaic(img_size = 36) |>
+        build_mosaic()
+)
+```
+
+Demo code to understand the core functionality of {**bricksr**}
+
+:::
+::::
+:::::
+
+
+###### Replicate with Shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-ex-09-04-replicate-code-with-shiny}
+: Replicate {**bricksr**} demo code with a Shiny app
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-ex-09-04-replicate-bricksr-demo-code-with-shiny}
+
+```{r}
+#| label: ex-09-04-bricksr-02-shiny-basics
+#| eval: false
+
+library(shiny)
+library(bslib)
+library(base64enc)
+library(brickr)
+
+ui <- page_sidebar(
+    titlePanel("Emulate LEGO Bricks"),
+    sidebar = sidebar(
+        fileInput("upload", "Load PNG image", accept = c(".png", ".PNG"))
+        ),
+    uiOutput("image"),
+    plotOutput("plot", width = "600px", height = "400px")
+    )
+
+server <- function(input, output, session) {
+    base64 <- reactive({
+        req(input$upload)
+        dataURI(file = input$upload$datapath, mime = "image/png")
+    })
+
+    output$plot <- renderPlot({
+        req(base64())
+        mosaic1 <- png::readPNG(input$upload$datapath) |>
+            image_to_mosaic(img_size = c(72, 48), color_palette = "generic") |>
+            build_mosaic()
+        mosaic1
+    }
+    )
+
+    output$image <- renderUI({
+        req(base64())
+        tags$div(
+            tags$img(src = base64(), width = "100%"),
+            style = "width: 400px;"
+        )
+
+
+    })
+}
+
+
+shinyApp(ui, server)
+
+```
+
+{**bricksr**} demo code replicated with Shiny
+:::
+::::
+:::::
+
+###### Interactivity
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-ex-04-bricksr-functionality}
+: Create interactive functionality to build mosaics with {**bricksr**}
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-09-ex-04-provide-bricksr-funktionality-with-shiny}
+
+```{r}
+#| label: ex-04-provide-bricksr-funktionality-with-shiny
+#| eval: false
+
+library(shiny)
+library(bslib)
+library(base64enc)
+library(brickr)
+
+ui <- page_sidebar(
+    titlePanel("Emulate LEGO Bricks"),
+    sidebar = sidebar(
+        fileInput("upload", "Load PNG image", accept = c(".png", ".PNG")),
+        numericInput("width", "Width", 36),
+        numericInput("height", "Height", 36),
+        selectInput("pal", "Color Palette:",
+                    c("Generic" = "generic",
+                      "Universal" = "universal")),
+        actionButton("process", "Process",
+                     icon = icon("cog", lib = "glyphicon"),
+                     disabled = TRUE)
+        ),
+    uiOutput("image"),
+    plotOutput("plot", width = "600px", height = "400px")
+    )
+
+server <- function(input, output, session) {
+    base64 <- reactive({
+        req(input$upload)
+        updateActionButton(
+            session, "process",
+            disabled = FALSE)
+        dataURI(file = input$upload$datapath, mime = "image/png")
+    })
+
+    output$plot <- renderPlot({
+        req(input$process > 0)
+        my_mosaic <-
+
+                png::readPNG(input$upload$datapath) |>
+                image_to_mosaic(img_size =
+                        c(isolate(input$width), isolate(input$height)),
+                        color_palette = isolate(input$pal)) |>
+                build_mosaic()
+        my_mosaic
+    })
+
+    output$image <- renderUI({
+        input$upload
+        tags$div(
+            tags$img(src = base64(), width = "100%"),
+            style = "width: 400px;"
+        )
+    })
+
+}
+
+
+shinyApp(ui, server)
+```
+
+Provided interactivity for emulating LEGO bricks with {**bricks**}
+
+:::
+::::
+:::::
+
+###### Improving UI
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-ex-04-improving-shiny-ui-for-bricks-emulating}
+: Improving User Interface of the LEGO bricks shiny app
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-09-ex-04-improving-shiny-ui-for-bricks-emulating}
+
+```{r}
+#| label: ex-04-improve-shiny-ui-for-bricks-emulating
+#| eval: false
+
+library(shiny)
+library(bslib)
+library(base64enc)
+library(brickr)
+library(waiter)
+
+
+waiting_screen <- tagList(
+    spin_flower(),
+    h4("Emulating picture with Lego bricks...")
+)
+
+ui <- page_sidebar(
+    useWaiter(),
+    titlePanel("Emulate LEGO Bricks"),
+    sidebar = sidebar(
+        fileInput("upload", "Load PNG image", accept = c(".png", ".PNG")),
+        numericInput("width", "Width", 36),
+        numericInput("height", "Height", 36),
+        selectInput("pal", "Color Palette:",
+                    c("Generic" = "generic",
+                      "Universal" = "universal")),
+        actionButton("process", "Process",
+                     icon = icon("cog", lib = "glyphicon"),
+                     disabled = TRUE)
+        ),
+    uiOutput("image"),
+    plotOutput("plot", width = "600px", height = "400px")
+    )
+
+server <- function(input, output, session) {
+    # create a waiter
+    w <- Waiter$new()
+
+    base64 <- reactive({
+        req(input$upload)
+        updateActionButton(
+            session, "process",
+            disabled = FALSE)
+        dataURI(file = input$upload$datapath, mime = "image/png")
+    })
+
+    output$plot <- renderPlot({
+        req(input$process > 0)
+        # w$show()
+        waiter_show(html = waiting_screen, color = "black")
+        my_mosaic <-
+
+                png::readPNG(input$upload$datapath) |>
+                image_to_mosaic(img_size =
+                        c(isolate(input$width), isolate(input$height)),
+                        color_palette = isolate(input$pal)) |>
+                build_mosaic()
+        # w$hide()
+        waiter_hide()
+        my_mosaic
+    })
+
+    output$image <- renderUI({
+        input$upload
+        tags$div(
+            tags$img(src = base64(), width = "100%"),
+            style = "width: 400px;"
+        )
+    })
+
+}
+
+
+shinyApp(ui, server)
+```
+
+
+Improving Shiny's UI for LEGO bricks emulating with {**bricksr**}
+:::
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+
+
+### Reorganizing reactive(s)
+
+#### Task description
+
+The app from the case study @sec-09-case-study contains a very large reactive. Break it up into multiple pieces so that (e.g.) `janitor::make_clean_names()` is not re-run when `input$empty` changes.
+
+````markdown
+tidied <- reactive({
+  out <- raw()
+  if (input$snake) {
+    names(out) <- janitor::make_clean_names(names(out))
+  }
+  if (input$empty) {
+    out <- janitor::remove_empty(out, "cols")
+  }
+  if (input$constant) {
+    out <- janitor::remove_constant(out)
+  }
+
+  out
+})
+
+````
+
+
+#### Solution
+
+
+::: {.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-ex-05-reorganize-reactives}
+: Code reorganizing of the final version of the case study in @sec-09-case-study
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_09/ex_05/app.R >}}
+```
+
+::::
+:::::
+
+:::
+
+::: {.callout-note #nte-09-reorganizing-reactive}
+After two days I gave up on this exercise and looked at the solution in [Mastering Shiny Solutions](https://mastering-shiny-solutions.netlify.app/uploads-and-downloads). 
+
+I knew that the main change has to be happen in the cleaning function. Exactly the part of code that was repeated in the exercise formulation. But I did not know how to collect the results of of the three cleaning actions into on `tableRender()`. I tried it with `reactiveVal()` and managed the separate cleaning procedure but only for the first time. I didn't succeed to develop an app where the user could also take back the cleaning action through by resetting the selection.
+
+I learned two things from the solution:
+
+1. Each change of an input results is a call to each available reactive function. Thinking now about it, this seems obvious. In contrast to the `eventReactive()` handler that only is activated by a change of a specific input value a [reactive expression is called **always** when an input value has changed]{.mark}.
+
+2. But most important I did not know that "if a reactive expression is marked as invalidated, any other reactive expressions that recently called it are also marked as invalidated. In this way, [invalidations ripple through the expressions that depend on each other]{.mark}" (`reactive()``` help page).
+
+This "ripple through the expression" is good visible as the result of every previous cleaning action is the start value of the `out` variable. Important is here the order of the different reactives. The raw data frame (`raw()`) must be included in the first reactive and is followed by one reactive after another applying or not applying each cleaning function. In this case is the order from top to bottom, because each reactive was invalidated by the previous one. this structure was a surprise for me, as I had a mental model of Shiny where code sequences **never** matters.
+
+:::

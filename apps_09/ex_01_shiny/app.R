@@ -1,6 +1,13 @@
 library(shiny)
-library(bslib)
 library(ambient)
+
+# shinylive Workaround Start ######
+downloadButton <- function(...) {
+    tag <- shiny::downloadButton(...)
+    tag$attribs$download <- NULL
+    tag
+}
+### End of workaround ####
 
 ui <- fluidPage(
     titlePanel("Generate Worley Noise"),
@@ -66,14 +73,14 @@ ui <- fluidPage(
 server <- function(input, output) {
 
     grid1 <-  reactive({
-        long_grid(seq(1, input$height, length.out = 1000),
+        ambient::long_grid(seq(1, input$height, length.out = 1000),
                   seq(1, input$width, length.out = 1000)
                   )
     })
 
     grid2 <-  reactive({
         grid1() |>
-            dplyr::mutate(noise = gen_worley(
+            dplyr::mutate(noise = ambient::gen_worley(
                 grid1()$x, grid1()$y,
                 value = input$value,
                 distance = input$distance,
@@ -82,6 +89,7 @@ server <- function(input, output) {
     })
 
     output$plot <- renderPlot({
+        req(grid2())
         plot(grid2(), noise)
     })
 

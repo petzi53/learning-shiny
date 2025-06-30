@@ -142,8 +142,10 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 ## R {#sec-annex-todo-r}
 
-- [ ] report {**glossary**} issue when [content of a term is part of another term](https://github.com/debruine/glossary/issues/11)
-- [ ] look into [Posit Connect Cloud](https://connect.posit.cloud/)
+- [x] Report {**glossary**} issue when [content of a term is part of another term](https://github.com/debruine/glossary/issues/11)
+    - [ ] Look into the glossary repo from time to time until the issue will be (hopefully) solved.
+- [ ] Explore the glossary package to see if and how one could write long entries with several paragraphs. 
+- [ ] Look into [Posit Connect Cloud](https://connect.posit.cloud/)
 
 
 ## Quarto computation

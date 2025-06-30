@@ -907,47 +907,14 @@ You can use `renderImage()` if you want to display existing images (not plots). 
 #| components: [editor, viewer]
 #| layout: vertical
 
-library(shiny)
+## file: app.R
+{{< include apps_07/display-images/app.R >}}
 
 ## file: eoqnr8ikwFE.jpg
 ## type: binary
-{{< include apps_07/display-images/puppy-photos/eoqnr8ikwFE.jpg >}}
+{{< base64 apps_07/display-images/puppy-photos/eoqnr8ikwFE.jpg "image/jpeg" >}}
 
-puppies <- tibble::tribble(
-    ~breed, ~ id, ~author,
-    "corgi", "eoqnr8ikwFE","alvannee",
-    "labrador", "KCdYn0xu2fU", "shaneguymon",
-    "spaniel", "TzjMd7i5WQI", "_redo_"
-)
 
-ui <- fluidPage(
-    selectInput("id", "Pick a breed", choices = setNames(puppies$id, puppies$breed)),
-    htmlOutput("source"),
-    imageOutput("photo")
-)
-
-server <- function(input, output, session) {
-    output$photo <- renderImage({
-        list(
-            src = base64enc::base64encode(
-                file.path("puppy-photos", paste0(input$id, ".jpg"))
-              ),
-            contentType = "image/jpeg",
-            width = 500,
-            height = 650
-        )
-    }, deleteFile = FALSE)
-
-    output$source <- renderUI({
-        info <- puppies[puppies$id == input$id, , drop = FALSE]
-        HTML(glue::glue("<p>
-      <a href='https://unsplash.com/photos/{info$id}'>original</a> by
-      <a href='https://unsplash.com/@{info$author}'>{info$author}</a>
-    </p>"))
-    })
-}
-
-shinyApp(ui, server)
 
 ```
 
