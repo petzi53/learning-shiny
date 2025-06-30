@@ -3,22 +3,24 @@
 ::: {.callout-note style="color: blue;"}
 #### This is work in progress
 
-I have finished about 48%. Currently I am working on the exercises for @sec-chap09.
+I have finished about 48%. Currently I am working on the exercises for
+@sec-chap09.
 
-@sec-chap04_8_exercises 4.8 and @sec-chap06-5_4_exercises 6.5.4 are missing.
-
+@sec-chap04_8_exercises 4.8 and @sec-chap06-5_4_exercises 6.5.4 are
+missing.
 :::
 
-:::::{.my-watch}
-:::{.my-watch-header}
-WATCH OUT: This is neither an accurate replication nor an authoritative textbook.
+::::: my-watch
+::: my-watch-header
+WATCH OUT: This is neither an accurate replication nor an authoritative
+textbook.
 :::
-::::{.my-watch-container}
 
-I am writing this book as a text for others to read because that forces me to
-become explicit and explain all my learning outcomes more carefully.
-Please keep in mind that this text is not written by an expert but by a
-learner.
+::: my-watch-container
+I am writing this book as a text for others to read because that forces
+me to become explicit and explain all my learning outcomes more
+carefully. Please keep in mind that this text is not written by an
+expert but by a learner.
 
 Text passages with content I am already familiar I have skipped. Section
 of the original text where I needed more in-depth knowledge I have
@@ -27,48 +29,52 @@ elaborated and added my own comments resulted from my personal research.
 Be warned! In spite of replicating most of the content this Quarto book
 may contain many mistakes. All the misapprehensions and errors are of
 course my own responsibility.
-::::
+:::
 :::::
-
-
 
 ## Content and Goals of this Book {.unnumbered}
 
 This Quarto book collects my personal notes, trials and exercises of
-[Mastering Shiny](https://mastering-shiny.org/) by Hadley Wickham [@wickham2021].
+[Mastering Shiny](https://mastering-shiny.org/) by Hadley Wickham
+[@wickham2021].
 
-I am learning wot work with {**shiny**} because I want to develop a dashboard for investigating countries in world maps with values of different years. For instance I want to use the `r glossary("WHR")` data 2011, 2012, 2014-2024 and show the distributions of the ladder scores abount the countries of the world.
-
-
+I am learning wot work with {**shiny**} because I want to develop a
+dashboard for investigating countries in world maps with values of
+different years. For instance I want to use the `r glossary("WHR")` data
+2011, 2012, 2014-2024 and show the distributions of the ladder scores
+abount the countries of the world.
 
 ## Text passages
 
 ### Quotes and personal comments
 
-My text consists mostly of quotes from the [Mastering Shiny book](https://www.amazon.de/Mastering-Shiny-Interactive-Reports-Dashboards/dp/1492047384/). Sometimes I have them changed slightly to adapt it to the flow of my notes. But I have not shown that it is a quote nor I jave referenced the position of the (semi)quotes in the book. As I am generally follow the book's outline using the same text for headers, it should be clear where to find the quotes. 
+My text consists mostly of quotes from the [Mastering Shiny
+book](https://www.amazon.de/Mastering-Shiny-Interactive-Reports-Dashboards/dp/1492047384/).
+Sometimes I have them changed slightly to adapt it to the flow of my
+notes. But I have not shown that it is a quote nor I jave referenced the
+position of the (semi)quotes in the book. As I am generally follow the
+book's outline using the same text for headers, it should be clear where
+to find the quotes.
 
-This means that most of the text in this Quarto book is not mine but comes
-from different resources. 
+This means that most of the text in this Quarto book is not mine but
+comes from different resources.
 
-My personal comments should be clear because most of the times it is a reflection about the book and my experiences with it.
-
-
+My personal comments should be clear because most of the times it is a
+reflection about the book and my experiences with it.
 
 ### Glossary
 
-I am using the {**glossary**} package [@glossary] to create links to glossary
-entries.
+I am using the {**glossary**} package [@glossary] to create links to
+glossary entries.
 
-::: my-r-code
-::: my-r-code-header
+:::::: my-r-code
+:::: my-r-code-header
 ::: {#cnj-load-glossary}
 : Load glossary
 :::
-:::
+::::
 
 ::: my-r-code-container
-
-
 ```{r}
 #| label: load-glossary
 #| lst-label: lst-preface-load-glossary
@@ -94,118 +100,178 @@ library(glossary)
 glossary::glossary_path("../glossary-pb/glossary.yml")
 
 ```
-
-
 :::
-:::
+::::::
 
 If you hover with your mouse over the double underlined links it opens
-an window with the appropriate glossary text. Try this example: `r glossary("WHR")`.
+an window with the appropriate glossary text. Try this example:
+`r glossary("WHR")`.
 
-::: my-watch-out
+:::::: my-watch-out
 ::: my-watch-out-header
 WATCH OUT! Glossary is my private learning vehicle
 :::
 
-::: my-watch-out-container
+:::: my-watch-out-container
 ::: {layout="[10, 30]" layout-valign="center"}
 ![](https://debruine.github.io/glossary/logo.png)
 
 I have added many of the glossary entries when I was working through
 other books either taking the text passage of these books I was reading
-or via an internet recherche from other resources. Sometimes I have added the
-source of the glossary entry as an abbreviation or as an URL. Many definitions were provided by the KI provided within the search of my [Brave browser](https://brave.com/).
+or via an internet recherche from other resources. Sometimes I have
+added the source of the glossary entry as an abbreviation or as an URL.
+Many definitions were provided by the KI provided within the search of
+my [Brave browser](https://brave.com/).
 :::
+::::
+::::::
 
-:::
-:::
-
-If you fork [my repository of these notes](https://github.com/petzi53/learning-shiny) then the glossary will not
-work out of the box. Load down the `glossary.yml` file from [my
+If you fork [my repository of these
+notes](https://github.com/petzi53/learning-shiny) then the glossary will
+not work out of the box. Load down the `glossary.yml` file from [my
 glossary-pb GitHub
 repo](https://github.com/petzi53/glossary-pb/blob/master/glossary.yml),
 store it on your hard disk and change the path in the code chunk
 @lst-preface-load-glossary accordingly.
 
-In any case I am the only responsible person for the glossary text, especially
-if I have used text from other resources wrongly. Again: The main purpose of the glossary is to support my personal learning venture.
+In any case I am the only responsible person for the glossary text,
+especially if I have used text from other resources wrongly. Again: The
+main purpose of the glossary is to support my personal learning venture.
 
 ## R Code and Datasets
 
-During coding I am following the [Tidyverse Style Guide](https://style.tidyverse.org/). For learning purposes I am practicing {**shiny**} in two modes:
+During coding I am following the [Tidyverse Style
+Guide](https://style.tidyverse.org/) and the conventions explained in
+[Rmarkdown](https://bookdown.org/yihui/rmarkdown/software-info.html), [@xie2018] a book written with {**bookdown**} [@Xie2018], a predecessor of Quarto.
 
-1. **{shiny} app**: I am writing the code in extra `app.R` files as explained in the book. I create folders with the number of the chapters, eg., `apps-01`, `apps-02`. Inside of these chapter folders I put the folders for the {**shiny**} examples with self explanatory names so that one can get and distinguish the example files that all have the name `app.R`. Additionally I order these examples with numbers that represents their appearance in the text, e.g., `01-hello-world`, `02-greetings1` `03-greetings2`, etc. 
-2. **{shinylife-r}**: Additionally I provide the example as standalone {**shinylive**} Quarto examples. They have two different version: One is the source code shown as code listing but not evaluated. The other is the working {**shinylive**} example.  This seems to me a nice way to communicate my learning experiences and the results of the {**shiny**} code. All these code chunks start with `{shinylive-r}` instead `{r}` in the header.
 
-::: {.callout-caution}
-I am not using always the exact code snippets of the book,
-because I am not only replicating the code to see how it works but also
-to change the values of parameters to observe their influences.
+-   There are no prompts (`>` and `+`) to R source code.
+-   The text output is commented out with two hashes `##` by default.
+    This is for your convenience when you want to copy and run the code.
+    The text output will be ignored since it is commented out.
+-   Inline code and filenames are formatted in a typewriter font (e.g.,
+    `knitr::knit('foo.Rmd')`).
+-   Package names are also formatted in a typewriter font but bold an in
+    curly parenthesis (e.g., {**rmarkdown**})[^index-1].
+-   Function names are followed by parentheses (e.g.,
+    `bookdown::render_book()`). The double-colon operator `::` means
+    accessing an object from a package.
+    
+
+[^index-1]: The parenthesis are my own addition not applied in the
+    mentioned RMarkdown book.
+    
+Additionally I am adopting the following convention: Whenever I use `Shiny` with capital letter I am referring to the app. In contrast to {**shiny**} which is pointing to the R package.
+
+For learning purposes I am practicing {**shiny**} in two modes:
+
+1.  **{shiny} app**: I am writing the code in extra `app.R` files as
+    explained in the book. I create folders with the number of the
+    chapters, eg., `apps-01`, `apps-02`. Inside of these chapter folders
+    I put the folders for the {**shiny**} examples with self explanatory
+    names so that one can get and distinguish the example files that all
+    have the name `app.R`. Additionally I order these examples with
+    numbers that represents their appearance in the text, e.g.,
+    `01-hello-world`, `02-greetings1` `03-greetings2`, etc.
+2.  **{shinylife-r}**: Additionally I provide the example as standalone
+    {**shinylive**} Quarto examples. They have two different version:
+    One is the source code shown as code listing but not evaluated. The
+    other is the working {**shinylive**} example. This seems to me a
+    nice way to communicate my learning experiences and the results of
+    the {**shiny**} code. All these code chunks start with
+    `{shinylive-r}` instead `{r}` in the header.
+
+::: callout-caution
+I am not using always the exact code snippets of the book, because I am
+not only replicating the code to see how it works but also to change the
+values of parameters to observe their influences.
 :::
 
 ## Annex
 
-In some of my book notes I provide files in the annex. They contain experiments not directly in line with the book but inspired by my reading of the book. 
+In some of my book notes I provide files in the annex. They contain
+experiments not directly in line with the book but inspired by my
+reading of the book.
 
-Often you will also find an annex file with a standardized short description of all my used packages, sometimes added with notes about my personal experiences with this package. An example of the standardized format gives you the following @sec-glossary-package.
+Often you will also find an annex file with a standardized short
+description of all my used packages, sometimes added with notes about my
+personal experiences with this package. An example of the standardized
+format gives you the following @sec-glossary-package.
 
 ### Glossary package {#sec-glossary-package}
+
 :::::: my-num-packagebox
 ::: my-num-packagebox-header
 Package Profile: glossary
 :::
 
 :::: my-num-packagebox-container
-<center>{**glossary**}: [Glossaries for Markdown and Quarto Documents](https://debruine.github.io/glossary/) [@glossary]</center>
+<center>{**glossary**}: [Glossaries for Markdown and Quarto
+Documents](https://debruine.github.io/glossary/) [@glossary]</center>
 
 ------------------------------------------------------------------------
 
 ::: {layout="[10, 30]" layout-valign="center"}
 ![](img/logoi/logo-glossary-min.png){width="176"}
 
-Add glossaries to markdown and quarto documents by tagging individual words. Definitions can be provided inline or in a separate file. <br/></br>   
-There is a lot of necessary jargon to learn reading new books. The goal of {**glossary**} is to provide a lightweight solution for making glossaries in educational materials written in quarto or R Markdown. This package provides functions to link terms in text to their definitions in an external glossary file, as well as create a glossary table of all linked terms at the end of a section.
+Add glossaries to markdown and quarto documents by tagging individual
+words. Definitions can be provided inline or in a separate file.
+<br/></br>\
+There is a lot of necessary jargon to learn reading new books. The goal
+of {**glossary**} is to provide a lightweight solution for making
+glossaries in educational materials written in quarto or R Markdown.
+This package provides functions to link terms in text to their
+definitions in an external glossary file, as well as create a glossary
+table of all linked terms at the end of a section.
 :::
 
 ------------------------------------------------------------------------
 
-In the meantime {**glossary**} is for me a very important learning vehicle. Whenever an expression appears with a doubled underlined link I know that I will get more information by hovering the mouse over the underlined text.
+In the meantime {**glossary**} is for me a very important learning
+vehicle. Whenever an expression appears with a doubled underlined link I
+know that I will get more information by hovering the mouse over the
+underlined text.
 
-There is a little inconvenience with abbreviation that could also be part of another glossary entry text string (e.g., `r glossary("APIx", "API")` and `r glossary("Capital Income")`). My workaround is to end the short abbreviation with an additional 'x' and then to call the glossary with the x-version follwed by the text that should be appear in the document (e.g., *r glossary("APIx", "API")*). This double format is a standard feature of the {**glossary**} package so that you can adapt the appearing text to the glossary entry (e.g., singular/plural or other grammar changes).
-
-
+There is a little inconvenience with abbreviation that could also be
+part of another glossary entry text string (e.g.,
+`r glossary("APIx", "API")` and `r glossary("Capital Income")`). My
+workaround is to end the short abbreviation with an additional 'x' and
+then to call the glossary with the x-version follwed by the text that
+should be appear in the document (e.g., *r glossary("APIx", "API")*).
+This double format is a standard feature of the {**glossary**} package
+so that you can adapt the appearing text to the glossary entry (e.g.,
+singular/plural or other grammar changes).
 ::::
 ::::::
 
-
-
-
 ## Resources
 
-::: {.my-resource}
-::: {.my-resource-header}
-:::::: {#lem-index-book-resources}
+:::::: my-resource
+:::: my-resource-header
+::: {#lem-index-book-resources}
 : Resources used for this Quarto book
+:::
+::::
+
+::: my-resource-container
+-   Wickham, H. (2021). Mastering Shiny: Build Interactive Apps,
+    Reports, and Dashboards Powered by R. O’Reilly UK Ltd.
+-   [Online version of Mastering
+    Shiny](https://mastering-shiny.org/index.html)
+-   [Mastering Shiny
+    Solutions](https://mastering-shiny-solutions.org/index.html)
+-   [shiny cheatsheet](https://rstudio.github.io/cheatsheets/shiny.pdf)
+-   [shiny docs & tutorial](https://shiny.posit.co/)
+-   [shinylive-r in
+    Quarto](https://quarto.thecoatlessprofessor.com/r-shinylive-demo/)
+-   [Awesome Shiny
+    Extensions](https://github.com/nanxstats/awesome-shiny-extensions)
+:::
 ::::::
-:::
-
-::: {.my-resource-container}
-
-- Wickham, H. (2021). Mastering Shiny: Build Interactive Apps, Reports, and Dashboards Powered by R. O’Reilly UK Ltd.
-- [Online version of Mastering Shiny](https://mastering-shiny.org/index.html)
-- [Mastering Shiny Solutions](https://mastering-shiny-solutions.org/index.html)
-- [shiny cheatsheet](https://rstudio.github.io/cheatsheets/shiny.pdf)
-- [shiny docs & tutorial](https://shiny.posit.co/)
-- [shinylive-r in Quarto](https://quarto.thecoatlessprofessor.com/r-shinylive-demo/)
-- [Awesome Shiny Extensions](https://github.com/nanxstats/awesome-shiny-extensions)
-:::
-:::
-
-
 
 ## Private Functions
 
-XXX: [DESCRIBE PRIVATE FUNCTION USED IN THIS BOOK]
+XXX: \[DESCRIBE PRIVATE FUNCTION USED IN THIS BOOK\]
 
 ## Glossary Entries {#unnumbered}
 
@@ -220,7 +286,7 @@ glossary_table()
 
 ## Session Info {.unnumbered}
 
-::: my-r-code
+::::: my-r-code
 ::: my-r-code-header
 Session Info
 :::
@@ -232,5 +298,4 @@ Session Info
 sessioninfo::session_info()
 ```
 :::
-:::
-
+:::::

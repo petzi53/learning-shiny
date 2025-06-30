@@ -1198,17 +1198,70 @@ iframe {
 
 
 
-/* ******************************************************* */
+/* ****  The following three lines are not working **** */
+/*        But it seems that I tried something           */
+/*    So i kept these lines for later inspection.       */
+/* **************************************************** */
 
-
-div.callout-rep {
+div.callout-report {
   border-left-color: #9834eb !important;
 }
 
-div.callout-rep .callout-icon::before {
+div.callout-report .callout-icon::before {
   background-image: url('img/icons8/report-100.png');
 }
 
-div.callout-tip.callout-style-default .callout-title {
+div.callout-report .callout-style-default .callout-title {
   background-color: #f6ebff
 }
+
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+/* The following code originate from my itns-exercise bookdown website   */
+/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+.rmdattention, .rmddanger, .rmdinfo, .rmdresource, .rmdsuccess,  .rmdweb {
+  padding: 1em 1em 1em 4em;
+  margin-bottom: 10px;
+/*  background: #f5f5f5 5px center/3em no-repeat; */
+}
+
+
+.rmdattention {
+  background: #FFF3CD 5px center/3em no-repeat;
+  background-image: url("img/icons8/bookdown/icons8-error-40-min.png");
+}
+
+.rmddanger {
+  background: #F8D7DA 5px center/3em no-repeat;
+  background-image: url("img/icons8/bookdown/icons8-stop-sign-40-min.png");
+}
+
+.rmdinfo {
+  background: #CCE5FF 5px center/3em no-repeat;
+  background-image: url("img/icons8/bookdown/icons8-info-64-min.png");
+}
+
+
+.rmdresource {
+  background: #E2E3E5 5px center/3em no-repeat;
+  background-image: url("img/icons8/bookdown/icons8-book-50-min.png");
+}
+
+
+
+.rmdsuccess {
+  background: #D4EDDA 5px center/3em no-repeat;
+  background-image: url("img/icons8/bookdown/icons8-checkmark-64-min.png");
+}
+
+
+
+.rmdweb {
+  background: #D1ECF1 5px center/3em no-repeat;
+  background-image: url("img/icons8/bookdown/icons8-website-64-min.png");
+}
+
+
+
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++ */

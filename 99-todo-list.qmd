@@ -65,13 +65,14 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [x] ~~delete in the code chunks all lines with `library(shiny)` and add it for each chapter only once in the setup chunk.~~ [setup chunk does not work with shinylive-r standalone = TRUE]{.mark}.  
 - [ ] delete all `shiny::<function()>` references, but keep or add all the other package references. Add/keep `shiny::` if it could be confused with another package just mentioned.
 - [ ] change all code examples in the first three chapters with to see Shiny in a horizontal section and not in an additional tab.
-- [ ] change the reference to external R file(s) (applying what I have learned from my [Posit post](https://forum.posit.co/t/shinylive-r-cannot-include-r-file/202123/6).
+- [ ] change the reference to external R file(s) (applying what I have learned from my [Posit post](https://forum.posit.co/t/shinylive-r-cannot-include-r-file/202123/6). Create and use all `apps_XX` folders with shiny apps and include them in the `shinylive-r` chunks. This has the big advantage that I can develop real Shiny app and use them in shinylive with only one source code.
+- [ ] Extract all shinylive workarounds to my new file `R/shinylive.R` and embed this function into the `shinylive-r` snippets.
 - [ ] wait for an answer to [my question on Posit](https://forum.posit.co/t/shinylive-r-with-renderimage/202516) about displaying images with shinylive.
 - [ ] use [Grammarly App](https://www.grammarly.com/desktop/mac) and [Grammarly browser extension](https://www.grammarly.com/browser) to get better English
 
 ### annex chapter "package used"
 
-- [x] `citeproc` in "Packages used" (@sec-annex-package-used)
+- [x] `citeproc` in "Packages used" (@sec-annex-packages-used)
 - [x] Clean it from previous note book
 - [x] Update it to contain all the packages already mentioned or used
 - [x] Add {**withr**}, {**progress**} and {**shinycssloaders**}
@@ -130,11 +131,13 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [ ] better font for plot axes     
 - [ ] use [diagrams](https://quarto.org/docs/authoring/diagrams.html) for developing reactive graphs 
 - [ ] how and when to use screenshots / graphics with 3D-margin but still working with [lightbox](https://quarto.org/docs/output-formats/html-lightbox-figures.html)
+- [ ] **Check Zotero quotation** of this book but also of my other books. There is something wrong with the citations. sometimes it refers to other article (see [t-test chapter](https://bookdown.org/pbaumgartner/swr-harris/) or it is not a correct citation (as in this book). There should be a systematic approach for Quarto books, maybe different from bookdown books.
 
 ## Shiny {#sec-annex-todo-shiny}
 
 - [x] How to source external files for `shinylive` extension (See [Posit answer](https://forum.posit.co/t/shinylive-r-cannot-include-r-file/202123/8))
 - [ ] How to work in `shinylive` with external images: via an [URL to an external website](https://forum.posit.co/t/shinylive-r-with-renderimage/202516/10), but I believe there is another solution with local images too. May the problem is related with the {**shinylive**} package (not the extension)
+- [ ] Change localization. (At the moment my Shiny UI requires `121,8` instead of the English localization `121.8`)
 
 
 ## R {#sec-annex-todo-r}
@@ -150,10 +153,27 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 ## Miscellanoeus
 
+### Related with this book
+
+- [ ] Learn the more modern UI of {**bslib**} to create the user interface (UI) for Shiny apps.
 - [ ] Look at the [list of awesome shiny extensions](https://github.com/nanxstats/awesome-shiny-extensions)
+- [ ] Investigate where the `.callout` selector comes from? From Bootstrap?
+- [ ] By this occasion try to [apply features of the Bootstrap framework]{.mark} not only for boxes but also for adapting UI appearances of Shiny (and other Quarto websites)! 
+
+
+### Not related with this book
+
+
+- [ ] Explore if [GitHub Copilot](https://github.com/features/copilot) is useful for me.
+    - [ ] Read [Rstudio User Guide](https://docs.posit.co/ide/user/ide/guide/tools/copilot.html) to GitHub Copilot
+    - [ ] Read [How to use GitHub Copilot in RStudio](https://tilburg.ai/2023/12/github-copilot-rstudio/)
+    - [ ] Read [GitHub Copilot in RStudio and VS Code](https://tilburgsciencehub.com/topics/automation/ai/gpt-models/github-copilot/)
+    - [ ] Read article from the GitHub Blog: [How to use GitHub Copilot](https://github.blog/ai-and-ml/github-copilot/what-can-github-copilot-do-examples/) with examples
+    
 - [ ] Hypothes.is preparation to get highlighted data similar to Zotero. Write an R package? (see Hypothes.is [Tools, Plug-ins and Integration](https://web.hypothes.is/tools-plug-ins-and-integrations/))
 - [ ] [{**hypothesis**}](https://r-world-devs.github.io/hypothesis/index.html): add, share and manage annotations for Shiny applications and R Markdown documents. See also [GitHub repo](https://github.com/r-world-devs/hypothesis). Last update 2 years ago.
 - [ ] [{**hypothesisr**}](https://github.com/mdlincoln/hypothesisr): Wrapper for the Hypothes.is API. Last update 6 years ago. Public archived, Aug 30, 2019, no out of date. Recommends {**rapiclient**}.
 - [ ] [{**rapiclient**}](https://github.com/bergant/rapiclient): Dynamic Open API (Swagger) Client for R.
+
 
 
