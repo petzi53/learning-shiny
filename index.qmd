@@ -5,7 +5,7 @@
 
 I have finished about 48%. Currently I am working on chapter 10 Dynamic UI.
 
-The missing @sec-chap04_8_exercises 4.8 and @sec-chap06-5_4_exercises 6.5.4 will be worked out in the next few days.
+The missing @sec-chap04_8_exercises 4.8 will be worked out in the next few days.
 :::
 
 ::::: my-watch
@@ -140,7 +140,7 @@ main purpose of the glossary is to support my personal learning venture.
 
 During coding I am following the [Tidyverse Style
 Guide](https://style.tidyverse.org/) and the conventions explained in
-[Rmarkdown](https://bookdown.org/yihui/rmarkdown/software-info.html), [@xie2018] a book written with {**bookdown**} [@Xie2017], a predecessor of Quarto.
+[Rmarkdown](https://bookdown.org/yihui/rmarkdown/software-info.html), [@xie2018] a book written with {**bookdown**} [@xie2017], a predecessor of Quarto.
 
 
 -   There are no prompts (`>` and `+`) to R source code.

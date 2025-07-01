@@ -1,0 +1,75 @@
+# Dynamic UI {#sec-chap10}
+
+
+```{r}
+#| label: setup
+#| results: hold
+#| include: false
+
+base::source(file = "R/helper.R")
+
+library(glossary)
+glossary::glossary_path("../glossary-pb/glossary.yml")
+
+```
+
+## Table of content for chapter 04 {.unnumbered}
+
+::::: {#obj-chap03}
+:::: {.my-objectives}
+::: {.my-objectives-header}
+Chapter section list
+:::
+
+::: {.my-objectives-container}
+
+-   ~~Working with RStudio projects (empty)~~ (@sec-chap01-1)
+-   R Basics (@sec-chap01-2)
+-   Fixing errors and getting help (@sec-chap01-3)
+-   ~~Organizing your work and making it reproducible (empty)~~ (@sec-chap01-4)
+-   An Extended Illustration: Duncan's Occupational-Prestige Regression (@sec-chap01-5)
+    - Getting, recoding and showing data (@sec-chap01-5-1)
+    - Explorative data analysis (@sec-chap01-5-2)
+    - Regression analysis (@sec-chap01-5-3)
+    - Regression diagnostics (@sec-chap01-5-4)
+- ~~R Functions for Basic Statistics (empty)~~ (@sec-chap01-6)
+- Generic functions and their methods (@sec-chap01-7)
+
+
+
+:::
+::::
+:::::
+
+
+
+
+
+
+## Glossary Entries {#unnumbered}
+
+```{r}
+#| label: glossary-table
+#| echo: false
+
+glossary_table()
+```
+
+------------------------------------------------------------------------
+
+## Session Info {.unnumbered}
+
+::: my-r-code
+::: my-r-code-header
+Session Info
+:::
+
+::: my-r-code-container
+```{r}
+#| label: session-info
+
+sessioninfo::session_info()
+```
+:::
+:::
+

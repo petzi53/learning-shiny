@@ -999,6 +999,109 @@ shinyApp(ui, server)
 
 ### Exercises {#sec-chap06-5_4_exercises}
 
+The suggested `bslib::bs_themer()` function worked in my case only with a native theme. Real-time theming worked but I had always to start with the fresh standard theme. I couldn't succeed to incorporate already those changes that I have already made to the theme.
+
+I learned two other live theme changing procedures that allows to start from an already specified theme:
+
+1. **`bslib::bs_theme_preview(theme)`** as recommended in the book. It is important that you fix those theme changes that you are satisfied with. For this you could use the function `theme = bslib::bs_theme(<here include the changes you already made>)`
+2. **`bslib::run_with_themer(shinyApp(ui, server))`** as explained in [Outstanding User Interfaces with Shiny](https://unleash-shiny.rinterface.com/beautify-with-bootstraplib#live-theming). Replace the `shinyApp(ui, server)` code line with `run_with_themer(shinyApp(ui, server))` and start the app. The `run_with_themer()` function allows you to work on the app and to modify the theme at the same time.
+
+::: {.callout-warning  #wrn-06-no-curl-WASM-package}
+##### Compiled {**curl**} package for webR not available
+
+I can't run this app in `shinyliv` because there is no `r glossary("WASM")` compatible compilation of the {**curl**} package available.
+
+```{block2, label='ex-06-bslib-theming-1', type='rmddanger'}
+
+An error has occurred!    
+Downloading Google Font files requires either the curl package or `capabilities('libcurl')`.
+
+```
+
+Running `capabilities('libcurl')` in the console returns true but trying to install the packages in the [webR demo page](https://webr.r-wasm.org/latest/) with 
+
+````markdown
+install.packages('curl',
+  repos = c('https://tidyverse.r-universe.dev', 'https://repo.r-wasm.org'))
+
+````
+
+returns 
+
+
+
+```{block2, label='ex-06-bslib-theming-2', type='rmdattention'}
+
+Warning message:
+In install.packages("curl", repos = c("https://tidyverse.r-universe.dev",  :
+  Requested package curl not found in webR binary repo.
+
+```
+
+
+
+
+:::
+
+For more information on the issue missing compiling WASM compatible R packages see @lem-compiling-packages-for-wasm.
+
+I have therefore only the app source code provided. To run the app, copy it form the code chunks below or fork this repo and run the provided app.
+
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-06-ex-06-ugliest-ui}
+: Real-time Shiny themes updates
+::::::
+:::
+::::{.my-r-code-container}
+
+```{r}
+#| label: real-time-shiny-themes-updates
+#| eval: false
+
+library(shiny)
+library(bslib)
+
+ui <- fluidPage(
+    theme = bslib::bs_theme(
+        fg = "rgba(37, 66, 192, 0.6)",
+        font_scale = NULL,
+        bg = "#ffffff",
+        base_font = font_google("Manufacturing Consent"),
+        code_font = font_google("Fira Code"),
+        heading_font = font_google("Bitcount Grid Double"),
+        secondary = "#9A3232",
+        success = "#B3E7BD",
+        spacer = "5rem"
+    ),
+    sidebarLayout(
+        sidebarPanel(
+            textInput("txt", "Text input:", "text here"),
+            sliderInput("slider", "Slider input:", 1, 100, 30)
+        ),
+        mainPanel(
+            h1(paste0("Theme: darkly")),
+            h2("Header 2"),
+            p("Some text")
+        )
+    )
+)
+
+
+server <- function(input, output, session) {
+}
+
+shinyApp(ui, server)
+
+## exchange above line with the following line
+# bslib::run_with_themer(shinyApp(ui, server))
+
+```
+
+::::
+:::::
+
 ## Under the hood
 
 There’s no magic behind all the input, output, and layout functions:

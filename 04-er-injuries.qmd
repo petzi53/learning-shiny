@@ -902,3 +902,43 @@ shinyApp(ui, server)
 
 
 ## Exercises {#sec-chap04_8_exercises}
+
+### Draw reactive graph
+
+#### Task description
+
+
+#### Solution (empty)
+
+
+### Flip fct_infreq() and fct_lump()
+
+#### Task description
+
+What happens if you flip `fct_infreq()` and `fct_lump()` in the code that reduces the summary tables?
+
+#### Solution (empty)
+
+### Add input control
+
+#### Task description
+
+Add an input control that lets the user decide how many rows to show in the summary tables.
+
+#### Solution (empty)
+
+### Forward and backwar buttons
+
+#### Task description
+
+Provide a way to step through every narrative systematically with forward and backward buttons.
+
+#### Solution (empty)
+
+### Circular narratives
+
+#### Task description
+
+Make the list of narratives “circular” so that advancing forward from the last narrative takes you to the first. (This is an optional, more advances exercise.)
+
+#### Solution (empty)

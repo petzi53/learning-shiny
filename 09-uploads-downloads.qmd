@@ -9,8 +9,7 @@
 library(glossary)
 glossary::glossary_path("../glossary-pb/glossary.yml")
 
-library(shiny)
-
+base::source(file = "R/helper.R")
 ```
 
 ## Table of content for chapter 09 {.unnumbered}
@@ -71,7 +70,7 @@ Like most other UI components, there are only two required arguments: `id` and `
 Handling `fileInput()` on the server is a little more complicated than other inputs. Most inputs return simple vectors, but `fileInput()` returns a data frame with four columns:
 
 - **name**: the original file name on the user’s computer.
-- **size**: the file size, in bytes. By default, the user can only upload files up to 5 MB. You can increase this limit by setting the shiny.maxRequestSize option prior to starting Shiny. For example, to allow up to 10 MB run options(shiny.maxRequestSize = 10 * 1024^2).
+- **size**: the file size, in bytes. By default, the user can only upload files up to 5 MB. You can increase this limit by setting the `shiny.maxRequestSize` option prior to starting Shiny. For example, to allow up to 10 MB run options(`shiny.maxRequestSize = 10 * 1024^2`).
 - **type**: the `r glossary("MIME type")` of the file. This is a formal specification of the file type that is usually derived from the extension and is rarely needed in Shiny apps.
 - **datapath**: the path to where the data has been uploaded on the server. Treat this path as ephemeral: if the user uploads more files, this file may be deleted. The data is always saved to a temporary directory and given a temporary name.
 
@@ -1146,7 +1145,7 @@ Write an app that allows the user to create a Lego mosaic from any `.png` file u
 #### Solution
 
 ::: {.callout-warning #wrn-09-ex-04-lego-bricks}
-##### Compiled {**brickr**} package WebAssembly not available
+##### Compiled {**brickr**} package for webR not available
 
 It turned out, that I couldn't run my solution because the {**brickr**} was not available for `shinylive` (`r glossary("webR")` / `r glossary("WebAssembly")`). I think the reason is that the current version of the package is neither on `r glossary("CRAN")` anymore (it was until the [previous version 0.3.5](https://cran.r-project.org/src/contrib/Archive/brickr/)) nor is there a [GitHub release](https://github.com/ryantimpe/brickr/) available.
 
@@ -1167,7 +1166,7 @@ Caused by error in `gh::gh()`:
 ```
 :::
 
-I have therefore only the app source code provided. To run the apps, copy it form the code chunks below or fork this repo and run the provided apps.
+I have therefore only the apps source code provided. To run the apps, copy it form the code chunks below or fork this repo and run the provided apps.
 
 :::::{.my-resource}
 :::{.my-resource-header}
