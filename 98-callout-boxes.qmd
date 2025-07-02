@@ -953,7 +953,6 @@ Here include text for the resource
 
 ### num-r-shiny {#sec-annex-num-r-shiny}
 
-:::{.column-page}
 
 :::::{.my-r-code}
 :::{.my-r-code-header}
@@ -975,7 +974,6 @@ start coding here
 ::::
 :::::
 
-:::
 
 
 

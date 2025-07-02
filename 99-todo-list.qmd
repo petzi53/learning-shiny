@@ -55,7 +55,9 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 ## Book content {#sec-annex-todo-book-content}
 
-### All chapters
+### Chapters
+
+#### All chapters
 
 - [ ] add glossary list and sessions_info
 - [ ] revise/write all **chapter objectives** (overviews)
@@ -69,29 +71,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [ ] Extract all shinylive workarounds to my new file `R/shinylive.R` and embed this function into the `shinylive-r` snippets.
 - [ ] wait for an answer to [my question on Posit](https://forum.posit.co/t/shinylive-r-with-renderimage/202516) about displaying images with shinylive.
 - [ ] use [Grammarly App](https://www.grammarly.com/desktop/mac) and [Grammarly browser extension](https://www.grammarly.com/browser) to get better English
-
-### annex chapter "package used"
-
-- [x] `citeproc` in "Packages used" (@sec-annex-packages-used)
-- [x] Clean it from previous note book
-- [x] Update it to contain all the packages already mentioned or used
-- [x] Add {**withr**}, {**progress**} and {**shinycssloaders**}
-- [ ] Mark those package that are essential for learning shiny (and the Mastering Shiny book).
-
-### Chapter 03
-
-- [ ] finish my own summary of `@sec-chap03` about reactive expressions
-
-### Clean & Check
-
-- [ ] internal links/references if a chapter is finished
-- [ ] all the (render) test files in the "learning-shiny" directory resp do not git these folders or files.
-
-### Errors to investigate
-
-- [ ] Downloading reports: {#sec-09downloading-reports-standard}
-- [ ] Downloading reports: {#sec-09downloading-reports-callr}
-
+- [ ] Starting with chapter 08 change all `shinylive` chunks to comment file references with include shortcodes.
 
 ### Index file
 
@@ -99,6 +79,40 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [ ] describe method to develop Shiny apps and their usage in the Quarto code chunks. This includes also the usage of the apps-XX directories.
 - [ ] explain external functions used in "R/helper"
 - [ ] explain text bookmarks like `@XXX_<section_number>`
+- [x] explain why I used copy & paste from the original source without quoting
+- [x] explain how to distinguish between my comments and the original "Mastering Shiny" source.
+- [x] provide an example of (slightly changed) text passages from the original and my own personal comments.
+
+
+#### Chapter 03
+
+- [ ] finish my own summary of `@sec-chap03` about reactive expressions
+
+#### Chapter 07
+
+- [x] explain solution and present solution for the failed image rendering code chunk under @@cnj-07-render-images-failed
+
+#### Annex "package used"
+
+- [x] `citeproc` in "Packages used" (@sec-annex-packages-used)
+- [x] Clean it from previous note book
+- [x] Update it to contain all the packages already mentioned or used
+- [x] Add {**withr**}, {**progress**} and {**shinycssloaders**}
+- [ ] Mark those package that are essential for learning shiny (and the Mastering Shiny book).
+
+
+### Clean & Check
+
+- [x] internal links/references if a chapter is finished
+- [x] all the (render) test files in the "learning-shiny" directory resp do not git these folders or files.
+
+### Errors to investigate
+
+- [ ] Downloading reports: {#sec-09downloading-reports-standard}
+- [ ] Downloading reports: {#sec-09downloading-reports-callr}
+- [x] Reference to other files (e.g., R Code) with `## File: app.R` etc.
+- [x] Render image {#sec-07-images} with quarto extension
+
 
 ### Missing exercises
 
@@ -159,8 +173,9 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 - [ ] Learn the more modern UI of {**bslib**} to create the user interface (UI) for Shiny apps.
 - [ ] Look at the [list of awesome shiny extensions](https://github.com/nanxstats/awesome-shiny-extensions)
-- [ ] Investigate where the `.callout` selector comes from? From Bootstrap?
+- [ ] Investigate where the `.callout` selector for `report` snippet comes from? From Bootstrap?
 - [ ] By this occasion try to [apply features of the Bootstrap framework]{.mark} not only for boxes but also for adapting UI appearances of Shiny (and other Quarto websites)! 
+- [x] Download Google fonts as repo that can be updated easily. (See <https://www.junian.net/tech/macos-google-fonts/>)
 
 
 ### Not related with this book

@@ -30,6 +30,7 @@ book:
         - 07-graphics.qmd
         - 08-user-feedback.qmd
         - 09-uploads-downloads.qmd
+        - 10-dynamic-ui.qmd
   appendices:
     - 50-packages-used.qmd
     - 60-whr-exercises.qmd
@@ -134,7 +135,7 @@ language:
    crossref-cor-title: "Assessment"         # replaces "Corollary"
    crossref-def-title: "Experiment"         # replaces "Definition"
    crossref-exm-title: "Code Collection"    # replaces "Example"
-#  crossref-exm-title: "Example"            # remains  "Example" (not in use, but snippet + CSS exists)
+ # crossref-exm-title: "Example"           # remains "Example" (now as  "Code Collection" from
    crossref-exr-title: "Exercise"           # remains  "Exercise"
    crossref-fig-title: "Screenshot"         # replaces "Figure"
    crossref-lem-title: "Resource"           # replaces "Lemma"

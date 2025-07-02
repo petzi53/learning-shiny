@@ -757,7 +757,7 @@ that is uniquely yours.
     even interactively in real-time.
 -   It uses newer versions of `r glossary("Bootstrap")` and
     `r glossary("Bootswatch")`, whereas Shiny and
-    `r glossary("R Markdown")` currently default to Bootstrap 3 and may
+    `r glossary("RMarkdown", "R Markdown")` currently default to Bootstrap 3 and may
     continue to do so to maintain backwards compatibility.
 
 :::::: my-resource
@@ -1038,14 +1038,33 @@ In install.packages("curl", repos = c("https://tidyverse.r-universe.dev",  :
 
 ```
 
-
+In this special case the problem is connected with the download of Google font with `font_google(<font name>)`. A way around the problem is to download the Google fonts and integrate them into the operating system. In that case `shinylive` have access to these fonts and downloading fonts with `font_google(<font name>)` is not necessary anymore.
 
 
 :::
 
 For more information on the issue missing compiling WASM compatible R packages see @lem-compiling-packages-for-wasm.
 
-I have therefore only the app source code provided. To run the app, copy it form the code chunks below or fork this repo and run the provided app.
+
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-06-downloading-google-fonts}
+: How to download Google fonts and integrate them into macOS
+::::::
+:::
+::::{.my-resource-container}
+
+To download and install Google font see the [article by Junian Triajianto](https://www.junian.net/tech/macos-google-fonts/): How to Install ALL Google Fonts on macOS: A simple guide to install the entire Google Fonts library on macOS. He explains two different ways to accomplish the same: one procedure uses the terminal, the other not. Both are easy to understand and the written explanation is supported by two videos: One for the [terminal way](https://www.youtube.com/watch?v=brkktM8D-EY), the other [without terminal](https://www.youtube.com/watch?v=8aVw9pVg4wE).
+::::
+:::::
+
+
+
+
+
+
+
 
 
 :::::{.my-r-code}
@@ -1056,48 +1075,17 @@ I have therefore only the app source code provided. To run the app, copy it form
 :::
 ::::{.my-r-code-container}
 
-```{r}
-#| label: real-time-shiny-themes-updates
-#| eval: false
 
-library(shiny)
-library(bslib)
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+#| layout: vertical
 
-ui <- fluidPage(
-    theme = bslib::bs_theme(
-        fg = "rgba(37, 66, 192, 0.6)",
-        font_scale = NULL,
-        bg = "#ffffff",
-        base_font = font_google("Manufacturing Consent"),
-        code_font = font_google("Fira Code"),
-        heading_font = font_google("Bitcount Grid Double"),
-        secondary = "#9A3232",
-        success = "#B3E7BD",
-        spacer = "5rem"
-    ),
-    sidebarLayout(
-        sidebarPanel(
-            textInput("txt", "Text input:", "text here"),
-            sliderInput("slider", "Slider input:", 1, 100, 30)
-        ),
-        mainPanel(
-            h1(paste0("Theme: darkly")),
-            h2("Header 2"),
-            p("Some text")
-        )
-    )
-)
-
-
-server <- function(input, output, session) {
-}
-
-shinyApp(ui, server)
-
-## exchange above line with the following line
-# bslib::run_with_themer(shinyApp(ui, server))
-
+## file: app.R
+{{< include apps_06/06-5-2-ex-01-bs-theme-ugliest/app.R >}}
 ```
+
 
 ::::
 :::::

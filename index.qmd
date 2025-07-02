@@ -36,11 +36,9 @@ This Quarto book collects my personal notes, trials and exercises of
 [Mastering Shiny](https://mastering-shiny.org/) by Hadley Wickham
 [@wickham2021].
 
-I am learning wot work with {**shiny**} because I want to develop a
-dashboard for investigating countries in world maps with values of
-different years. For instance I want to use the `r glossary("WHR")` data
-2011, 2012, 2014-2024 and show the distributions of the ladder scores
-abount the countries of the world.
+I am learning working with {**shiny**} because I want to develop a
+dashboard to display country distributions of different indices (like well-being, carbon footprint, happy planet indicator and most of all inequality statistics).  There should be the possibility to display the global distribution via colored world maps, but also to choose a set of country and compare them. For instance I want to use the `r glossary("WHR")` data
+2011, 2012, 2014-2024 and revealing the development of the ladder scores in these years for different countries but also the global distribution via world maps.
 
 ## Text passages
 
@@ -49,16 +47,34 @@ abount the countries of the world.
 My text consists mostly of quotes from the [Mastering Shiny
 book](https://www.amazon.de/Mastering-Shiny-Interactive-Reports-Dashboards/dp/1492047384/).
 Sometimes I have them changed slightly to adapt it to the flow of my
-notes. But I have not shown that it is a quote nor I jave referenced the
-position of the (semi)quotes in the book. As I am generally follow the
-book's outline using the same text for headers, it should be clear where
-to find the quotes.
+notes. But I have not shown that it is a quote nor did I reference the
+position of the (semi)quotes in the book. The reason that I did not quote correctly the text passages from "Mastering Shiny" is that most of the text in this Quarto book is not mine! As I am generally follow the book's outline using the same text for headers, it should be clear where
+to find the quotes. 
 
-This means that most of the text in this Quarto book is not mine but
-comes from different resources.
+But why I have copied the text anyway? My intention is to slow down my reading from the original resource by copying and making minor tweaks to these text passages (like changing the format of code expression to typewriter font, to set package names in bold and surround them with curly brakes etc. (See @sec-00-style-guide-and-conventions). 
 
-My personal comments should be clear because most of the times it is a
-reflection about the book and my experiences with it.
+:::::{.my-important}
+:::{.my-important-header}
+Cite "Mastering Shiny"; not this book
+:::
+::::{.my-important-container}
+Do not quote text passages from this book but from the original 'Mastering Shiny'!
+::::
+:::::
+
+
+It should be clear which text passages are my own comments. They are always a personal reflection about the book and my experience with it. If I do not mention explicitly my learning experience and/or my difficulties with the original text/code then there is a good change that the text is from 'Mastering Shiny'.
+
+
+To prevent misunderstandings I will illustrate the different text sources with the section @sec-07-images in chapter 7 "graphics".
+
+It should be clear that the box following text under @lst-07-render-images-failed is mine:
+
+> "The above code does not work. Hopefully I will learn the solution form the answer to my [Posit post](https://forum.posit.co/t/shinylive-r-with-renderimage/202516).
+
+It is evident that the following explanation and workaround of this problem in @sol-07-render-image-succeeded is my own comment. It is also obvious that the mentioned solution and the development of the quarto extension is not mine. I have referred to the author Garrick Aden-Buie explicitly. All the other text before and after these two text passages are not mine, but originate from Hadley Wickham‘s "Mastering Shiny".
+
+
 
 ### Glossary
 
@@ -136,7 +152,7 @@ In any case I am the only responsible person for the glossary text,
 especially if I have used text from other resources wrongly. Again: The
 main purpose of the glossary is to support my personal learning venture.
 
-## R Code and Datasets
+## R Code and Datasets {#sec-00-style-guide-and-conventions}
 
 During coding I am following the [Tidyverse Style
 Guide](https://style.tidyverse.org/) and the conventions explained in

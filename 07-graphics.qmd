@@ -5,7 +5,6 @@ execute:
 
 # Graphics {#sec-chap07}
 
-## Introduction
 
 :::::: {#obj-chap07}
 ::::: my-objectives
@@ -23,7 +22,7 @@ Chapter section list
 :::::
 ::::::
 
-## Introduction
+## Interactivity
 
 One of the coolest things about `plotOutput()` is that as well as being
 an output that displays plots, it can also be an input that responds to
@@ -312,7 +311,7 @@ place to use `base::browser()`, which was discussed in
 3.  Click inside the plot in the resulted web page.
 4.  Then you will see in the console the following text:
 
-``` console
+``` markdown
 > runApp('apps-07/click-browser')
 Listening on http://127.0.0.1:5962
 Called from: eval(expr, p)
@@ -324,7 +323,7 @@ Browse[1]>
 5.  Continue in the second `Browse[1]>` line, where the cursor stops,
     with
 
-``` console
+``` markdown
 Browse[1]> nearPoints(mtcars, input$plot_click)
                mpg cyl  disp hp drat    wt  qsec vs am gear carb
 Toyota Corona 21.5   4 120.1 97  3.7 2.465 20.01  1  0    3    1
@@ -877,46 +876,95 @@ shinyApp(ui, server)
 
 ***
 
-::: {.callout-note }
-- When you resize the plot, the data stays the same: you don’t get new random numbers.
-- In real apps, you’ll use more complicated expressions in the width and height functions.
 
-
-:::
 
 
 ::::
 :::::
 :::
 
-## Images
+::: {.callout-note }
+###### Dynamic width and height of images
+
+- When you resize the plot, the data stays the same: you don’t get new random numbers.
+- In real apps, you’ll use more complicated expressions in the width and height functions.
+
+
+:::
+
+## Images {#sec-07-images}
 
 You can use `renderImage()` if you want to display existing images (not plots). For example, you might have a directory of photographs that you want shown to the user. The following app illustrates the basics of ? by showing cute puppy photos. The photos come from <https://unsplash.com>, my favorite source of royalty free stock photographs.
 
+`renderImage()` needs to return a list. The only crucial argument is `src`, a local path to the image file. You can additionally supply:
+
+- A contentType, which defines the MIME type of the image. If not provided, Shiny will guess from the file extension, so you only need to supply this if your images don’t have extensions.
+- The `width` and `height` of the image, if known.
+- Any other arguments, like `class` or `alt` will be added as attributes to the `<img>` tag in the HTML.
+
+You **must** also supply the `deleteFile` argument. Unfortunately `renderImage()` was originally designed to work with temporary files, so it automatically deleted images after rendering them. This was obviously very dangerous, so the behavior changed in Shiny 1.5.0. Now Shiny no longer deletes the images, but instead forces you to explicitly choose which behavior you want.
+
+You can learn more about `renderImage()`, and see other ways that you might use it at <https://shiny.rstudio.com/articles/images.html>.
+
 :::::{.my-r-code}
 :::{.my-r-code-header}
-:::::: {#cnj-07-render-images}
-: Display existing images (not plots)
+:::::: {#cnj-07-render-images-failed}
+: Display existing images (not plots) FAILED!
 ::::::
 :::
 ::::{.my-r-code-container}
 
+::: {#lst-07-render-images-failed}
+
 ```{shinylive-r}
 #| standalone: true
-#| viewerHeight: 1000
+#| viewerHeight: 900
 #| components: [editor, viewer]
 #| layout: vertical
 
-## file: app.R
-{{< include apps_07/display-images/app.R >}}
 
-## file: eoqnr8ikwFE.jpg
-## type: binary
-{{< base64 apps_07/display-images/puppy-photos/eoqnr8ikwFE.jpg "image/jpeg" >}}
+library(shiny)
 
+puppies <- tibble::tribble(
+    ~breed, ~ id, ~author,
+    "corgi", "eoqnr8ikwFE","alvannee",
+    "labrador", "KCdYn0xu2fU", "shaneguymon",
+    "spaniel", "TzjMd7i5WQI", "_redo_"
+)
+
+ui <- fluidPage(
+    selectInput("id", "Pick a breed", choices = setNames(puppies$id, puppies$breed)),
+    htmlOutput("source"),
+    imageOutput("photo")
+)
+server <- function(input, output, session) {
+    output$photo <- renderImage({
+        list(
+            src = file.path("puppy-photos-failed", paste0(input$id, ".jpg")),
+            contentType = "image/jpeg",
+            width = 500,
+            height = 650
+        )
+    }, deleteFile = FALSE)
+
+    output$source <- renderUI({
+        info <- puppies[puppies$id == input$id, , drop = FALSE]
+        HTML(glue::glue("<p>
+      <a href='https://unsplash.com/photos/{info$id}'>original</a> by
+      <a href='https://unsplash.com/@{info$author}'>{info$author}</a>
+    </p>"))
+    })
+}
+
+shinyApp(ui, server)
 
 
 ```
+
+Display existing images (not plots or R generated pictures). FAILED!
+
+:::
+
 
 ::: {.callout-important }
 ####### `renderImage()` not working with shinylive-r
@@ -927,17 +975,109 @@ The above code does not work. Hopefully I will learn the solution form the answe
 ::::
 :::::
 
+:::::{.my-solution}
+:::{.my-solution-header}
+:::::: {#sol-07-render-image-succeeded}
+: File comment header and base64 encoding
+::::::
+:::
+::::{.my-solution-container}
 
-`renderImage()` needs to return a list. The only crucial argument is `src`, a local path to the image file. You can additionally supply:
+There are two steps for the solution of the failed image rendering in @cnj-07-render-images-failed:
 
-- A contentType, which defines the MIME type of the image. If not provided, Shiny will guess from the file extension, so you only need to supply this if your images don’t have extensions.
-- The `width` and `height` of the image, if known.
-- Any other arguments, like `class` or `alt` will be added as attributes to the `<img>` tag in the HTML.
+1. "To include files in a Shinylive app in a Quarto document, the files need to be included in the shinylive-r chunk using the `## file: {filename}` comment header." See the answer to my question  [shinylive-r: cannot include R file](https://forum.posit.co/t/shinylive-r-cannot-include-r-file/202123/6?u=petzi53) in the Posit forum by [Garrick Aden-Buie](https://www.garrickadenbuie.com/about/). --- This posting was very helpful for me. I have read the documentation in [Shinylive applications embedded in Quarto documents](https://quarto-ext.github.io/shinylive/) but I didn't understand  
+2. The images in `shinylive` has to be base64 encoded. See [Multiple Files](https://quarto-ext.github.io/shinylive/#multiple-files) in [Shinylive applications embedded in Quarto documents](https://quarto-ext.github.io/shinylive/). But the encoding process needed extra tools and was cumbersome until Garrick Aden-Buie developed a Quarto extension. See his answer to my qeustion [Again: Shinylive with renderImage() & new base64 Quarto extension](https://forum.posit.co/t/again-shinylive-with-renderimage-new-base64-quarto-extension/203838?u=petzi53) in the Posit forum. The Quarto extension with its documentation can be found in the [quarto-base64 GitHub Repo](https://github.com/gadenbuie/quarto-base64).
 
-You **must** also supply the `deleteFile` argument. Unfortunately `renderImage()` was originally designed to work with temporary files, so it automatically deleted images after rendering them. This was obviously very dangerous, so the behavior changed in Shiny 1.5.0. Now shiny no longer deletes the images, but instead forces you to explicitly choose which behavior you want.
+Before I will present the code solution of @cnj-07-render-images-failed there are two important requirements to fulfill:
 
-You can learn more about `renderImage()`, and see other ways that you might use it at <https://shiny.rstudio.com/articles/images.html>.
+1. Download the base64 Quarto extension and install it on your system.
+2. Add the extension to your Quarto documents either as YAML header at the start of your document or into your `_quarto.yml` file like this:
+
+````markdown
+filters:
+   - shinylive
+   - base64
+````
+
+::::
+:::::
+
+Before we will interact with the full functional Shiny app, I will present the real code snippets producing the successful outcome.
+
+```` markdown
+```{{shinylive-r}}
+#| standalone: true
+#| viewerHeight: 900
+#| components: [editor, viewer]
+#| layout: vertical
+
+## file: app.R
+{{{< include apps_07/display-images-success/app.R >}}}
+
+## file: puppy-photos-success/eoqnr8ikwFE.jpg
+## type: binary
+{{{< base64 apps_07/display-images/puppy-photos-success/eoqnr8ikwFE.jpg "image/jpeg" >}}}
+
+## file: puppy-photos-success/KCdYn0xu2fU.jp
+## type: binary
+{{{< base64 apps_07/display-images/puppy-photos-success/KCdYn0xu2fU.jpg "image/jpeg" >}}}
+
+## file: puppy-photos-success/TzjMd7i5WQI.jpg
+## type: binary
+{{{< base64 apps_07/display-images/puppy-photos-success/TzjMd7i5WQI.jpg "image/jpeg" >}}}
+```
+````
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-07-display-image-succeeded}
+: Display existing images (not plots) SUCCESS!
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-07-render-image-succeeded}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 900
+#| components: [editor, viewer]
+#| layout: vertical
+
+## file: app.R
+{{< include apps_07/display-images-success/app.R >}}
+
+## file: puppy-photos-success/eoqnr8ikwFE.jpg
+## type: binary
+{{< base64 apps_07/display-images-success/puppy-photos-success/eoqnr8ikwFE.jpg "image/jpeg" >}}
+
+## file: puppy-photos-success/KCdYn0xu2fU.jpg
+## type: binary
+{{< base64 apps_07/display-images-success/puppy-photos-success/KCdYn0xu2fU.jpg "image/jpeg" >}}
+
+## file: puppy-photos-success/TzjMd7i5WQI.jpg
+## type: binary
+{{< base64 apps_07/display-images-success/puppy-photos-success/TzjMd7i5WQI.jpg "image/jpeg" >}}
+```
+
+
+Display existing images (not plots or R generated pictures). SUCCESS!
+:::
+
+::::
+:::::
+
 
 ## My Summary
 
-I haven't succeed to display images with `shinlive-r`. Here I am hoping to get an answer to my question posted at the [Posit Forum](https://forum.posit.co/t/shinylive-r-cannot-include-r-file/202123/8).
+In this chapter I learned to interact with plots and to render pre-fabricated images. The rendering process of external images poses a problem with `shinylive` because the code chunks are self-contained and sealed-off from the standard R environment. 
+
+After some help via the Posit forum I could manage to call multiple files (R scripts, Shiny apps, images etc.) and to refer to these files inside the `shinylive-r` chunk.
+
+::: {.callout-important #imp-07-using-file-comment-header}
+###### Embedding files with `shinylive` comment header and Quarto `include` shortcode
+
+In all the following chapters I will not include the code for Shiny apps directly into the `shinylive-r` code chunk. Instead I will embed Shiny apps (and all other used files)  via a reference with the file comment procedure followed by a [Quarto include shortcode](https://quarto.org/docs/authoring/includes.html). For details see the explanation in @sol-07-render-image-succeeded and the example in @lst-07-render-image-succeeded.
+
+:::
+

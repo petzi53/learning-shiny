@@ -23,28 +23,188 @@ Chapter section list
 
 ::: {.my-objectives-container}
 
--   ~~Working with RStudio projects (empty)~~ (@sec-chap01-1)
--   R Basics (@sec-chap01-2)
--   Fixing errors and getting help (@sec-chap01-3)
--   ~~Organizing your work and making it reproducible (empty)~~ (@sec-chap01-4)
--   An Extended Illustration: Duncan's Occupational-Prestige Regression (@sec-chap01-5)
-    - Getting, recoding and showing data (@sec-chap01-5-1)
-    - Explorative data analysis (@sec-chap01-5-2)
-    - Regression analysis (@sec-chap01-5-3)
-    - Regression diagnostics (@sec-chap01-5-4)
-- ~~R Functions for Basic Statistics (empty)~~ (@sec-chap01-6)
-- Generic functions and their methods (@sec-chap01-7)
-
-
 
 :::
 ::::
 :::::
 
+There are three key techniques for creating dynamic user interfaces:
+
+- Using the update family of functions to modify parameters of input controls.
+- Using `tabsetPanel()` to conditionally show and hide parts of the user interface.
+- Using `uiOutput()` and `renderUI()` to generate selected parts of the user interface with code.
+
+
+## Updating inputs
+
+We’ll begin with a simple technique that allows you to modify an input after it has been created: the update family of functions. [Every input control]{.mark}, e.g. `textInput()`, [is paired with an **update function**]{.mark}, e.g. `updateTextInput()`, that allows you to modify the control after it has been created.
+
+The key idea to modify an input is to use `observeEvent()` to trigger the corresponding update<whatever> function whenever the input changes. (For the `observeEvent()` function see @sec-03-observers and @XXX15.3.)
+
+::: {.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-updating-inputs-intro}
+: Updating the slider whenever the the minimum or maximum input changes
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/01-updating-inputs-intro/app.R >}}
+```
+
+
+
+::::
+:::::
+
+::: 
+
+### Simple uses
 
 
 
 
+The simplest uses of the update functions are to provide small conveniences for the user. For example, maybe you want to make it easy to reset parameters back to their initial value.
+
+::: {.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-updating-with-reset-button}
+: Updating controls with reset button
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/02-updating-with-reset-button/app.R >}}
+```
+::::
+:::::
+
+::: 
+
+
+A similar application is to tweak the text of an action button so you know exactly what it’s going to do.
+
+
+::: {.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-updating-vutton-text}
+: Updating button text if it has changed functionality
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 400
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/03-updating-button-text/app.R >}}
+```
+::::
+:::::
+
+::: 
+
+### Hierarchical select boxes {#sec-10-hierarchical-selct-boxes}
+
+A more complicated, but particularly useful, application of the update functions is to allow interactive drill down across multiple categories. I’ll illustrate their usage with some imaginary data for a sales dashboard.
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-10-kaggle}
+: Kaggle --- An online community platform for data scientists and machine learning enthusiasts
+::::::
+:::
+::::{.my-resource-container}
+This section uses [Sample Sales Data](https://www.kaggle.com/datasets/kyanyoga/sample-sales-data), a well-documented imaginary dataset provided by `r glossary("Kaggle")` for education, training and research. To download the dataset from Kaggle you have to register. But you can also download the Sample Sales Data as `r glossary("CSV", ".csv")` file from the [GitHub repo of Mastering Shiny](https://github.com/hadley/mastering-shiny/raw/refs/heads/main/sales-dashboard/sales_data_sample.csv) or alternatively my own version of the dataset.
+
+***
+
+[Kaggle](https://www.kaggle.com/) is one of the largest hosting platforms used by data scientists and machine learning enthusiasts globally. It allows users to collaborate with other users, find and publish datasets, use GPU integrated notebooks, and compete with other data scientists to solve data science challenges.  
+
+Founded in 2010 by [Anthony Goldbloom](https://en.wikipedia.org/wiki/Anthony_Goldbloom) and [Jeremy Howard](https://en.wikipedia.org/wiki/Jeremy_Howard_(entrepreneur)), Kaggle was acquired by Google in 2017. 
+::::
+:::::
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-load-sales-dataset}
+: Load and display sales dataset
+::::::
+:::
+::::{.my-r-code-container}
+```{r}
+#| label: code-chunk-name
+
+sales <- vroom::vroom("data/sales_data_sample.csv", col_types = list(), na = "")
+sales  |> 
+  dplyr::select(TERRITORY, CUSTOMERNAME, ORDERNUMBER, dplyr::everything()) |> 
+  dplyr::arrange(ORDERNUMBER)
+```
+
+::::
+:::::
+
+For this demo, I’m going to focus on a natural hierarchy in the data:
+
+- Each territory contains customers.
+- Each customer has multiple orders.
+- Each order contains rows.
+
+I want to create a user interface where you can:
+
+- Select a territory to see all customers.
+- Select a customer to see all orders.
+- Select an order to see the underlying rows.
+
+The essence of the UI is simple: I’ll create three select boxes and one output table. The choices for the `customername` and `ordernumber` select boxes will be dynamically generated, so I set `choices = NULL`.
+
+In the server function, there is th following top-down procedure to follow:
+
+:::::{.my-procedure}
+:::{.my-procedure-header}
+:::::: {#prp-10-replicate-hierarchical-data-structure}
+: Replicating the hierarchical data structure in the server function
+::::::
+:::
+::::{.my-procedure-container}
+
+1. Create a reactive, `territory()`, that contains the rows from sales that match the selected territory.
+2. Whenever `territory()` changes, update the list of choices in the `input$customername` select box.
+3. Create another reactive, `customer()`, that contains the rows from `territory()` that match the selected customer.
+4. Whenever `customer()` changes, update the list of choices in the `input$ordernumber` select box.
+5. Display the selected orders in `output$data`.
+
+::::
+:::::
+
+:::::{.my-example}
+:::{.my-example-header}
+:::::: {#exm-ID-text}
+: Numbered Example Title
+::::::
+:::
+::::{.my-example-container}
+Here include example text
+::::
+:::::
 
 ## Glossary Entries {#unnumbered}
 

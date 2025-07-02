@@ -1,4 +1,4 @@
-#### apps-07/display-images/app.R
+#### This is the file in "apps-07/display-images/app.R"
 
 
 library(shiny)
@@ -18,7 +18,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
     output$photo <- renderImage({
         list(
-            src = file.path("puppy-photos", paste0(input$id, ".jpg")),
+          src = file.path("puppy-photos-success", paste0(input$id, ".jpg")),
             contentType = "image/jpeg",
             width = 500,
             height = 650
