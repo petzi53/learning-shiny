@@ -1315,7 +1315,7 @@ library(brickr)
 ui <- page_sidebar(
     titlePanel("Emulate LEGO Bricks"),
     sidebar = sidebar(
-        fileInput("upload", "Load PNG image", accept = c(".png", ".PNG"))
+        fileInput("upload", "Load PNG image", accept = c(".png"))
         ),
     uiOutput("image"),
     plotOutput("plot", width = "600px", height = "400px")

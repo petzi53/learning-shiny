@@ -3,7 +3,7 @@
 ::: {.callout-note style="color: blue;"}
 #### This is work in progress
 
-I have finished about 48%. Currently I am working on chapter 10 Dynamic UI.
+I have finished about 50% of the book content. Currently I am working on chapter @sec-chap10.
 
 The missing @sec-chap04_8_exercises 4.8 will be worked out in the next few days.
 :::

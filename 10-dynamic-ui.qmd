@@ -13,7 +13,7 @@ glossary::glossary_path("../glossary-pb/glossary.yml")
 
 ```
 
-## Table of content for chapter 04 {.unnumbered}
+## Table of content for chapter 10 {.unnumbered}
 
 ::::: {#obj-chap03}
 :::: {.my-objectives}
@@ -69,7 +69,7 @@ The key idea to modify an input is to use `observeEvent()` to trigger the corres
 
 ### Simple uses
 
-
+#### Reset button
 
 
 The simplest uses of the update functions are to provide small conveniences for the user. For example, maybe you want to make it easy to reset parameters back to their initial value.
@@ -96,6 +96,8 @@ The simplest uses of the update functions are to provide small conveniences for 
 
 ::: 
 
+
+### Button changed functionality
 
 A similar application is to tweak the text of an action button so you know exactly what it’s going to do.
 
@@ -195,16 +197,100 @@ In the server function, there is th following top-down procedure to follow:
 ::::
 :::::
 
+:::{.column-page-inset}
+
 :::::{.my-example}
 :::{.my-example-header}
-:::::: {#exm-ID-text}
-: Numbered Example Title
+:::::: {#exm-10-updating-nested}
+: Hierarchical select boxes
 ::::::
 :::
 ::::{.my-example-container}
-Here include example text
+
+::: {.panel-tabset}
+
+###### First take
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-updating-nested1}
+: Hierarchical select boxes: Small demo
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-10-updating-nested1}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/04-updating-nested1/app.R >}}
+```
+
+Small demo of hierarchical select boxes
+:::
+
 ::::
 :::::
+
+
+###### Improved demo
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-updating-nested2}
+: Hierarchical select boxes: More fleshed out
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-10-updating-nested2}
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+
+## file: app.R
+{{< include apps_10/04-updating-nested2/app.R >}}
+
+```
+
+Hierarchical select boxes: more fleshed out demo
+:::
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+:::
+
+::: {.callout-warning #wrn-10-upating-nested}
+###### Couldn't load data without user input
+
+To get a version that works with Shiny and shinylive-r at the same time, I had to provide `fileInput()`. This is suboptimal as the user has to find and select the file to get the intended data for playing around.
+
+It was easy to find a solution for Shiny: Just load the data before the ui/server part into an R object and then reference it from the `server()` function. I couldn’t manage the same result for `shinylive-r`. Local references, relative URL and non-HTTPS URL generate error. The only possible way seems to doanload the data via HTTPS. I tried but didn’t succeed. I asked for help via the [Posit Community](https://forum.posit.co/t/shinylive-in-quarto-document-with-reactive-data-source/204237) and are currently waiting for answers.
+
+A workaround was to provide a file upload control. But even to create a workable demo took me hours. It was a bitter experience to learn that I still didn't understand quite well how reactives work. As the debugger `browser()` did not work, it was finally for me quite helpful to install `print()` outputs in **every** reactive function to see what happens. In the end I solved this problem with three important changes:
+
+1. Creating a reactive value with `sales <- reactiveVal()`.
+2. Adding an `observeEvent()` function which fulfilled several tasks:
+    - Loading the data after `fileInput()` was active.  
+    - Assigning the file to the reactive value `sales`.
+    - Updating with the data the choice of the territory `selectInput()` function. (Previously I had to set the UI choices for territory to NULL to prevent an error because the data was not available at start up.)
+3. The reference to the previous `sales` object had to be changed to the reactive function `sales()`. Additional had I to add `req(input$upload)` to prevent that the reactive territory function is called immediately after start up without available data.
+
+
+:::
+
 
 ## Glossary Entries {#unnumbered}
 
