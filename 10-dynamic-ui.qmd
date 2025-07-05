@@ -287,10 +287,288 @@ A workaround was to provide a file upload control. But even to create a workable
     - Assigning the file to the reactive value `sales`.
     - Updating with the data the choice of the territory `selectInput()` function. (Previously I had to set the UI choices for territory to NULL to prevent an error because the data was not available at start up.)
 3. The reference to the previous `sales` object had to be changed to the reactive function `sales()`. Additional had I to add `req(input$upload)` to prevent that the reactive territory function is called immediately after start up without available data.
+:::
 
+### Freezing reactive inputs
+
+Sometimes hierarchical selections can briefly create an invalid set of inputs, leading to a flicker of undesirable output.
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-freezing-reactive-input1}
+: Flicker of undesirable output
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/05-freezing-reactive-input1/app.R >}}
+```
+
+::::
+:::::
 
 :::
 
+You’ll notice that when you switch datasets the summary output will briefly flicker. That’s because `updateSelectInput()` only has an effect after all outputs and observers have run, so there’s temporarily a state where you have dataset B and a variable from dataset A, so that the output contains summary(NULL).
+
+You can resolve this problem by “freezing” the input with `freezeReactiveValue()`. This ensures that any reactives or outputs that use the input won’t be updated until the next full round of invalidation. It’s good practice to **always** use it when you dynamically change an input value.
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-freezing-reactive-input2}
+: Freezing input with `freezeReactiveValaue()`
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/05-freezing-reactive-input2/app.R >}}
+```
+::::
+:::::
+
+:::
+
+### Circular references
+
+Using an update function to modify value is no different to the user modifying the value by clicking or typing. That means an update function can trigger reactive updates in exactly the same way that a human can. This means that you are now stepping outside of the bounds of pure reactive programming, and you need to start worrying about circular references and infinite loops.
+
+
+````markdown
+
+library(shiny)
+
+ui <- fluidPage(
+    actionButton("action", "start"),
+    numericInput("n", "n", 0)
+)
+server <- function(input, output, session) {
+    observeEvent(input$n,
+                 updateNumericInput(inputId = "n", value = input$n + 1)
+    )
+}
+
+shinyApp(ui, server)
+
+````
+For example, take the simple app above. It contains a single input control and an observer that increments its value by one. Every time `updateNumericInput()` runs, it changes `input$n`, causing `updateNumericInput()` to run again, so the app gets stuck in an infinite loop constantly increasing the value of `input$n`.
+
+To prevent that the circular reference runs all the time I had to add a start and a stop button. This was a welcome training occasion for me. I used as help the article [Using Action Buttons](https://shiny.posit.co/r/articles/build/action-buttons/).
+
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-circular-references}
+: Demonstration of circular references
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/06-circular-references2/app.R >}}
+```
+::::
+:::::
+
+:::
+
+### Inter-related inputs
+
+One place where it’s easy to end up with circular references is when you have multiple “sources of truth” in an app. For example, imagine that you want to create a temperature conversion app where you can either enter the temperature in Celsius or in Fahrenheit:
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-inter-realted-inputs}
+: Demo of inter-related inputs
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/07-inter-related-inputs/app.R >}}
+```
+::::
+:::::
+
+:::
+
+If you play around with this app you’ll notice that it mostly works, but you might notice that it’ll sometimes trigger multiple changes. For example:
+
+- Set 120 F, then click the down arrow.
+- F changes to 119, and C is updated to 48.
+- 48 C converts to 118 F, so F changes again to 118.
+- Fortunately 118 F is still 48 C, so the updates stop there.
+
+There’s no way around this problem because you have one idea (the temperature) with two expressions in the app (Celsius and Fahrenheit). Here we are lucky that cycle quickly converges to a value that satisfies both constraints. In general, you are better off avoiding these situations, unless you are willing to very carefully analyse the convergence properties of the underlying dynamic system that you’ve created.
+
+### Exercises
+
+#### Update date
+
+##### Task description
+
+Complete the user interface below with a server function that updates `input$date` so that you can only select dates in `input$year`.
+
+##### Solution
+
+::: {.column-page-inset}
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-10-ex-01-updating-date1}
+: Update date input to limit the choices for the selected year
+::::::
+:::
+::::{.my-exercise-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/ex-01-updating-date1/app.R >}}
+```
+
+
+::::
+:::::
+
+::: 
+
+
+
+### Update county by chosen state
+
+#### Task description
+
+Complete the user interface below with a server function that updates `input$county` choices based on `input$state`. For an added challenge, also change the label from “County” to “Parish” for Louisiana and “Borough” for Alaska.
+
+#### Solution
+
+::: {.column-page-inset}
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-10-ex-02-updating-county}
+: Update county by chose state
+::::::
+:::
+::::{.my-exercise-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/ex-02-updating-county/app.R >}}
+```
+
+
+::::
+:::::
+
+::: 
+
+
+### Update country by chosen continent
+
+#### Task description
+
+Complete the user interface below with a server function that updates `input$country` choices based on the `input$continent`. Use `output$data` to display all matching rows.
+
+#### Solution
+
+::: {.column-page-inset}
+
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-10-ex-03-updating-country}
+: Updating country by chosen state
+::::::
+:::
+::::{.my-exercise-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/ex-03-updating-country/app.R >}}
+```
+
+::::
+:::::
+
+::: 
+
+### Updating with additional country value
+
+#### Task description
+
+Extend the previous app so that you can also choose to select all continents, and hence see all countries. You’ll need to add `"(All)"` to the list of choices, and then handle that specially when filtering.
+
+#### Solution
+
+::: {.column-page-inset}
+
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-10-ex04-updating-country-all}
+: Show all countries when continent "All" was chosen
+::::::
+:::
+::::{.my-exercise-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/ex-04-updating-country-all/app.R >}}
+```
+
+
+::::
+:::::
+
+::: 
+
+### Mutually dependent input
+
+#### Task description
+
+What is at the heart of the problem described at <https://community.rstudio.com/t/29307>?
+
+#### Solution
+
+It is a circular reference because the different `numericInput()` are mutually dependent to each other. The first `observeEvent()` listens for `input$A` and changes `input$B`. But the second `observeEvent()` which listens for `input$B` changes `input$A` and therefore triggers the first `observeEvent()` creating an endless circular reference.
 
 ## Glossary Entries {#unnumbered}
 
