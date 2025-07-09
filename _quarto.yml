@@ -11,7 +11,7 @@ book:
   site-url: https://bookdown.org/pbaumgartner/learning-shiny/
   repo-url: https://github.com/petzi53/learning-shiny
   repo-branch: master
-  repo-actions: [edit, issue]
+  repo-actions: [edit, issue, source]
   page-navigation: true
 
   chapters:
@@ -31,6 +31,7 @@ book:
         - 08-user-feedback.qmd
         - 09-uploads-downloads.qmd
         - 10-dynamic-ui.qmd
+        - 11-bookmarks.qmd
   appendices:
     - 50-packages-used.qmd
     - 60-whr-exercises.qmd

@@ -901,7 +901,7 @@ shinyApp(ui, server)
 :::
 
 
-## Exercises {#sec-chap04_8_exercises}
+## Exercises {#sec-04-exercises}
 
 ### Draw reactive graph
 

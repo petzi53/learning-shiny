@@ -399,7 +399,7 @@ You can do so with a tool built into `shiny: validate()`. When called inside a r
 :::
 ::::{.my-r-code-container}
 
-::: {#lst-validate-output}
+::: {#lst-08-validate-output}
 
 ```{shinylive-r}
 #| standalone: true
@@ -1125,7 +1125,7 @@ This package is part of a larger ecosystem of packages with a shared vision: sol
 
 Sometimes an action is potentially dangerous, and you either want to make sure that the user really wants to do it, or you want to give them the ability to back out before it’s too late. Of the three options (explicit confirmation, undoing an action and trash) the last one is a complex strategy difficult to realize in Shiny and therefore out of scope of this book.
 
-### Explicit confirmation
+### Explicit confirmation {#sec-08-explicit-confirmation}
 
 The simplest approach to protecting the user from accidentally performing a dangerous action is to require an explicit confirmation. The easiest way is to use a dialog box which forces the user to pick from one of a small set of actions. In Shiny, you create a dialog box with `modalDialog()`. This is called a “modal” dialog because it creates a new “mode” of interaction; you can’t interact with the main application until you have dealt with the dialog.
 

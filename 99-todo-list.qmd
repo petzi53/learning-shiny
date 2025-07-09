@@ -55,13 +55,18 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 ## Book content {#sec-annex-todo-book-content}
 
-### Chapters
-
-#### All chapters
+### All chapters
 
 - [ ] add glossary list and sessions_info
 - [ ] revise/write all **chapter objectives** (overviews)
-- [ ] add references to Hadley live demos (where and how?)
+- [ ] add for all code chunk a reference for listings/outputs.
+- [ ] add for all types of numbered callouts a table of content. Using TextSniper to copy the results of RStudio "Find In Files" into a Quarto document and editing manually. I researched at the Internet and got several other ideas. 
+  - [ ] The very promising {**findInFiles**} packages does not work (See: [findInFiles returns always "no results"](https://github.com/stla/findInFiles/issues/5))
+  - [ ] Several [proposal for R functions](https://stackoverflow.com/questions/45502010/is-there-an-r-version-of-rstudios-find-in-files) 
+  - [ ] {**sifr**} works for me! **This is the best option!** But I need to change for my search the default file extension for different R and other programming code file extension to `".*\\.qmd$"`. The command is `options(sifr.path_pattern = ".*\\.qmd$")` It works for me only with the first parameter `pattern` whenever I use from the root level of my R project, but it may be helpful to add `recursive = FALSE`. (`fixed = TRUE`, e.g. matching the string as-is did not work) The function generates Markers in RStudio to get to the code of line directly, but it also stores the result in an R object type `sif_result` --- a kind of data.frame. I could do some extra work such as generate the markdown code lines from the `sif_result` objects by converting with `tibble::as_tibble(x)` to a tibble and the extracting the part in the curly brakes (e.g., `#lst-greeting-example`) and as final step to replace `#` with `@`. (If you clean up the lst-lines then you have fixed position to delete: 1-5 and the last. pos 6 --- or after deleting the first --- has to be changed into `@`.)
+ `lst-01-add-reactive-expression-code}
+- [ ] add references to Hadley live demos (where and how?) --- look for `https://hadley.shinyapps.io` to get a listing of all appearances in the original book. Collect these reference per chapter. Where? Maybe in the starting objective callout box?
+- [ ] comment all apps and describe their function, so that you can use it independently of the book. Make an explicit reference to the book, so that you can find the book passages explaining the app. Provide URLs if available.
 - [ ] revise all apps-XX folders: rename folder and add comments (name, purpose etc.) An example can be found in "apps09/download-report-github/app.R"
 - [ ] reference packages to their package profiles
 - [x] ~~delete in the code chunks all lines with `library(shiny)` and add it for each chapter only once in the setup chunk.~~ [setup chunk does not work with shinylive-r standalone = TRUE]{.mark}.  
@@ -79,32 +84,57 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [ ] describe method to develop Shiny apps and their usage in the Quarto code chunks. This includes also the usage of the apps-XX directories.
 - [ ] explain external functions used in "R/helper"
 - [ ] explain text bookmarks like `@XXX_<section_number>`
+- [ ] explain using of snippets and provide source for callout blocks.
+- [ ] warn that first div block (`:::`) needs empty line before and last div block after it.
 - [x] explain why I used copy & paste from the original source without quoting
 - [x] explain how to distinguish between my comments and the original "Mastering Shiny" source.
 - [x] provide an example of (slightly changed) text passages from the original and my own personal comments.
+- [ ] explain that I have used throughout the text American English, e.g., I changed `colour` to `color` and `generalisation` to `generalization`.
+- [ ] clean copied text from the first person order to facilitate the differences between book text and my comment. "I" should only used for my personal comments, not for text of "Mastering Shiny". 
 
 
-#### Chapter 03
+### Chapter 03
 
 - [ ] finish my own summary of `@sec-chap03` about reactive expressions
 
-#### Chapter 07
+### ~~Chapter 07~~
 
 - [x] explain solution and present solution for the failed image rendering code chunk under @@cnj-07-render-images-failed
 
-#### Annex "package used"
+### Annex "packages used"
 
 - [x] `citeproc` in "Packages used" (@sec-annex-packages-used)
 - [x] Clean it from previous note book
 - [x] Update it to contain all the packages already mentioned or used
 - [x] Add {**withr**}, {**progress**} and {**shinycssloaders**}
-- [ ] Mark those package that are essential for learning shiny (and the Mastering Shiny book).
+- [ ] It would nice to have links to the package usage in the text, but that would be a lot of work. I could find these text passages by looking for `{**` strings or developing a `grep()` function for the text search.
+- [x] Mark those package that are essential for learning shiny (and the Mastering Shiny book). Use [standard marks for the header!]{.mark}). This has the advantage that you can see the emphasis also in the table of content on the right side.
 
+Add the following packages:
+
+- [ ] brickr
+- [ ] base64enc
+- [ ] datasets
+- [ ] gapminder
+- [ ] lorem
+- [ ] openintro
+- [ ] rwasm
+- [ ] sysfonts
+- [ ] webR
+
+### Annex "extensions used"
+
+- [ ] Prepare annex chapter with a list of the extension used:
+  - [ ] include-code-files (currently not used in this book!)
+  - [ ] section-bibliographies
+  - [ ] shinylive
+  - [ ] base64
 
 ### Clean & Check
 
 - [x] internal links/references if a chapter is finished
-- [x] all the (render) test files in the "learning-shiny" directory resp do not git these folders or files.
+- [x] do not commit test files in the "learning-shiny" directory. Starting their names with `test-` will ignore them.
+- [ ] remove these test-files resp. copy them to the `_archive` folder.
 
 ### Errors to investigate
 
@@ -116,15 +146,27 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 ### Missing exercises
 
-- [ ] @sec-chap04_8_exercises, 
-- [ ] @sec-chap06-5_4_exercises
+- [ ] @sec-04_exercises
+- [x] @sec-chap06-5_4_exercises
+- [ ] Exercise @sec-10-choose-geom-advanced 10.2.3: the third (the last one)
+- [ ] @sec-10-exercises3 10.3.5 all five
+- [ ] @sec-11-exercises 11.3: all two
 
 ### My own challenges
 
+::: {.callout-note}
+###### Mandatory and voluntary improvements
+
+Marked challenges are important as they are part of the original book and currently not working for me. The other challenges are personal interesting exercises but not part of "Mastering Shiny". 
+:::
+
+
 - [ ] experiment with actionButtons in @sec-02-action-buttons
-- [ ] start and reset button @cnj-08-progressive-updates
-- [ ] load multiple file: @cnj-09-file-upload-server
-- [ ] pre-filter the list of datasets to get only data frames in @cnj-09-downloading-data
+- [ ] start and reset button "Progressive updates" (@cnj-08-progressive-updates)
+- [ ] [load multiple files]{.mark}: @cnj-09-file-upload-server
+- [ ] [pre-filter the list of datasets]{.mark} to get only data frames in @cnj-09-downloading-data
+- [ ] [load external file programmatically]{.mark} (without using `fileInput()`): @wrn-10-upating-nested
+- [ ] force dot `.` as decimal separator independent of the browser used. {**shinyWidget**} with `formatNumericInput()` and `autonumericInput()` is not working for my case, because it does not provide up/down buttons. There are several approaches
 
 
 
@@ -136,7 +178,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [x] limit right margin of boxes inside boxes with `padding-right: 10px` in container
 - [ ] get correct header for numbered box without preset theorem variation  (black instead of grey and in line with the number, at the moment the title is one line lower than the number) Ask at StackOverflow?
 - [ ] reorganize my callout boxes
-- [x] create annex about all my boxes
+- [x] create annex about all my boxes in the CSS file (but also the snippets in RStudio)
 
 ### Quarto {#sec-annex-todo-quarto}
 
@@ -164,7 +206,17 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 ## Quarto computation
 
-- [ ] how to use cache to make the rendering process of this book faster
+- [x] how to use cache to make the rendering process of this book faster: It seems that this is not possible, as shinylive-r chunks use a different mechanism and are not eligible for Quarto cache:
+
+::: {.callout-note}
+###### Quarto vs shinylive cache
+
+While Quarto's caching is primarily for managing the execution of code chunks within a document, shinylive's caching is more about managing the web assets required to run Shiny applications in a browser. This means that the caching strategies and mechanisms are tailored to their respective purposes: Quarto focuses on document rendering efficiency, while shinylive focuses on the efficient delivery and execution of Shiny applications in a web environment  functions.
+
+:::
+
+
+
 - [ ] how about the {**munsell**} package problem with {**ggplot2**}
 
 ## Miscellanoeus

@@ -1,5 +1,11 @@
 # Packages used {#sec-annex-packages-used}
 
+::: {.callout-important}
+###### Shiny specific packages are marked
+
+Packages that are essential for the usage of Shiny are marked orange in their header. The other packages are mentioned throughout the book, but ore either of general use (like the {**tidyverse**} collection) or for specific parts of this book (e.g., exercises).
+:::
+
 ## ambient {#sec-annex-ambient}
 
 :::::: my-packagebox
@@ -25,7 +31,7 @@ Generation of natural looking noise has many application within simulation, proc
 ::::
 ::::::
 
-## bslib {#sec-annex-bslib}
+## [bslib]{.mark} {#sec-annex-bslib}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -501,7 +507,7 @@ The package offers features such as sorting, pagination, filtering, and searchin
 ::::
 ::::::
 
-## reactlog {#sec-annex-reactlog}
+## [reactlog]{.mark} {#sec-annex-reactlog}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -590,7 +596,7 @@ Convenience wrapper that uses the 'rmarkdown' package to render small snippets o
 ::::
 ::::::
 
-## rhino {#sec-annex-rhino}
+## [rhino](.mark) {#sec-annex-rhino}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -643,7 +649,7 @@ The {**rlang**} package is a toolkit for working with core R and {**tidyverse**}
 ::::
 ::::::
 
-## shiny {#sec-annex-shiny}
+## [shiny]{.mark} {#sec-annex-shiny}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -668,7 +674,7 @@ Makes it incredibly easy to build interactive web applications with R. Automatic
 ::::
 ::::::
 
-## shinycssloaders {#sec-annex-shinycssloaders}
+## [shinycssloaders]{.mark} {#sec-annex-shinycssloaders}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -694,7 +700,7 @@ When a 'Shiny' output (such as a plot, table, map, etc.) is recalculating, it re
 ::::
 ::::::
 
-## shinydashboard {#sec-annex-shinydashboard}
+## [shinydashboard]{.mark} {#sec-annex-shinydashboard}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -718,7 +724,7 @@ This package provides a theme on top of 'Shiny', making it easy to create attrac
 ::::
 ::::::
 
-## shinyFeedback {#sec-annex-shinyFeedback}
+## [shinyFeedback]{.mark} {#sec-annex-shinyFeedback}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -745,7 +751,7 @@ Easily display user feedback in Shiny apps. {**shinyFeedback**} currently works 
 ::::
 ::::::
 
-## shinylive {#sec-annex-shinylive}
+## [shinylive]{.mark} {#sec-annex-shinylive}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -770,7 +776,7 @@ When an application is deployed with 'shinylive', R and 'shiny' run in the web b
 ::::
 ::::::
 
-## shinymaterial {#sec-annex-shinymaterial}
+## [shinymaterial]{.mark} {#sec-annex-shinymaterial}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -796,7 +802,7 @@ An R package that allows developers to implement Google's Material Design <https
 ::::
 ::::::
 
-## shinymeta {#sec-annex-shinymeta}
+## [shinymeta]{.mark} {#sec-annex-shinymeta}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -827,7 +833,7 @@ Keep in mind that there were [breaking changes](https://github.com/rstudio/shiny
 ::::
 ::::::
 
-## shinyMobile {#sec-annex-shinyMobile}
+## [shinyMobile]{.mark} {#sec-annex-shinyMobile}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -852,7 +858,7 @@ Develop outstanding 'shiny' apps for 'iOS' and 'Android' as well as beautiful 's
 ::::
 ::::::
 
-## shinysnippets {#sec-annex-shinysnippets}
+## [shinysnippets]{.mark} {#sec-annex-shinysnippets}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -862,7 +868,7 @@ Package Profile: shinysnippets
 ------------------------------------------------------------------------
 
 :::: my-packagebox-container
-<center>[RStudio Snippets for Shiny Devs](	https://github.com/Thinkr-open/shinysnippets) [@shinysnippets]</center>
+<center>[RStudio Snippets for Shiny Devs](https://github.com/Thinkr-open/shinysnippets) [@shinysnippets]</center>
 
 ------------------------------------------------------------------------
 
@@ -871,14 +877,24 @@ Package Profile: shinysnippets
 ![](img/logoi/logo-shinysnippets-min.png){width="176"}
 
 
-A series of shiny related RStudio Snippets. The goal of shinysnippets is to save development time while taking advantage of Rstudio snippets for Shiny applications.
+A series of shiny related RStudio Snippets. The goal of {**shinysnippets**} is to save development time while taking advantage of Rstudio snippets for Shiny applications.
 
 :::
+
+***
+
+::: {.callout-note}
+###### {shinysnippets} is not useful for me
+
+I have my own Shiny snippets mostly for the markdown text (callout boxes with code snippets) but also for R scripts. My system is much more sophisticated. Instead of using the {**shinysnippets**} package I will use my own system and add those snippets from {**shinysnippets**} that are valuable for me.
+
+:::
+
 
 ::::
 ::::::
 
-## shinyvalidate {#sec-annex-shinyvalidate}
+## [shinyvalidate]{.mark} {#sec-annex-shinyvalidate}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -904,7 +920,7 @@ Improves the user experience of Shiny apps by helping to provide feedback when r
 ::::
 ::::::
 
-## shiny.semantic {#sec-annex-shiny.semantic}
+## [shiny.semantic]{.mark} {#sec-annex-shiny.semantic}
 
 :::::: my-packagebox
 ::: my-packagebox-header
@@ -1214,7 +1230,7 @@ The goal of 'vroom' is to read and write data (like 'csv', 'tsv' and 'fwf') quic
 ::::::
 
 
-## waiter {#sec-annex-waiter}
+## [waiter]{.mark} {#sec-annex-waiter}
 
 :::::: my-packagebox
 ::: my-packagebox-header

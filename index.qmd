@@ -3,9 +3,14 @@
 ::: {.callout-note style="color: blue;"}
 #### This is work in progress
 
-I have finished about 50% of the book content. Currently I am working on chapter @sec-chap10.
+I have finished about 57% of the book content. Currently I am working on the exercises of @sec-chap10.
 
-The missing @sec-chap04_8_exercises 4.8 will be worked out in the next few days.
+From the text already covered are following exercises still missing:
+ 
+- @sec-04-exercises 4.8: all four
+- Exercise @sec-10-choose-geom-advanced 10.2.3: the third (the last one)
+- @sec-10-exercises3 10.3.5 all five
+- @sec-11-exercises 11.3: all two
 :::
 
 ::::: my-watch

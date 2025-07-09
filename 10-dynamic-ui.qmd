@@ -97,7 +97,7 @@ The simplest uses of the update functions are to provide small conveniences for 
 ::: 
 
 
-### Button changed functionality
+#### Button changed functionality
 
 A similar application is to tweak the text of an action button so you know exactly what it’s going to do.
 
@@ -153,7 +153,7 @@ Founded in 2010 by [Anthony Goldbloom](https://en.wikipedia.org/wiki/Anthony_Gol
 :::
 ::::{.my-r-code-container}
 ```{r}
-#| label: code-chunk-name
+#| label: load-sales-dataset
 
 sales <- vroom::vroom("data/sales_data_sample.csv", col_types = list(), na = "")
 sales  |> 
@@ -201,7 +201,7 @@ In the server function, there is th following top-down procedure to follow:
 
 :::::{.my-example}
 :::{.my-example-header}
-:::::: {#exm-10-updating-nested}
+:::::: {#exm-10-updating-nested-user-input}
 : Hierarchical select boxes
 ::::::
 :::
@@ -213,12 +213,12 @@ In the server function, there is th following top-down procedure to follow:
 
 :::::{.my-r-code}
 :::{.my-r-code-header}
-:::::: {#cnj-10-updating-nested1}
+:::::: {#cnj-10-updating-nested-user-input1}
 : Hierarchical select boxes: Small demo
 ::::::
 :::
 ::::{.my-r-code-container}
-::: {#lst-10-updating-nested1}
+::: {#lst-10-updating-nested-user-input1}
 
 ```{shinylive-r}
 #| standalone: true
@@ -226,7 +226,7 @@ In the server function, there is th following top-down procedure to follow:
 #| components: [editor, viewer]
 
 ## file: app.R
-{{< include apps_10/04-updating-nested1/app.R >}}
+{{< include apps_10/04-updating-nested-user-input1/app.R >}}
 ```
 
 Small demo of hierarchical select boxes
@@ -240,12 +240,12 @@ Small demo of hierarchical select boxes
 
 :::::{.my-r-code}
 :::{.my-r-code-header}
-:::::: {#cnj-10-updating-nested2}
+:::::: {#cnj-10-updating-nested-user-input2}
 : Hierarchical select boxes: More fleshed out
 ::::::
 :::
 ::::{.my-r-code-container}
-::: {#lst-10-updating-nested2}
+::: {#lst-10-updating-nested-user-input2}
 
 
 ```{shinylive-r}
@@ -255,7 +255,7 @@ Small demo of hierarchical select boxes
 
 
 ## file: app.R
-{{< include apps_10/04-updating-nested2/app.R >}}
+{{< include apps_10/04-updating-nested-user-input2/app.R >}}
 
 ```
 
@@ -279,6 +279,8 @@ To get a version that works with Shiny and shinylive-r at the same time, I had t
 
 It was easy to find a solution for Shiny: Just load the data before the ui/server part into an R object and then reference it from the `server()` function. I couldn’t manage the same result for `shinylive-r`. Local references, relative URL and non-HTTPS URL generate error. The only possible way seems to doanload the data via HTTPS. I tried but didn’t succeed. I asked for help via the [Posit Community](https://forum.posit.co/t/shinylive-in-quarto-document-with-reactive-data-source/204237) and are currently waiting for answers.
 
+:::
+
 A workaround was to provide a file upload control. But even to create a workable demo took me hours. It was a bitter experience to learn that I still didn't understand quite well how reactives work. As the debugger `browser()` did not work, it was finally for me quite helpful to install `print()` outputs in **every** reactive function to see what happens. In the end I solved this problem with three important changes:
 
 1. Creating a reactive value with `sales <- reactiveVal()`.
@@ -287,6 +289,88 @@ A workaround was to provide a file upload control. But even to create a workable
     - Assigning the file to the reactive value `sales`.
     - Updating with the data the choice of the territory `selectInput()` function. (Previously I had to set the UI choices for territory to NULL to prevent an error because the data was not available at start up.)
 3. The reference to the previous `sales` object had to be changed to the reactive function `sales()`. Additional had I to add `req(input$upload)` to prevent that the reactive territory function is called immediately after start up without available data.
+
+```{block2, label='success-upload-external-file', type='rmdsuccess'}
+In the meanwhile I [received an answer](https://forum.posit.co/t/shinylive-in-quarto-document-with-reactive-data-source/204237/3?u=petzi53). I commit a silly error providing the wrong URL for downloading the raw data.
+
+What follows are the original code chunks from "Mastering Shiny" with a tiny change: Instead to get the salaes data locally I uploaded it via an URL. 
+
+```
+
+
+:::{.column-page-inset}
+
+:::::{.my-example}
+:::{.my-example-header}
+:::::: {#exm-10-updating-nested-external-file1}
+: Hierarchical select boxes
+::::::
+:::
+::::{.my-example-container}
+
+::: {.panel-tabset}
+
+###### First take
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-updating-nested-external-file1}
+: Hierarchical select boxes: Small demo
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-10-updating-nested-external-file1}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/04-updating-nested-external-file1/app.R >}}
+```
+
+Small demo of hierarchical select boxes
+:::
+
+::::
+:::::
+
+
+###### Improved demo
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-updating-nested2}
+: Hierarchical select boxes: More fleshed out
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-10-updating-nested-external-file2}
+
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [editor, viewer]
+
+
+## file: app.R
+{{< include apps_10/04-updating-nested-external-file2/app.R >}}
+
+```
+
+Hierarchical select boxes: more fleshed out demo
+:::
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
 :::
 
 ### Freezing reactive inputs
@@ -430,11 +514,9 @@ There’s no way around this problem because you have one idea (the temperature)
 
 #### Update date
 
-##### Task description
 
-Complete the user interface below with a server function that updates `input$date` so that you can only select dates in `input$year`.
+**Task description**: Complete the user interface below with a server function that updates `input$date` so that you can only select dates in `input$year`.
 
-##### Solution
 
 ::: {.column-page-inset}
 
@@ -462,13 +544,10 @@ Complete the user interface below with a server function that updates `input$dat
 
 
 
-### Update county by chosen state
+#### Update county
 
-#### Task description
+**Task description**: Complete the user interface below with a server function that updates `input$county` choices based on `input$state`. For an added challenge, also change the label from “County” to “Parish” for Louisiana and “Borough” for Alaska.
 
-Complete the user interface below with a server function that updates `input$county` choices based on `input$state`. For an added challenge, also change the label from “County” to “Parish” for Louisiana and “Borough” for Alaska.
-
-#### Solution
 
 ::: {.column-page-inset}
 
@@ -495,13 +574,11 @@ Complete the user interface below with a server function that updates `input$cou
 ::: 
 
 
-### Update country by chosen continent
+#### Update country
 
-#### Task description
 
-Complete the user interface below with a server function that updates `input$country` choices based on the `input$continent`. Use `output$data` to display all matching rows.
+**Task description**: Complete the user interface below with a server function that updates `input$country` choices based on the `input$continent`. Use `output$data` to display all matching rows.
 
-#### Solution
 
 ::: {.column-page-inset}
 
@@ -527,13 +604,11 @@ Complete the user interface below with a server function that updates `input$cou
 
 ::: 
 
-### Updating with additional country value
+#### Updating all
 
-#### Task description
 
-Extend the previous app so that you can also choose to select all continents, and hence see all countries. You’ll need to add `"(All)"` to the list of choices, and then handle that specially when filtering.
+**Task description**: Extend the previous app so that you can also choose to select all continents, and hence see all countries. You’ll need to add `"(All)"` to the list of choices, and then handle that specially when filtering.
 
-#### Solution
 
 ::: {.column-page-inset}
 
@@ -560,15 +635,558 @@ Extend the previous app so that you can also choose to select all continents, an
 
 ::: 
 
-### Mutually dependent input
+#### Circular reference
 
-#### Task description
 
-What is at the heart of the problem described at <https://community.rstudio.com/t/29307>?
+**Task description**: What is at the heart of the problem described at <https://community.rstudio.com/t/29307>?
 
-#### Solution
 
 It is a circular reference because the different `numericInput()` are mutually dependent to each other. The first `observeEvent()` listens for `input$A` and changes `input$B`. But the second `observeEvent()` which listens for `input$B` changes `input$A` and therefore triggers the first `observeEvent()` creating an endless circular reference.
+
+## Dynamic visibility
+
+::: {.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-dynamic-visibility-basics}
+: Dynamic visibility basics
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/08-dynamic-visibility-basics/app.R >}}
+```
+
+
+::::
+:::::
+
+:::
+
+
+There are two main ideas here:
+
+- Use tabset panel with hidden tabs.
+- Use `updateTabsetPanel()` to switch tabs from the server.
+
+### Conditional UI
+
+
+::: {.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-conditional-ui}
+: Conditional UI
+::::::
+:::
+::::{.my-r-code-container}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/09-conditional-ui/app.R >}}
+```
+
+::::
+:::::
+
+:::
+
+
+Note that the value of (e.g.) `input$mean` is independent of whether or not its visible to the user. The underlying HTML control still exists; you just can’t see it.
+
+### Wizard interface
+
+You can also use this idea to create a “wizard”, a type of interface that makes it easier to collect a bunch of information by spreading it across multiple pages. Here we embed action buttons within each “page”, making it easy to go forward and back.
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-ID-text}
+: Numbered R Code Title
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/10-wizard-interface/app.R >}}
+```
+::::
+:::::
+
+:::
+
+Note the use of the `switch_page()` function to reduce the amount of duplication in the server code.
+
+### Exercises
+
+#### Show additonal controls
+
+
+**Task description**: Use a hidden tabset to show additional controls only if the user checks an “advanced” check box.
+
+
+:::{.column-page-inset}
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-10-ex-06-show-additional-controls}
+: Show additional controls after selecting a check box
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/ex-06-show-additional-controls/app.R >}}
+```
+::::
+:::::
+
+:::
+
+
+#### Choose geom
+
+Create an app that plots `ggplot(diamonds, aes(carat))` but allows the user to choose which geom to use: `geom_histogram()`, `geom_freqpoly()`, or `geom_density()`. Use a hidden tabset to allow the user to select different arguments depending on the geom: `geom_histogram()` and `geom_freqpoly()` have a `binwidth` argument; `geom_density()` has a `bw` argument.
+
+:::{.column-page-inset}
+
+:::::{.my-exercise}
+:::{.my-exercise-header}
+:::::: {#exr-10-choose-geom}
+: Choose geom for plotting
+::::::
+:::
+::::{.my-example-container}
+
+::: {.panel-tabset}
+
+###### shiny
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-choose-geom-shiny}
+: Choose geom for plotting ({**shiny**} variant)
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-10-choose-geom-shiny}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/ex-07-choose-geom-shiny/app.R >}}
+```
+
+Choose geom for plotting diamonds data. User interface with {**shiny**} 
+
+:::
+
+::::
+:::::
+
+
+###### bslib
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-choose-geom-bslib}
+: Choose geom for plotting ({**shiny**} variant)
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-10-choose-geom-bslib}  
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/ex-07-choose-geom-bslib/app.R >}}
+```
+
+Choose geom for plotting diamonds data. User interface with {**bslib**} 
+:::
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+:::
+
+::: {.callout-note #nte-10-choose-geom}
+###### Limiting the user input to appropriate number ranges or choices
+
+- To get an adequate number range for `geom_histogram()` and `geom_freqpoly()` I had to experiment with the data. 
+- For the `bw` argument of the density distribution I had to read (and understand!) the [docs about kernel density estimation](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/bandwidth.html). 
+
+Bandwidth refers to a parameter that controls the smoothness of the estimated density function. It determines the width of the `r glossary("kernel")` used in the estimation process. Specifically, the bandwidth is the standard deviation of the kernel, which influences how much each data point contributes to the overall density estimate. ([What does bandwidth mean?](https://stats.stackexchange.com/questions/61374/what-does-bandwidth-mean) and [Wikipedia about bandwidth selection](https://en.wikipedia.org/wiki/Kernel_density_estimation#Bandwidth_selection))
+
+To experiment for choosing an appropriate bandwidth is important because different bandwidths may provide you with very diverging impressions of the underlying distribution. For more details, read: [The importance of kernel density estimation bandwidth](https://aakinshin.net/posts/kde-bw/).
+
+:::
+
+
+
+::: {.callout-caution #cau-10-input-number-decimal-separator}
+###### Problem with loalization of decimal separator
+
+Surprisingly I got commas as decimal separator which I couldn't change to dots. I tried it with different approaches:
+
+- Setting the output of decimal separator to a dot using the R command `options(OutDec=".")`. Does not help because it is already the default. ([Option settings](https://stat.ethz.ch/R-manual/R-devel/library/base/html/options.html))
+- Setting a different locale for specific Shiny apps with `Sys.setlocale("LC_ALL","C")` or `Sys.setlocale("LC_ALL","en_US.UTF-8")` ([Setting a different locale for specific Shiny apps](https://stackoverflow.com/questions/61656119/setting-a-different-locale-for-specific-shiny-apps-only-on-shinyapps-io)).
+- Using a `textInput()` and convert it to a number in R with `as.numeric(input$mynumber)`. You could also change the comma separator to a dot with `as.numeric(sub(",", ".", input$mynumber))` But the problem with `textInput()` is that the user could could type in any string, not just a number. ([Shiny apps_issue with decimal point/comma](https://groups.google.com/g/shinyapps-users/c/HGDNwV5y314)) --- So this approach would require a more complex workaround using input validation, maybe with the {**shinyFeedback**} package.
+
+Instead of `numericInput()` I used as a workaround `sliderInput()`
+
+> The HTML5 input type=number is inadequate from the localization point of view, due to both the definition and the implementations. It is meant to be localized but as per the locale of the browser, which you cannot set or even know as a designer/author. ([Localization of input type number](https://stackoverflow.com/questions/13412204/localization-of-input-type-number))
+:::
+
+
+#### Choose geom advanced {#sec-10-choose-geom-advanced}
+
+
+
+## Creating UI with code {#sec-10-creating-ui-with-code}
+
+The update functions only allow you to change existing inputs, and a tabset only works if you have a fixed and known set of possible combinations. Sometimes you need to create different types or numbers of inputs (or outputs), depending on other inputs.
+
+There are two parts to this solution:
+
+- `uiOutput()` inserts a placeholder in your ui. This leaves a “hole” that your server code can later fill in.
+- `renderUI()` is called within `server()` to fill in the placeholder with dynamically generated UI.
+
+### Getting started
+
+:::{.column-page-inset}
+
+:::::{.my-example}
+:::{.my-example-header}
+:::::: {#exm-10-creating-ui-basics}
+: Creating UI with code
+::::::
+:::
+::::{.my-example-container}
+
+::: {.panel-tabset}
+
+###### Basic
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-creating-ui-basics1}
+: Creating UI with code: basics
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 450
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/11-creating-ui-basics1/app.R >}}
+```
+
+::::
+:::::
+
+
+###### Improved
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-creating-ui-bascis2}
+: Creating UI with code with values transferred 
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 450
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/11-creating-ui-basics2/app.R >}}
+```
+
+
+
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+:::
+
+The use of `isolate()` in the improved version is important. We’ll come back to what it does in @XXX_15.4.1, but here it ensures that we don’t create a reactive dependency that would cause this code to re-run every time `input$dynamic` changes (which will happen whenever the user modifies the value). We only want it to change when `input$type` or `input$label` changes.
+
+
+::: {.callout-warning #wrn-10-creating-ui-basics2}
+The book example does not work. It raises the error:
+
+> In sliderInput(): `min`, `max`, and `value` cannot be NULL, NA, or empty.
+
+The problem is that at app initialization, `input$dynamic` is `NULL` which rise the error. It could be fixed with `value=0` (like default) when `input$dynamic` is `NULL`.
+
+Before I looked at the GitHub Repo of "Mastering Shiny" I tried to solve the problem with reserving slider and numeric input to get the latter as the first (default) option. A numeric input does not raise an error. But this hack does not work if the user changes immediately into slider mode, without to input a numeric value. 
+
+This problem is already reported on the [repo website of Mastering Shiny](https://github.com/hadley/mastering-shiny/issues/515). The author of issues 515 proposed also a solution with the `% || %` [null coalescing operator](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Control.html) I have never heard about. `x % || % y` is a 1-line function and an alternative way to call `if (is.null(x)) y else x`.
+
+(Hadley uses this trick too to solve the same problem in the next section.)
+:::
+
+
+There are two downsides creating UI with code:
+
+- Relying on it too much can create a laggy UI. For good performance, strive to keep fixed as much of the user interface as possible.
+- When you change controls, you lose the currently selected value. Maintaining existing state is one of the big challenges of creating UI with code. This is one reason that selectively showing and hiding UI is a better approach if it works for you — because you’re not destroying and recreating the controls, you don’t need to do anything to preserve the values.
+
+However, in many cases, we can fix the problem by setting the value of the new input to the current value of the existing control.
+
+
+
+### Multiple controls {#sec-multiple-controls}
+
+Dynamic UI is most useful when you are generating an arbitrary number or type of controls. That means that you’ll be generating UI with code, and I recommend using functional programming for this sort of task. 
+
+Imagine that you’d like users to be able to supply their own color palette. They’ll first specify how many colors they want, and then supply a value for each color. The ui is pretty simple: we have
+
+- a `numericInput()` that controls the number of inputs, 
+- a `uiOutput()` where the generated text boxes will go, and 
+- a `textOutput()` that demonstrates that we’ve plumbed everything together correctly.
+
+:::{.column-page-inset}
+
+:::::{.my-example}
+:::{.my-example-header}
+:::::: {#exm-10-creating-ui-multiple-controls}
+: Creating UI with multiple controls
+::::::
+:::
+::::{.my-example-container}
+
+::: {.panel-tabset}
+
+###### Basic
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-creating-UI-with-multiple-controls}
+: Creating UI with multiple controls
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/12-creating-ui-multiple-controls1/app.R >}}
+```
+
+::::
+:::::
+
+
+###### Improved
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-creating-ui-multiple-controls2}
+: Numbered R Code Title
+::::::
+:::
+::::{.my-r-code-container}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/12-creating-ui-multiple-controls2/app.R >}}
+```
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+:::
+
+Hadley uses here `purrr::map()` and `purrr::reduce()`, but you could certainly do the same with the base `lapply()` and `Reduce()` functions. If you’re not familiar with the `map()` and `reduce()` of functional programming, you might want to take a brief detour to read [Functional programming](https://adv-r.hadley.nz/functionals.html) before continuing. We’ll also come back to this idea in @XXX_18.
+
+Although the server function is short it contains some big ideas:
+
+- It uses a reactive, `col_names()`, to store the names of each of the colour inputs the user is about to generate.
+- Using `purrr::map()` to create a list of `textInput()`s, one each for each name in `col_names()`. `renderUI()` then takes this list of HTML components and adds it to UI.
+- Using a new trick to access the values  of the input values. So far we’ve always accessed the components of input with `$`, e.g. `input$col1`. But here we have the input names in a character vector, like `var <- "col1"`. `$` no longer works in this scenario, so we need to swich to `[[`, i.e. `input[[var]]`.
+- Using `purrr::map_chr()` to collect all values into a character vector, and display that in `output$palette`. Unfortunately there’s a brief period, just before the new inputs are rendered by the browser, where their values are NULL. This causes `purrr::map_chr()` to error, which we fix by using the handy `%||%` function: it returns the right-hand side whenever the left-hand side is NULL.
+
+If you run this app, you’ll discover a really annoying behavior: whenever you change the number of colors, all the data you’ve entered disappears. We can fix this problem by using the same technique as before: setting value to the (isolated) current value. We’ll also tweak the appearance in the improved version to look a little nicer, including displaying the selected colors in a plot.
+
+
+### Dynamic filtering
+
+The last example in this chapter is to create an app that lets you dynamically filter any data frame. Each numeric variable will get a range slider and each factor variable will get a multi-select, so (e.g.) if a data frame has three numeric variables and two factors, the app will have three sliders.
+
+
+:::{.column-page-inset}
+
+:::::{.my-example}
+:::{.my-example-header}
+:::::: {#exm-10-creating-ui-dynamic-filter}
+: Creating UI for dynamic filtering of data
+::::::
+:::
+::::{.my-example-container}
+
+::: {.panel-tabset}
+
+###### Basic
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-creating-ui-dynamic-filter1}
+: Creating UI for dynamic filtering of data: First take
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-10-creating-ui-dynamic-filter1}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/13-creating-ui-dynamic-filter1/app.R >}}
+```
+
+Creating UI for dynamic filtering of data: First take
+:::
+::::
+:::::
+
+
+###### Improved
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-creating-ui-dynamic-filter2}
+: Creating UI for dynamic filtering of data: Second version
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-10-creating-ui-dynamic-filter2}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/13-creating-ui-dynamic-filter2/app.R >}}
+```
+
+Creating UI for dynamic filtering of data: Improved
+:::
+::::
+:::::
+
+###### Generalized
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-creating-ui-dynamic-filter3}
+: Creating UI for dynamic filtering of data: Third version
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-10-creating-ui-dynamic-filter3}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/13-creating-ui-dynamic-filter3/app.R >}}
+```
+
+Creating UI for dynamic filtering of data: Generalized
+:::
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+:::
+
+**Basic version**
+
+1. **`make_ui()`**: Creating this app we start with a function `make_ui()` that creates the UI for a single variable. It’ll return a range slider for numeric inputs, a multi-select for factor inputs, and `NULL` (nothing) for all other types.
+2. **`filter_var()`**: The next step is to write the server side equivalent of `make-ui()`: `filter_var()` takes the variable and value of the input control, and returns a logical vector saying whether or not to include each observation. Using a logical vector makes it easy to combine the results from multiple columns.
+
+**Improved version**
+
+You might notice that the app only works with three columns. We can make it work with all the columns by using a little functional programming:
+
+- In `ui()` use `purrr::map()` to generate one control for each variable.
+- In `server()`, use `purrr::map()` to generate the selection vector for each variable. 
+- Then use `reduce()` to take the logical vector for each variable and combine them into a single logical vector by `&`-ing each vector together.
+
+Again, don’t worry too much if you don’t understand exactly what’s happening here. The main take away is that once you master functional programming, you can write very succinct code that generate complex, dynamic apps.
+
+**Generalized version**
+
+From there, it’s a simple generalization to work with any data frame. @lst-10-creating-ui-dynamic-filter3 illustrates it using the data frames in the {**datasets**} package, but you can easily imagine how you might extend this to user uploaded data.
+
+
+### Dialog boxes
+
+Before we finish up, there is another but related technique to mention: dialog boxes. 
+
+You’ve seen them already in @sec-08-explicit-confirmation, where the contents of the dialog was a fixed text string. But because `modalDialog()` is called from within the server function, you can actually dynamically generate content in the same way as `renderUI()`. This is a useful technique to have in your back pocket if you want to force the user to make some decision before continuing on with the regular app flow.
+
+### Exercises {#sec-10-exercises3}
 
 ## Glossary Entries {#unnumbered}
 

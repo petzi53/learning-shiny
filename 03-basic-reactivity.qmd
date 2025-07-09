@@ -79,7 +79,7 @@ An app is going to be pretty boring if it only has inputs or only has outputs. T
 :::
 ::::{.my-r-code-container}
 
-::: {#lst-greeting-example}
+::: {#lst-03-greeting-example}
 ```{r}
 #| label: greeting-example
 #| eval: false
@@ -179,7 +179,7 @@ We don’t need a reactive expression in our very simple app, but I’ll add one
 :::
 ::::{.my-r-code-container}
 
-:::{#lst-greeting-example2}
+::: {#lst-03-greeting-example2}
 ```{r}
 #| label: greeting-example2
 #| eval: false
@@ -217,7 +217,7 @@ shiny::shinyApp(ui, server)
 
 ***
 
-Compare the tiny difference in the server code with @lst-greeting-example.
+Compare the tiny difference in the server code with @lst-03-greeting-example.
 ::::
 :::::
 
@@ -241,7 +241,7 @@ It’s important to understand that the order in which your code runs is solely 
 :::
 ::::{.my-r-code-container}
 
-:::{#lst-greeting-example3}
+::: {#lst-03-greeting-example3}
 ```{r}
 #| label: greeting-example3
 #| eval: false
@@ -279,7 +279,7 @@ shiny::shinyApp(ui, server)
 
 ***
 
-Again: Compare the tiny difference in the server code; this time with @lst-greeting-example2.
+Again: Compare the tiny difference in the server code; this time with @lst-03-greeting-example2.
 ::::
 :::::
 
@@ -486,7 +486,7 @@ shinyApp(ui, server)
 :::
 ::::{.my-r-code-container}
 
-::: {#lst-draw-graphs-challenge}
+::: {#lst-03-draw-graphs-challenge}
 ```{r}
 #| label: draw-graphs-challenge
 #| eval: false
@@ -523,7 +523,7 @@ server3 <- function(input, output, session) {
 :::::{.my-r-code}
 :::{.my-r-code-header}
 :::::: {#cnj-03-ex-02-draw-graphs-solution}
-: Draw the graphs in the three server functions of @lst-draw-graphs-challenge
+: Draw the graphs in the three server functions of @lst-03-draw-graphs-challenge
 ::::::
 :::
 ::::{.my-r-code-container}
@@ -2061,7 +2061,7 @@ A minimal example consists of four lines of code:
 :::
 ::::{.my-r-code-container}
 
-:::{#lst-03-summary-minimal-example}
+::: {#lst-03-summary-minimal-example}
 ```{shinylive-r}
 #| standalone: true
 #| components: [editor, viewer]
@@ -2449,7 +2449,7 @@ The next example implements this minimal reactivity in Shiny.
 :::
 ::::{.my-r-code-container}
 
-::: {#lst-summary-reactivity-template}
+::: {#lst-03-summary-reactivity-template}
 
 ```{shinylive-r}
 #| standalone: true
@@ -2525,7 +2525,7 @@ shinyApp(ui, server)
 
 ***
 
-Compare the code with @lst-summary-reactivity-template.
+Compare the code with @lst-03-summary-reactivity-template.
 ::::
 :::::
 
@@ -2537,7 +2537,7 @@ We can think of reactive expressions as tools to reduces duplication in the reac
 
 #### Practical example
 
-In the case above we didn't use the additional node, to simplify the code. In order to understand why we need `r glossary("reactivce epxressions")` we need a more complex example. Hadley offers in the book the comparison of two simulated datasets with a plot and a hypothesis test. 
+In the case above we didn't use the additional node, to simplify the code. In order to understand why we need `r glossary("reactive epxressions")` we need a more complex example. Hadley offers in the book the comparison of two simulated datasets with a plot and a hypothesis test. 
 
 I am planning to generate a simpler example. STILL TO DO -> @XXX_practical-example
 
