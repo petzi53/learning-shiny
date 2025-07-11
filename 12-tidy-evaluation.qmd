@@ -1,0 +1,569 @@
+# Tidy evaluation {#sec-chap12}
+
+```{r}
+#| label: setup
+#| results: hold
+#| include: false
+
+base::source(file = "R/helper.R")
+library(glossary)
+glossary::glossary_path("../glossary-pb/glossary.yml")
+```
+
+## Table of content for chapter 12 {.unnumbered}
+
+:::::: {#obj-chap11}
+::::: my-objectives
+::: my-objectives-header
+Chapter section list
+:::
+
+::: my-objectives-container
+
+:::
+:::::
+::::::
+
+If you are using Shiny with the {**tidyverse**}, you will almost
+certainly encounter the challenge of programming with tidy evaluation.
+Tidy evaluation is used throughout the tidyverse to make interactive
+data exploration more fluid, but it comes with a cost: it’s hard to
+refer to variables indirectly, and hence harder to program with.
+
+In this chapter, you’ll learn how to wrap {**ggplot2**} and {**dplyr**}
+functions in a Shiny app. The techniques for wrapping ggplot2 and dplyr
+functions in a function and/or a package, are a little different and
+covered in other resources:
+
+:::::: my-resource
+:::: my-resource-header
+::: {#lem-12-tidy-evaluation}
+: Wrapping {**tidyverse**} functions in a function and/or a package
+:::
+::::
+
+::: my-resource-container
+**Tutorials for beginners**
+
+-   [Using ggplot2 in
+    packages](http://ggplot2.tidyverse.org/dev/articles/ggplot2-in-packages.html)
+-   [Programming with
+    dplyr](http://dplyr.tidyverse.org/articles/programming.html).
+
+Additionally I have found other important (newer) information in
+articles about the {**rlang**} package. The references are sorted by
+increasing difficulty/specialization: Overviews --- Guides --- Notes.
+
+**Tidy evaluation**
+
+-   Overview: [What is data-masking and why do I need
+    `{{`?](https://rlang.r-lib.org/reference/topic-data-mask.html)
+-   Overview: [Data mask programming
+    patterns](https://rlang.r-lib.org/reference/topic-data-mask-programming.html)
+-   Guide: [The data mask
+    ambiguity](https://rlang.r-lib.org/reference/topic-data-mask-ambiguity.html)
+-   Guide: [The double evaluation
+    problem](https://rlang.r-lib.org/reference/topic-double-evaluation.html)
+-   Note: [What happens if I use injection operators out of
+    context?](https://rlang.r-lib.org/reference/topic-inject-out-of-context.html)
+-   Note: [Does `{{` work on regular
+    objects?](https://rlang.r-lib.org/reference/topic-embrace-non-args.html)
+
+**Metaprogramming**
+
+-   Overview: [Defusing R
+    expressions](https://rlang.r-lib.org/reference/topic-defuse.html)
+-   Overview: [Injecting with `!!`, `!!!`, and glue
+    syntax](https://rlang.r-lib.org/reference/topic-inject.html)
+-   Overview: [Metaprogramming
+    pattern](https://rlang.r-lib.org/reference/topic-metaprogramming.html)
+-   Overview: [What are quosures and when are they
+    needed?](https://rlang.r-lib.org/reference/topic-quosure.html)
+-   Guide: [Taking multiple columns without
+    …](https://rlang.r-lib.org/reference/topic-multiple-columns.html)
+-   Note: [Why are strings and other constants enquosed in the empty
+    environment?](https://rlang.r-lib.org/reference/topic-embrace-constants.html)
+
+**Metaprogramming in Advanced R**
+
+Additionally there are several chapters on metaprogramming in Advanced R
+[@wickham2019c]. There is also an [online
+version](https://adv-r.hadley.nz/).
+
+-   [Introduction](https://adv-r.hadley.nz/metaprogramming.html)
+-   [Big picture](https://adv-r.hadley.nz/meta-big-picture.html)
+-   [Expressions](https://adv-r.hadley.nz/expressions.html)
+-   [Quasiquotation](https://adv-r.hadley.nz/quasiquotation.html)
+-   [Evaluation](https://adv-r.hadley.nz/evaluation.html)
+-   [Translating R code](https://adv-r.hadley.nz/translation.html)
+:::
+::::::
+
+## Motivation
+
+:::::::: column-page-inset
+::::::: my-r-code
+:::: my-r-code-header
+::: {#cnj-12-indirection-basics-not-working}
+: Filter numeric variable to select rows that are greater than a
+threshold (not working)
+:::
+::::
+
+:::: my-r-code-container
+::: {#lst-12-indirection-basics-not-working}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 450
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_12/01-indirection-basics-not-working/app.R >}}
+```
+
+Trying to select rows that are greater than a threshold on a
+user-selected variable (not working correctly!)
+:::
+::::
+:::::::
+::::::::
+
+As you can see from @lst-12-indirection-basics-not-working, the app runs
+without error, but it doesn’t return the correct result — all the rows
+have values of `carat` less than 1. {**dplyr**} thinks you have asked
+for `filter(diamonds, "carat" > 1)`.
+
+This is a problem of **indirection**: normally when using
+{**tidyverse**} functions you type the name of the variable directly in
+the function call. But now you want to refer to it indirectly: the
+variable (`carat`) is stored inside another variable (`input$var`).
+
+That sentence might have made intuitive sense to you, but it’s a bit
+confusing because the “variable” means in the above sentence two
+slightly different things. It’s going to be easier to understand what’s
+happening if we can disambiguate the two uses by introducing two new
+terms:
+
+An **env-variable (environment variable)** is a “programming” variable
+that you create with `<-`. `input$var` is an env-variable.
+
+A **data-variable (data frame variables)** is “statistical” variable
+that lives inside a data frame or tibble. `carat` is a data-variable.
+
+With these new terms we can make the problem of indirection more clear:
+we have a data-variable (`carat`) stored inside an env-variable
+(`input$var`), and we need some way to tell {**dplyr**} this. There are
+two slightly different ways to inform {**dplyr**} depending on whether
+the function you’re working with is a “data-masking” function or a
+“tidy-selection” function.
+
+## Data-masking
+
+`r glossary("Data-masking")` functions allow you to use variables in the
+“current” data frame without any extra syntax. It’s used in many
+{**dplyr**} functions like `arrange()`, `filter()`, `group_by()`,
+`mutate()`, and `summarise()`, and in {**ggplot2**}’s `aes()`.
+Data-masking is useful because it lets you use data-variables without
+any additional syntax.
+
+Let’s begin with this call to `dplyr::filter()` which uses a
+data-variable (`carat`) and an env-variable (`min`):
+
+```{r}
+#| label: data-env-variable1
+#| eval: false
+
+min <- 1
+ggplot2::diamonds  |> dplyr::filter(carat > min)
+```
+
+Compare this to the base R equivalent:
+
+```{r}
+#| label: data-env-variable2
+#| eval: false
+
+ggplot2::diamonds[ggplot2::diamonds$carat > min, ]
+```
+
+In most base R functions[^12-tidy-evaluation-1] you have to refer to
+data-variables with `$`. This means that you often have to repeat the
+name of the data frame multiple times, but does make it clear exactly
+what is a data-variable and what is an env-variable. It also makes it
+straightforward to use indirection[^12-tidy-evaluation-2] because you
+can store the name of the data-variable in an env-variable, and then
+switch from `$` to `[[`:
+
+
+[^12-tidy-evaluation-1]: One exception is `base::subest().`
+
+[^12-tidy-evaluation-2]: In Shiny apps, the most common form of
+    indirection is having the name of data-variable stored in a reactive
+    value. Another form of indirection that is useful when you're
+    writing functions is denoted by double curly-brackets `{{ x }}`,
+    also called `r glossary("embracing operator", "embracing")`.
+
+```{r}
+#| label: data-env-variable3
+#| eval: false
+
+
+var <- "carat"
+ggplot2::diamonds[ggplot2::diamonds[[var]] > min, ]
+```
+
+How can we achieve the same result with `r glossary("tidy evaluation")`? We need some way to add `$` back into the picture. Fortunately, inside data-masking functions you can use `.data` or `.env` if you want to be explicit about whether you’re talking about a data-variable or an env-variable:
+
+```{r}
+#| label: data-env-variable4
+#| eval: false
+
+ggplot2::diamonds |>  dplyr::filter(.data$carat > .env$min)
+```
+
+Now we can switch from `$` to `[[`:
+
+```{r}
+#| label: data-env-variable5
+#| eval: false
+
+ggplot2::diamonds |> dplyr::filter(.data[[var]] > .env$min)
+```
+
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-12-indirection-basics-working}
+: Filter numeric variable to select rows that are greater than a
+threshold (working!)
+::::::
+:::
+::::{.my-r-code-container}
+:::{#lst-12-indirection-basics-working}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 450
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_12/02-indirection-basics-working/app.R >}}
+```
+
+Select rows that are greater than a threshold on a
+user-selected variable
+:::
+::::
+:::::
+
+:::
+
+### Example `{ggplot2}` {#sec-12-example-ggplot2}
+
+Let’s apply this idea to a dynamic plot where we allow the user to create a scatterplot by selecting the variables to appear on the x and y axes.
+
+:::{.column-page-inset}
+
+:::::{.my-example}
+:::{.my-example-header}
+:::::: {#exm-12-example-ggplot2}
+: Using in indirection in {**ggplot2**}
+::::::
+:::
+::::{.my-example-container}
+
+::: {.panel-tabset}
+
+###### Using {**ggforce**} 
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-12-example-ggplot-ggforce}
+: Indirection in {**ggplot2**} using {**ggforce**}
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-12-example-ggplot-ggforce}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_12/03-example-ggplot-ggforce/app.R >}}
+```
+
+A simple app that allows you to select which variables are plotted on the x and y axes.
+:::
+
+::::
+:::::
+
+
+###### Change `geom`
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-12-example-ggplot-change-geom}
+: Indirection in {**ggplot2**} changing `geom`
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-12-example-ggplot-change-geom}    
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_12/04-example-ggplot-change-geom/app.R >}}
+```
+
+A more complex app that allows you to select which variables are plotted on the x and y axes and to choose the `geom`.
+:::
+
+::::
+:::::
+
+:::
+
+::::
+:::::
+
+:::
+
+- In the first tab "Using {**ggforce**}" we’ve used `ggforce::position_auto()` so that `geom_point()` works nicely regardless of whether the `x` and `y variables are continuous or discrete. 
+- Alternatively, we could allow the user to pick the `geom`. The second tab "Choosing `geom` the app uses a `switch()` statement to generate a reactive `geom` that is later added to the plot.
+- I could image a third --- more complex variant where the method of the `smooth` argument can be chosen for datasets with fewer and more than 1000 observations.
+- Another --- even more complex variant --- would be to let the user change which dataset to use.
+- 
+
+::: {.callout-important #imp-12-complexity-increases-with-user-choices}
+###### Programming complexity increases with numer of user choices
+
+This is one of the challenges of programming with user selected variables: your code has to become more complicated to handle all the cases the user might generate. 
+
+:::
+
+### Example `{dplyr}`
+
+The same technique also works for {**dplyr**}. The following app extends the previous simple example to allow you to choose a variable to filter, a minimum value to select, and a variable to sort by.
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-12-example-dplyr}
+: Indirection in {**dplyr**}: Choose sorting order
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-12-example-dplyr}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_12/06-sorting-order/app.R >}}
+```
+
+Indirection in {**dplyr**}: Choose sorting order
+
+:::
+::::
+:::::
+
+:::
+
+### User-supplied data {#sec-12-user-supplied-data}
+
+The following app allows the user to upload a `tsv` file, then select a variable and filter by it. It will work for the vast majority of inputs that you might try it with.
+
+
+
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-12-user-supplied-data}
+: User-supplied data could result in the clash of variable names
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-12-user-supplied-data}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_12/07-user-supplied-data/app.R >}}
+```
+
+User-supplied data could result in the clash of variable names: A variable name of `input` would result in an error 
+:::
+::::
+:::::
+
+:::
+
+There could be a clash in the variable/column names when you work with user-supplied data. If there is a variable `input` the following Shiny app would result in an error because `dplyr::filter()` is attempting to evaluate `df$input$min`. 
+
+This problem is due to the ambiguity of data-variables and env-variables, and because data-masking prefers to use a data-variable if both are available. We can resolve the problem by using `.env` to tell `dplyr::filter()` only look for min in the env-variables:
+
+```{r}
+#| label: user-supplied-data-problem
+#| eval: false
+
+### use
+df  |>  dplyr::filter(.data[[input$var]] > .env$input$min)
+### instead of
+## df  |>  dplyr::filter(.data[[input$var]] > input$min) 
+
+```
+
+You only need to worry about this problem when working with user supplied data; when working with your own data, you can ensure the names of your data-variables don’t clash with the names of your env-variables (and if they accidentally do, you’ll discover it right away).
+
+::: {.callout-caution #cau-12-user-supplied-data}
+
+###### Two issues with user supplied data example
+
+There are two issues with @lst-12-user-supplied-data:
+
+1. The live version at <https://hadley.shinyapps.io/ms-user-supplied> does not work. After uploading the file the apps disconnects from the server.
+2. For a real world Shiny app you would have to provide a solution for factor variables because the example works only with numeric variables.
+:::
+
+### Why not use base R?
+
+At this point you might wonder if you’re better off without filter(), and if instead you should use the equivalent base R code:
+
+```{r}
+#| label: why-not-using-base-r
+#| eval: false
+
+df[df[[input$var]] > input$min, ]
+```
+
+
+That’s a totally legitimate position, as long as you’re aware of the work that `dplyr::filter()` does for you so you can generate the equivalent base R code. In this case:
+
+- You’ll need `drop = FALSE` if `df` only contains a single column (otherwise you’ll get a vector instead of a data frame).
+- You’ll need to use `which()` or similar to drop any missing values.
+- You can’t do group-wise filtering (e.g. `df %>% group_by(g) %>% filter(n() == 1`)).
+
+In general, if you’re using {**dplyr**} for very simple cases, you might find it easier to use base R functions that don’t use data-masking. However, one of the advantages of the {**tidyverse**} is the careful thought that has been applied to edge cases so that functions work more consistently. It’s easy to forget the quirks of specific base R functions, and write code that works 95+% of the time, but fails in unusual ways the other 5% of the time.
+
+## Tidy selection and data-masking
+
+Working with multiple variables is trivial when you’re working with a function that uses tidy-selection: you can just pass a character vector of variable names into `tidyselect::any_of()` or `tidyselect::all_of()`. Wouldn’t it be nice if we could do that in data-masking functions too? That’s the idea of the `across()` function, added in {**dplyr**} 1.0.0. It allows you to use tidy-selection inside data-masking functions.
+
+`dplyr::across()` is typically used with either one or two arguments. The first argument selects variables, and is useful in functions like `dplyr::group_by()` or `dplyr::distinct()`. For example, the following app allows you to select any number of variables and count their unique values.
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-12-tidy-selection}
+: Tidy selection: Using `dplyr::across()`
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-12-tidy-selection}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_12/08-tidy-selection/app.R >}}
+```
+
+Tidy-selection with one argument: Using `dplyr::across()`
+:::
+
+::::
+:::::
+
+:::
+
+The second argument is a function (or list of functions) that’s applied to each selected column. That makes it a good fit for `dplyr::mutate()` and `dplyr::summarize()` where you typically want to transform each variable in some way. For example, the following code lets the user select any number of grouping variables, and any number of variables to summarize with their means.
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-12-tidy-select2}
+: Tidy-select with second parameter
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-12-tidy-select2} 
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_12/09-tidy-select2/app.R >}}
+```
+
+Tidy-select with two arguments using `dplyr::across()`
+
+:::
+
+::::
+:::::
+
+:::
+
+## `parse()` + `eval()`
+
+Before we go, it’s worth a brief comment about `base::paste()` + `base::parse(`) + `base::eval()`. If you have no idea what this combination is, you can skip this section, but if you have used it, there is a small note of caution necessary.
+
+It’s a tempting approach because it requires learning very few new ideas. But it has some major downsides: because you are pasting strings together, it’s very easy to accidentally create invalid code, or code that can be abused to do something that you didn’t want. This isn’t super important if it’s a Shiny app that only you use, but it isn’t a good habit to get into — otherwise it’s very easy to accidentally create a security hole in an app that you share more widely. We’ll come back that idea in XXX_22.
+
+::: {.callout-caution #cau-12-string-manipulation}
+###### Try to prvent string manipulation to solve indirection problems
+
+You shouldn’t feel bad if this is the only way you can figure out to solve a problem, but when you have a bit more mental space, it is better to spend some time figuring out how to do it without string manipulation. This will help you to become a better R programmer.
+:::
+
+
+## Glossary Entries {#unnumbered}
+
+```{r}
+#| label: glossary-table
+#| echo: false
+
+glossary_table()
+```
+
+------------------------------------------------------------------------
+
+## Session Info {.unnumbered}
+
+::::: my-r-code
+::: my-r-code-header
+Session Info
+:::
+
+::: my-r-code-container
+```{r}
+#| label: session-info
+
+sessioninfo::session_info()
+```
+:::
+:::::

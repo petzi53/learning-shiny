@@ -77,11 +77,13 @@ Handling `fileInput()` on the server is a little more complicated than other inp
 
 :::::{.my-r-code}
 :::{.my-r-code-header}
-:::::: {#cnj-09-file-upload-server}
-: File upload server 
+:::::: {#cnj-09-multiple-uploaded-files}
+: Upload multiple file on the server (not working)
 ::::::
 :::
 ::::{.my-r-code-container}
+
+::: {#lst-09-multiple-uploaded-files}
 
 ```{shinylive-r}
 #| standalone: true
@@ -100,18 +102,58 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-::: {.callout-warning #wrn-09-file-upload-server}
-
-`fileInput()` does not show multiple uploaded files. One can see only the last one. 
-
-This issue was on May 2, 2021 [opened at GitHub](https://github.com/hadley/mastering-shiny/issues/468), but it is still not closed. I do not know with my rudimentary knowledge at the moment (2025-06-08) how to solve this problem.
-
+Book example does not show multiple uploaded files, only the last one
 
 :::
 
+::::
+:::::
+
+::: {.callout-warning #wrn-09-file-upload-server}
+
+###### Example does not show multiple upoaded files
+
+`fileInput()` in @lst-09-multiple-uploaded-files does not show multiple uploaded files. One can see only the last one. 
+
+This issue was on May 2, 2021 [opened at GitHub](https://github.com/hadley/mastering-shiny/issues/468), but it is still not closed. I do not know with my rudimentary knowledge at the moment (2025-06-08) how to solve this problem.
+
+:::
+
+```{block2, label='uploaded-multiple-files', type='rmdsuccess'}
+In the meanwhile I have found a solution for . See my posting about issue [fileInput() dosen't upload multiple files](https://github.com/hadley/mastering-shiny/issues/468#issuecomment-3049717660) in "Mastering Shiny".
+
+In @lst-09-multiple-files-uploads I have demonstrated my solution.
+
+```
+
+
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-09-multiple-files-upload}
+: Upload multiple files on the server (working example)
+::::::
+:::
+::::{.my-r-code-container}
+
+::: {#lst-09-multiple-files-uploads}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_09/multiple-file-uploads/app.R >}}
+```
+
+Upload multiple files on the server (working example)
+
+:::
 
 ::::
 :::::
+
 
 
 ### Uploading data

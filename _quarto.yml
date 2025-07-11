@@ -32,6 +32,8 @@ book:
         - 09-uploads-downloads.qmd
         - 10-dynamic-ui.qmd
         - 11-bookmarks.qmd
+        - 12-tidy-evaluation.qmd
+        - 13-why-reactivity.qmd
   appendices:
     - 50-packages-used.qmd
     - 60-whr-exercises.qmd

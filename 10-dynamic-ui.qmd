@@ -279,6 +279,43 @@ To get a version that works with Shiny and shinylive-r at the same time, I had t
 
 It was easy to find a solution for Shiny: Just load the data before the ui/server part into an R object and then reference it from the `server()` function. I couldn’t manage the same result for `shinylive-r`. Local references, relative URL and non-HTTPS URL generate error. The only possible way seems to doanload the data via HTTPS. I tried but didn’t succeed. I asked for help via the [Posit Community](https://forum.posit.co/t/shinylive-in-quarto-document-with-reactive-data-source/204237) and are currently waiting for answers.
 
+My solution with shinylive-r choosing the file by the user is in @lst-10-updating-nested-user-input1 and @lst-10-updating-nested-user-input2
+
+:::
+
+```{block2, label='uploading-file-programmatically', type='rmdsuccess'}
+
+In the meanwhile I [received an answer](https://forum.posit.co/t/shinylive-in-quarto-document-with-reactive-data-source/204237/3?u=petzi53). I commit a silly error providing the wrong URL for downloading the raw data. Instead of the GitHub reference `https://raw.githubusercontent.com/petzi53/…`I used `https://github.com/petzi53/…`. This worked in the Shiny app mode, because there the app is using {**curl**}, a package that is not available in `shinylive-r` where the fallback is using the URL.
+```
+
+What follows are the original code chunks from "Mastering Shiny" to demonstrate that uploading the file via an URL is working with `shinylive-r`.
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-10-updating-nested}
+: Hierarchical select boxes with external file uploaded programmatically
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-10-updating-nested}
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_10/04-updating-nested-external-file/app.R >}}
+```
+
+
+Hierarchical select boxes with external file uploaded programmatically
+:::
+
+::::
+:::::
+
 :::
 
 A workaround was to provide a file upload control. But even to create a workable demo took me hours. It was a bitter experience to learn that I still didn't understand quite well how reactives work. As the debugger `browser()` did not work, it was finally for me quite helpful to install `print()` outputs in **every** reactive function to see what happens. In the end I solved this problem with three important changes:
@@ -290,10 +327,12 @@ A workaround was to provide a file upload control. But even to create a workable
     - Updating with the data the choice of the territory `selectInput()` function. (Previously I had to set the UI choices for territory to NULL to prevent an error because the data was not available at start up.)
 3. The reference to the previous `sales` object had to be changed to the reactive function `sales()`. Additional had I to add `req(input$upload)` to prevent that the reactive territory function is called immediately after start up without available data.
 
+What follows are the original code chunks from "Mastering Shiny" with one change: Instead to get the sales data locally I uploaded it via an URL. 
+
 ```{block2, label='success-upload-external-file', type='rmdsuccess'}
 In the meanwhile I [received an answer](https://forum.posit.co/t/shinylive-in-quarto-document-with-reactive-data-source/204237/3?u=petzi53). I commit a silly error providing the wrong URL for downloading the raw data.
 
-What follows are the original code chunks from "Mastering Shiny" with a tiny change: Instead to get the salaes data locally I uploaded it via an URL. 
+What follows are the original code chunks from "Mastering Shiny" with a tiny change: Instead to get the sales data locally I uploaded it via an URL. 
 
 ```
 

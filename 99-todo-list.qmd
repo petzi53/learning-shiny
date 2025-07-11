@@ -60,23 +60,20 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [ ] add glossary list and sessions_info
 - [ ] revise/write all **chapter objectives** (overviews)
 - [ ] add for all code chunk a reference for listings/outputs.
-- [ ] add for all types of numbered callouts a table of content. Using TextSniper to copy the results of RStudio "Find In Files" into a Quarto document and editing manually. I researched at the Internet and got several other ideas. 
-  - [ ] The very promising {**findInFiles**} packages does not work (See: [findInFiles returns always "no results"](https://github.com/stla/findInFiles/issues/5))
-  - [ ] Several [proposal for R functions](https://stackoverflow.com/questions/45502010/is-there-an-r-version-of-rstudios-find-in-files) 
-  - [ ] {**sifr**} works for me! **This is the best option!** But I need to change for my search the default file extension for different R and other programming code file extension to `".*\\.qmd$"`. The command is `options(sifr.path_pattern = ".*\\.qmd$")` It works for me only with the first parameter `pattern` whenever I use from the root level of my R project, but it may be helpful to add `recursive = FALSE`. (`fixed = TRUE`, e.g. matching the string as-is did not work) The function generates Markers in RStudio to get to the code of line directly, but it also stores the result in an R object type `sif_result` --- a kind of data.frame. I could do some extra work such as generate the markdown code lines from the `sif_result` objects by converting with `tibble::as_tibble(x)` to a tibble and the extracting the part in the curly brakes (e.g., `#lst-greeting-example`) and as final step to replace `#` with `@`. (If you clean up the lst-lines then you have fixed position to delete: 1-5 and the last. pos 6 --- or after deleting the first --- has to be changed into `@`.)
- `lst-01-add-reactive-expression-code}
-- [ ] add references to Hadley live demos (where and how?) --- look for `https://hadley.shinyapps.io` to get a listing of all appearances in the original book. Collect these reference per chapter. Where? Maybe in the starting objective callout box?
-- [ ] comment all apps and describe their function, so that you can use it independently of the book. Make an explicit reference to the book, so that you can find the book passages explaining the app. Provide URLs if available.
+- [ ] add for all types of numbered callouts a table of content. Where and how? (First reflection in @sec-annex-provide-additional-indices)
+- [ ] add references to Hadley live demos (where and how?) --- look for `https://hadley.shinyapps.io` to get a listing of all appearances in the original book. Collect these reference per chapter (see my first reflection how to do this listing in @sec-annex-provide-additional-indices). Where? Maybe in the starting objective callout box?
+- [ ] comment all apps and describe their function, so that you can use it independently of the book. Make an explicit reference to the book, so that you can find the book passages explaining the app. Provide URLs if available. It would be helpful to develop a snippet for this task. Snippet code: `###`.
 - [ ] revise all apps-XX folders: rename folder and add comments (name, purpose etc.) An example can be found in "apps09/download-report-github/app.R"
 - [ ] reference packages to their package profiles
 - [x] ~~delete in the code chunks all lines with `library(shiny)` and add it for each chapter only once in the setup chunk.~~ [setup chunk does not work with shinylive-r standalone = TRUE]{.mark}.  
 - [ ] delete all `shiny::<function()>` references, but keep or add all the other package references. Add/keep `shiny::` if it could be confused with another package just mentioned.
-- [ ] change all code examples in the first three chapters with to see Shiny in a horizontal section and not in an additional tab.
+- [ ] change all code examples in the first three chapters to see Shiny in a horizontal section and not in an additional tab.
 - [ ] change the reference to external R file(s) (applying what I have learned from my [Posit post](https://forum.posit.co/t/shinylive-r-cannot-include-r-file/202123/6). Create and use all `apps_XX` folders with shiny apps and include them in the `shinylive-r` chunks. This has the big advantage that I can develop real Shiny app and use them in shinylive with only one source code.
 - [ ] Extract all shinylive workarounds to my new file `R/shinylive.R` and embed this function into the `shinylive-r` snippets.
 - [ ] wait for an answer to [my question on Posit](https://forum.posit.co/t/shinylive-r-with-renderimage/202516) about displaying images with shinylive.
 - [ ] use [Grammarly App](https://www.grammarly.com/desktop/mac) and [Grammarly browser extension](https://www.grammarly.com/browser) to get better English
 - [ ] Starting with chapter 08 change all `shinylive` chunks to comment file references with include shortcodes.
+- [ ] clean text from the first person order to facilitate the differences between book text and my comment. "I" should only used for my personal comments, not for text of "Mastering Shiny".
 
 ### Index file
 
@@ -84,13 +81,14 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [ ] describe method to develop Shiny apps and their usage in the Quarto code chunks. This includes also the usage of the apps-XX directories.
 - [ ] explain external functions used in "R/helper"
 - [ ] explain text bookmarks like `@XXX_<section_number>`
+- [ ] explain that I have used the native pipe (and the consequences)
 - [ ] explain using of snippets and provide source for callout blocks.
 - [ ] warn that first div block (`:::`) needs empty line before and last div block after it.
 - [x] explain why I used copy & paste from the original source without quoting
 - [x] explain how to distinguish between my comments and the original "Mastering Shiny" source.
 - [x] provide an example of (slightly changed) text passages from the original and my own personal comments.
 - [ ] explain that I have used throughout the text American English, e.g., I changed `colour` to `color` and `generalisation` to `generalization`.
-- [ ] clean copied text from the first person order to facilitate the differences between book text and my comment. "I" should only used for my personal comments, not for text of "Mastering Shiny". 
+ 
 
 
 ### Chapter 03
@@ -116,9 +114,11 @@ Add the following packages:
 - [ ] base64enc
 - [ ] datasets
 - [ ] gapminder
+- [ ] ggforce
 - [ ] lorem
 - [ ] openintro
 - [ ] rwasm
+- [ ] shinyWidget
 - [ ] sysfonts
 - [ ] webR
 
@@ -138,15 +138,15 @@ Add the following packages:
 
 ### Errors to investigate
 
-- [ ] Downloading reports: {#sec-09downloading-reports-standard}
-- [ ] Downloading reports: {#sec-09downloading-reports-callr}
+- [ ] Downloading reports: {@sec-09downloading-reports-standard}
+- [ ] Downloading reports: {@sec-09downloading-reports-callr}
 - [x] Reference to other files (e.g., R Code) with `## File: app.R` etc.
-- [x] Render image {#sec-07-images} with quarto extension
+- [x] Render image {@sec-07-images} with quarto extension
 
 
 ### Missing exercises
 
-- [ ] @sec-04_exercises
+- [ ] @sec-04-exercises
 - [x] @sec-chap06-5_4_exercises
 - [ ] Exercise @sec-10-choose-geom-advanced 10.2.3: the third (the last one)
 - [ ] @sec-10-exercises3 10.3.5 all five
@@ -163,10 +163,12 @@ Marked challenges are important as they are part of the original book and curren
 
 - [ ] experiment with actionButtons in @sec-02-action-buttons
 - [ ] start and reset button "Progressive updates" (@cnj-08-progressive-updates)
-- [ ] [load multiple files]{.mark}: @cnj-09-file-upload-server
+- [x] [load multiple files]{.mark}: @lst-09-multiple-uploaded-files (wrong) @lst-09-multiple-files-uploads (corrected)
 - [ ] [pre-filter the list of datasets]{.mark} to get only data frames in @cnj-09-downloading-data
-- [ ] [load external file programmatically]{.mark} (without using `fileInput()`): @wrn-10-upating-nested
+- [x] [load external file programmatically]{.mark} (without using `fileInput()`): @wrn-10-upating-nested. This was a silly error of mine. See my posting at the [Posit forum](https://forum.posit.co/t/shinylive-in-quarto-document-with-reactive-data-source/204237/3?u=petzi53).
 - [ ] force dot `.` as decimal separator independent of the browser used. {**shinyWidget**} with `formatNumericInput()` and `autonumericInput()` is not working for my case, because it does not provide up/down buttons. There are several approaches
+- [ ] In @sec-12-example-ggplot2 let user select the dataset 
+- [ ] In @sec-12-example-ggplot2 provide methods and formula for the `smooth` geom.
 
 
 
@@ -244,5 +246,14 @@ While Quarto's caching is primarily for managing the execution of code chunks wi
 - [ ] [{**hypothesisr**}](https://github.com/mdlincoln/hypothesisr): Wrapper for the Hypothes.is API. Last update 6 years ago. Public archived, Aug 30, 2019, no out of date. Recommends {**rapiclient**}.
 - [ ] [{**rapiclient**}](https://github.com/bergant/rapiclient): Dynamic Open API (Swagger) Client for R.
 
+## Providing addtional indices {#sec-annex-provide-additional-indices}
 
+It would be nice to have different indices to look and find various types of content. For instance it would be helpful to get a listing of all warnings or all code chunks listings. I have thought about several posibilities:
+
+1. Using TextSniper to copy the results of RStudio "Find In Files" into a Quarto document and editing manually. This is a solution I could apply immediately, but it needs a lot of manual work. I need to copy and paste the listing code. 
+2. The very promising {**findInFiles**} package does not work (See: [findInFiles returns always "no results"](https://github.com/stla/findInFiles/issues/5))
+3. There are several [proposal for R functions](https://stackoverflow.com/questions/45502010/is-there-an-r-version-of-rstudios-find-in-files) using `r glossary("regex")` 
+4. {**sifr**} works for me! **This is the best option!** But I need to change for my search the default file extension for different R and other programming code file extension to `".*\\.qmd$"`. The command is `options(sifr.path_pattern = ".*\\.qmd$")` It works for me only with the first parameter `pattern` whenever I use from the root level of my R project, but it may be helpful to add `recursive = FALSE`. (`fixed = TRUE`, e.g. matching the string as-is did not work) The function generates Markers in RStudio to get to the code of line directly, but it also stores the result in an R object type `sif_result` --- a kind of data.frame. 
+
+I could do some extra coding and provide a wrapper to generate the markdown code lines from the `sif_result` objects by converting it with `tibble::as_tibble(x)` to a tibble and the extracting the part in the curly brakes (e.g., `#lst-03-greeting-example`) and as final step to replace `#` with `@`. (If you clean up the lst-lines then you have fixed position to delete: 1-5 and the last. pos 6 --- or after deleting the first --- has to be changed into `@`.)
 

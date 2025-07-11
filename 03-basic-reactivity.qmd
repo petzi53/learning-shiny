@@ -554,7 +554,7 @@ width="50%"}
 ::::
 :::::
 
-Compare the graphs with the server code snippets in @lst-draw-graphs-challenge.
+Compare the graphs with the server code snippets in @lst-03-draw-graphs-challenge.
 
 
 
