@@ -62,15 +62,6 @@ Comparison of two simulated distribution with frequency polygons
 
 :::
 
-Below is a diagram of a reactive graph. The shapes on the left are reactive inputs (or values), the ones in the middle are reactive expressions, and on the right are observers (or outputs). The lines between the shapes are directional, with the arrows indicating the direction of their inter-dependencies. When a shiny app is loaded, this graph is discovered and formed.
-
-![Reactive graph for the app in @lst-14-two-freqpoly](img/14-two-freqpoly.png){#fig-14-two-freqpoly
-fig-alt="alt-text" fig-align="center" 
-width="70%"}
-
-
-
-
 ::: {#nte-14-my-own-reactlog-tour .callout-note}
 ###### My own reactlog tour
 
@@ -91,7 +82,31 @@ Using a different app than in the book results in a different `reactlog` tour: I
     {**reactlog**} references the package and `reactlog` or just
     reactlog without any emphasis is the result, which shows how the
     reactive graph evolves over time.
-    
+
+To explain the process of reactive execution, we’ll use the graphic
+shown in @fig-14-two-freqpoly. It contains three reactive inputs,
+two reactive expressions, and one output. Anywhere you see
+"output", you can also think "observer." The primary difference is that
+certain outputs that aren't visible will never be computed. We'll
+discuss the details in @XXX_15_3.
+
+Recall that reactive inputs and expressions are collectively called
+`r glossary("reactive producers")`; reactive expressions and outputs are
+`r glossary("reactive consumers")`.
+
+The shapes on the left are reactive inputs (or values), the ones in the middle are reactive expressions, and on the right are observers (or outputs). The lines between the shapes are directional, with the arrows indicating the direction of their inter-dependencies. When a shiny app is loaded, this graph is discovered and formed.
+
+![Reactive graph for the app in @lst-14-two-freqpoly](img/14-two-freqpoly.png){#fig-14-two-freqpoly
+fig-alt="alt-text" fig-align="center" 
+width="70%"}
+
+
+The shapes on the left in @fig-14-two-freqpoly are reactive inputs (or values), the ones in the middle are reactive expressions, and on the right is a observer (or output). The lines between the shapes are directional, with the arrows indicating the direction of their inter-dependencies. When a shiny app is loaded, this graph is discovered and formed.
+
+When a user interacts with the app and changes reactive input values, the graph is partially deconstructed and then reformed. The sub-sections that follow explain how this reactive life cycle works in detail. The `reactlog` visualization is designed to help you inspect each particular step in this reactive life cycle.
+
+
+
 
 
 ::: {.callout-caution #cau-14-different-chapter-structure}
@@ -103,65 +118,9 @@ Although I am trying to cover all the content as in the original book chapter ab
 - Additionally I will provide screenshots of these steps via the {**reactlog**} package. I have therefore to explain the usage much earlier than in the book. To understand how each step is represented in the `reactlog`, I have  to cover much more details about the functionality of the {**reactlog**} package.
 :::
 
+### A session begins
 
-To explain the process of reactive execution, we’ll use the graphic
-shown in @fig-14-reactive-graph. It contains three reactive inputs,
-three reactive expressions, and three outputs. Anywhere you see
-"output", you can also think "observer." The primary difference is that
-certain outputs that aren't visible will never be computed. We'll
-discuss the details in @XXX_15_3.
-
-Recall that reactive inputs and expressions are collectively called
-`r glossary("reactive producers")`; reactive expressions and outputs are
-`r glossary("reactive consumers")`.
-
-![Complete reactive graph of an imaginary app containing three inputs,
-three reactive expressions, and three
-outputs](https://mastering-shiny.org/diagrams/reactivity-tracking/08.png){#fig-14-reactive-graph
-fig-alt="Input A is connected with reactive expression a, Inputs B and C are connected with reactive expression c. Reactive expression a and Input b are connected with reactive expression b and related to  the outputs 1 and 2. Reactive expression c outputs to output 3."
-fig-align="center" width="70%"}
-
-The connections between the components are directional, with the arrows
-indicating the direction of reactivity. Shortly, however, you’ll see
-that the flow of reactivity is more accurately modelled in the opposite
-direction.
-
-The underlying app is not important, but if it helps you to have
-something concrete, you could pretend that it was derived from this
-not-very-useful app.
-
-:::::::: column-page-inset
-::::::: my-r-code
-:::: my-r-code-header
-::: {#cnj-14-reactivity-demo-app}
-: Demo app for the reactivity process example
-:::
-::::
-
-:::: my-r-code-container
-::: {#lst-14-reactivity-demo-app}
-```{shinylive-r}
-#| standalone: true
-#| viewerHeight: 700
-#| components: [editor, viewer]
-
-## file: app.R
-{{< include apps_14/01-reactivity-demo-app/app.R >}}
-```
-
-Demo app for the reactivity process example
-:::
-::::
-:::::::
-::::::::
-
-::: {#nte-14-skip-reactivity-process .callout-note}
-###### Skipping the details of the step-by-step tour of reactivity execution
-
-I will skip the details of the step-by-step tour of reactivity
-execution. It seems to me at the moment not important to reproduce every
-step here for my notes.
-:::
+When you load a shiny app, all reactive expression and observers begin in an **invalidated** state (indicated in gray). Invalidated state essentially means that any code that the node depends upon needs to be re-executed.
 
 ### Exercises
 
