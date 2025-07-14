@@ -33,7 +33,12 @@ book:
         - 10-dynamic-ui.qmd
         - 11-bookmarks.qmd
         - 12-tidy-evaluation.qmd
+    - part: "Mastering reactivity"
+      chapters:
+        - intro2.qmd
         - 13-why-reactivity.qmd
+        - 14-reactive-graph.qmd
+        - 15-reactive-building-blocks.qmd
   appendices:
     - 50-packages-used.qmd
     - 60-whr-exercises.qmd
@@ -140,7 +145,7 @@ language:
    crossref-exm-title: "Code Collection"    # replaces "Example"
  # crossref-exm-title: "Example"           # remains "Example" (now as  "Code Collection" from
    crossref-exr-title: "Exercise"           # remains  "Exercise"
-   crossref-fig-title: "Screenshot"         # replaces "Figure"
+   crossref-fig-title: "Picture"            # replaces "Figure"
    crossref-lem-title: "Resource"           # replaces "Lemma"
    crossref-lst-title: "Listing / Output"   # replaces "Listing"
    crossref-prp-title: "Procedure"          # replaces "Proposition"

@@ -22,7 +22,7 @@ options(show.signif.stars = FALSE)
 ::::: {#obj-chap03}
 :::: {.my-objectives}
 ::: {.my-objectives-header}
-Chapter section list
+Objectives and chapter section list
 :::
 
 
@@ -1200,7 +1200,7 @@ Compare the code in @lst-03-compare-simulated-data-code2 for this shiny app.
 
 This transformation yields the substantially simpler graph shown in @fig-03-09. This simpler graph makes it easier to understand the app because you can understand connected components in isolation; the values of the distribution parameters only affect the output via `x1` and `x2.` This rewrite also makes the app much more efficient since it does much less computation. Now, when you change the `binwidth` or `range`, only the plot changes, not the underlying data.
 
-![title](https://mastering-shiny.org/diagrams/basic-reactivity/case-study-2.png){#fig-03-09 
+![Using reactive expressions considerably simplifies the graph, making it much easier to understand](https://mastering-shiny.org/diagrams/basic-reactivity/case-study-2.png){#fig-03-09 
 fig-alt="The inputs n1, mean1, sd1 connect to x1 and the inputs n2, mean2, sd2 connect to x2. x1 and x2 connect to ttest and hist. binwidth and range connect to hist." fig-align="center" 
 width="40%"}
 
@@ -1210,7 +1210,7 @@ To emphasize this modularity @fig-03-10 draws boxes around the independent compo
 fig-alt="The inputs n1, mean1, sd1 connect to x1; the inputs n2, mean2, sd2 connect to x2. x1 and x2 connect to ttest and hist; binwidth and range connect to hist. Additionally there are two boxes drawn. One around n1, mean, sd1 and x1, the other one around n2, mean2, sd2 and x2." fig-align="center" 
 width="40%"}
 
-You might be familiar with the “rule of three” of programming: whenever you copy and paste something three times, you should figure out how to reduce the duplication (typically by writing a function). **In Shiny, however, I think you should consider the rule of one**: whenever you copy and paste something once, you should consider extracting the repeated code out into a reactive expression. The rule is stricter for Shiny because reactive expressions don’t just make it easier for humans to understand the code, they also improve Shiny’s ability to efficiently rerun code.
+You might be familiar with the “rule of three” of programming: whenever you copy and paste something three times, you should figure out how to reduce the duplication (typically by writing a function). [In Shiny, however, you should consider the rule of one]{.mark}: whenever you copy and paste something once, you should consider extracting the repeated code out into a reactive expression. The rule is stricter for Shiny because reactive expressions don’t just make it easier for humans to understand the code, they also improve Shiny’s ability to efficiently rerun code.
 
 
 ### Why do we need reactive expressions?

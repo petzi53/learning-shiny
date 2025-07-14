@@ -60,6 +60,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [ ] add glossary list and sessions_info
 - [ ] revise/write all **chapter objectives** (overviews)
 - [ ] add for all code chunk a reference for listings/outputs.
+- [ ] add as summary my own résumé. (The summaries in the MS-book is very general and useless. They just mention the main sections of the chapter and function most of all as a bridge passage to the next chapter.
 - [ ] add for all types of numbered callouts a table of content. Where and how? (First reflection in @sec-annex-provide-additional-indices)
 - [ ] add references to Hadley live demos (where and how?) --- look for `https://hadley.shinyapps.io` to get a listing of all appearances in the original book. Collect these reference per chapter (see my first reflection how to do this listing in @sec-annex-provide-additional-indices). Where? Maybe in the starting objective callout box?
 - [ ] comment all apps and describe their function, so that you can use it independently of the book. Make an explicit reference to the book, so that you can find the book passages explaining the app. Provide URLs if available. It would be helpful to develop a snippet for this task. Snippet code: `###`.
@@ -117,6 +118,8 @@ Add the following packages:
 - [ ] ggforce
 - [ ] lorem
 - [ ] openintro
+- [ ] R6
+- [ ] reactlog
 - [ ] rwasm
 - [ ] shinyWidget
 - [ ] sysfonts

@@ -3,7 +3,7 @@
 ::: {.callout-note style="color: blue;"}
 #### This is work in progress
 
-I have finished about 617% of the book content. Currently I am working on @sec-chap13.
+I have finished about 67% of the book content. Currently I am working on @sec-chap15.
 
 From the text already covered are following exercises still missing:
  
@@ -11,6 +11,7 @@ From the text already covered are following exercises still missing:
 - Exercise @sec-10-choose-geom-advanced 10.2.3: the third (the last one)
 - @sec-10-exercises3 10.3.5 all five
 - @sec-11-exercises 11.3: all two
+- @sec-14-exercises 14.4.5 the second and third
 :::
 
 ::::: my-watch

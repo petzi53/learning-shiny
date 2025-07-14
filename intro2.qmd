@@ -1,0 +1,24 @@
+# Introduction {.unnumbered}
+
+Next we’ll turn our attention to the theory of reactivity that underlies the magic of Shiny:
+
+::::: {#obj-intro2}
+:::: {.my-objectives}
+::: {.my-objectives-header}
+Overview of "Mastering reactivity" chapters 
+:::
+
+::: {.my-objectives-container}
+
+- In **chapter @sec-chap13** will you learn why the reactivity programming model is needed, and a little bit about the history of reactive programming outside of R.
+- In **chapter @sec-chap14**  will you learn the full details of the reactive graph, which determines exactly when reactive components are updated.
+- In **chapter @sec-chap15** will you learn about the underlying building blocks, particularly observers and timed invalidation.
+- In **chapter @sec-chap16** will you learn how to escape the constraints of the reactive graph using `reactiveVal()` and `observe()`.
+
+:::
+::::
+:::::
+
+You certainly don’t need to understand all these details for routine development of Shiny apps. But improving your understanding will help you write correct apps from the get-go, and when something behaves unexpectedly you can more quickly narrow in on the underlying issue.
+
+
