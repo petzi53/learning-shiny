@@ -162,7 +162,7 @@ fig-alt="alt-text" fig-align="center"
 width="100%"}
 
 
-What do different symbols mean?
+#### What do the different symbols mean? {#sec-14-meaning-reactive-symbols}
 
 - The objects of the left side represent reactive inputs or reactive values. For example this here
 ![](img/reactlog-objects/object-input-ready-min.png)\ is a ready input.
@@ -170,9 +170,9 @@ What do different symbols mean?
 - The objects on the right hand side are (with the exception of the `Theme counter`) outputs or observers. Anywhere you see
 "output", you can also think "observer." The primary difference is that
 certain outputs that aren't visible will never be computed. We'll
-discuss the details in @XXX_15_3. For example this here ![](img/reactlog-objects/object-output-invalidating-min.png)\  is an output or observer just in the process of invalidating.
+discuss the details in @sec-15-observers-and-outputs. For example this here ![](img/reactlog-objects/object-output-invalidating-min.png)\  is an output or observer just in the process of invalidating.
 
-The lines between the shapes are directional, with the arrows indicating the direction of their inter-dependencies. When a shiny app is loaded, the graph in @fig-14-hello-reactlog-ggplot2 has to be discovered and formed. Because of the additional three plot reactives (height, widht and ratio) Shiny need 21 steps to find and rebuild all the elements of the app. 
+The lines between the shapes are directional, with the arrows indicating the direction of their inter-dependencies. When a shiny app is loaded, the graph in @fig-14-hello-reactlog-ggplot2 has to be discovered and formed. Because of the additional three plot reactives (height, width and ratio) Shiny need 21 steps to find and rebuild all the elements of the app. 
 
 Recall that reactive inputs and expressions are collectively called
 `r glossary("reactive producers")`; reactive expressions and outputs are
@@ -186,7 +186,9 @@ width="15%"}
 
 What you see in @fig-14-hello-reactlog-ggplot2 is step 21 reached after the startup of the `diamonds` exploring app. The `reactlog` is always starting  with the first idle state after the startup. If you interact with the app extensively and type the keyboard F3 shortcut, then Shiny opens the default browser window displaying the first idle state of the startup, independently how many interactions and idle states you have had.
 
-Note that while reactive inputs and outputs have names, reactive expressions and observers do not, so they’re labelled with their contents. In this case it is not important because the reactive has a short name and there are not many objects sharing the screen space. But reactives can be a long strings abridged by `reactlog` and/or interfering with other `reactlog` objects. To make things easier to read (and understand) you may want use the `label` argument to `reactive()` and `observe()`, which will then appear in the `reactlog`. You can use `r glossary("emoji")`s to make particularly important reactives stand out visually.
+#### Labelling reactive expressions and observers
+
+Note that while reactive inputs and outputs have names, reactive expressions and observers do not, so they’re labelled with their contents. In this case it is not important because the reactive has a short name and there are not many objects sharing the screen space. But reactives can be long strings abridged by `reactlog` and/or interfering with other `reactlog` objects. To make things easier to read (and understand) you may want use the `label` argument to `reactive()` and `observe()`, which will then appear in the `reactlog`. You can use `r glossary("emoji")`s to make particularly important reactives stand out visually.
 
 The label argument works only with `reactive()` or `observe()`. I have therefore our hello-reactlog app so constructed that it has one reactive expression. This wouldn't be necessary for this simple app, because all computation could be done in `renderPlot()` output.
 

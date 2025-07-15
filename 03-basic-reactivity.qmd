@@ -1380,7 +1380,7 @@ To play around with this app use the live version at <https://hadley.shinyapps.i
 fig-alt="lambda1 and n connect to x1, lambda2 and n connect to x2. x1 and x2 connect to the hist output." fig-align="center" 
 width="40%"}
 
-### Timed invalidation
+### Timed invalidation {#sec-03-timed-invalidation}
 
 Imagine you wanted to reinforce the fact that this is for simulated data by constantly resimulating the data, so that you see an animation rather than a static plot. We can increase the frequency of updates with a new function: `shiny::reactiveTimer()`.
 

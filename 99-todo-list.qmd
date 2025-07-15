@@ -78,8 +78,9 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 ### Index file
 
+- [ ] explain the presentation of the Shiny apps with ´shinylive-r` and how to work with it. (Changing code, restart etc.)
+- [ ] describe method to develop Shiny apps and their usage in the Quarto code chunks. This includes also the usage of the apps-XX directories and their inclusion in the `shinylive-r` code chunks
 - [ ] describe method for `<package>::<function()>` references
-- [ ] describe method to develop Shiny apps and their usage in the Quarto code chunks. This includes also the usage of the apps-XX directories.
 - [ ] explain external functions used in "R/helper"
 - [ ] explain text bookmarks like `@XXX_<section_number>`
 - [ ] explain that I have used the native pipe (and the consequences)
@@ -87,7 +88,10 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 - [ ] warn that first div block (`:::`) needs empty line before and last div block after it.
 - [x] explain why I used copy & paste from the original source without quoting
 - [x] explain how to distinguish between my comments and the original "Mastering Shiny" source.
-- [x] provide an example of (slightly changed) text passages from the original and my own personal comments.
+- [x] provide an example of (slightly changed) text passages from the original and my own personal
+- [ ] remove all Hadleys `I`s. The reference to the first person must always refer to my personal note.
+- [ ] explain how I have changed Hadley’s first person: rephrasing (more complex) or replacing with `we` (much easier)
+- [ ] explain why I have (started with chapter ??) not to use R Code Collection (because you can't reference header, figures, code listings in all the tabs --- except the first one.)
 - [ ] explain that I have used throughout the text American English, e.g., I changed `colour` to `color` and `generalisation` to `generalization`.
  
 
@@ -114,9 +118,12 @@ Add the following packages:
 - [ ] brickr
 - [ ] base64enc
 - [ ] datasets
+- [ ] future
 - [ ] gapminder
 - [ ] ggforce
+- [ ] ipc
 - [ ] lorem
+- [ ] mirai
 - [ ] openintro
 - [ ] R6
 - [ ] reactlog
@@ -143,6 +150,7 @@ Add the following packages:
 
 - [ ] Downloading reports: {@sec-09downloading-reports-standard}
 - [ ] Downloading reports: {@sec-09downloading-reports-callr}
+- [ ] How about the {**munsell**} package problem with {**ggplot2**}? Is this problem solved?
 - [x] Reference to other files (e.g., R Code) with `## File: app.R` etc.
 - [x] Render image {@sec-07-images} with quarto extension
 
@@ -172,8 +180,12 @@ Marked challenges are important as they are part of the original book and curren
 - [ ] force dot `.` as decimal separator independent of the browser used. {**shinyWidget**} with `formatNumericInput()` and `autonumericInput()` is not working for my case, because it does not provide up/down buttons. There are several approaches
 - [ ] In @sec-12-example-ggplot2 let user select the dataset 
 - [ ] In @sec-12-example-ggplot2 provide methods and formula for the `smooth` geom.
+- [ ] Offer Start and Stop action button for @lst-15-observer-incrementing-number
+- [ ] Try the same with the previous code chunk where a reactive will automatically generate 10 fresh random normals every half a second (not included in the text yet)
 
+## README
 
+- [ ] Revise the README file (and adapt it if necessary)
 
 ## Book appearance {#sec-annex-todo-book-appearance}
 
@@ -190,7 +202,7 @@ Marked challenges are important as they are part of the original book and curren
 - [x] small check mark boxes at the beginning of the line (See [Markdown Basics: Lists](https://quarto.org/docs/authoring/markdown-basics.html#lists))
 - [x] how to put ticks in these check mark boxes interactively (disappears after page reloading)
 - [ ] better font for plot axes     
-- [ ] use [diagrams](https://quarto.org/docs/authoring/diagrams.html) for developing reactive graphs 
+- [ ] ~~use [diagrams](https://quarto.org/docs/authoring/diagrams.html) for drawing reactive graphs~~ The two Quarto options with [Mermaid](https://mermaid.js.org/#/) or [Graphviz](https://graphviz.org/) do not provide by default the necessary symbols. Therefore I have created a template with the necessary three reactive symbols with LibreOffice. See the results in @sec-14-meaning-reactive-symbols.
 - [ ] how and when to use screenshots / graphics with 3D-margin but still working with [lightbox](https://quarto.org/docs/output-formats/html-lightbox-figures.html)
 - [ ] **Check Zotero quotation** of this book but also of my other books. There is something wrong with the citations. sometimes it refers to other article (see [t-test chapter](https://bookdown.org/pbaumgartner/swr-harris/) or it is not a correct citation (as in this book). There should be a systematic approach for Quarto books, maybe different from bookdown books.
 
@@ -203,8 +215,9 @@ Marked challenges are important as they are part of the original book and curren
 
 ## R {#sec-annex-todo-r}
 
+- [ ] Unfortunately there is no search bar in the RStudio code snippet files. My old RStudio addins from the fake package {**AASnippets**} does not provide anymore the correct (new) file paths I need to write the package new from scratch, because I didn't create a GitHub repo and overwrote the source code with the compiled package. The old location was in `~/.r/snippets` but is now at  `~/.config/rstudio/snippets/` (e.g., `~/.config/rstudio/snippets/r.snippets` or ``~/.config/rstudio/snippets/markdown-snippets` etc.). See [Code Snippets in the RStudio IDE](https://support.posit.co/hc/en-us/articles/204463668-Code-Snippets-in-the-RStudio-IDE) and the [guide to write RStudio addins](https://docs.posit.co/ide/user/ide/guide/productivity/add-ins.html).
 - [x] Report {**glossary**} issue when [content of a term is part of another term](https://github.com/debruine/glossary/issues/11)
-    - [ ] Look into the glossary repo from time to time until the issue will be (hopefully) solved.
+- [ ] Look into the glossary repo from time to time until the issue will be (hopefully) solved.
 - [ ] Explore the glossary package to see if and how one could write long entries with several paragraphs. 
 - [ ] Look into [Posit Connect Cloud](https://connect.posit.cloud/)
 
@@ -220,9 +233,15 @@ While Quarto's caching is primarily for managing the execution of code chunks wi
 
 :::
 
+## Quarto lesson learned
+
+- [ ] **inline graphic**: Add `\` at the end of the image path, see example in @sec-14-meaning-reactive-symbols.
+- [ ] **code chunk not executed**: Three options:
+  - `#| eval: false` in the chunk header
+  - framing the three ticks with four left ticks {markdown} 
+  - double curly braces around the language engine e.g., `{{r}}` (See @lst-15-re-reading-csv-file1 and Quarto docs on [Executable Blocks](https://quarto.org/docs/output-formats/html-code.html#executable-blocks))
 
 
-- [ ] how about the {**munsell**} package problem with {**ggplot2**}
 
 ## Miscellanoeus
 
@@ -230,9 +249,11 @@ While Quarto's caching is primarily for managing the execution of code chunks wi
 
 - [ ] Learn the more modern UI of {**bslib**} to create the user interface (UI) for Shiny apps.
 - [ ] Look at the [list of awesome shiny extensions](https://github.com/nanxstats/awesome-shiny-extensions)
-- [ ] Investigate where the `.callout` selector for `report` snippet comes from? From Bootstrap?
+- [ ] Investigate where the `.callout` selector for `report` in the RStudio snippet file comes from: From Bootstrap?
 - [ ] By this occasion try to [apply features of the Bootstrap framework]{.mark} not only for boxes but also for adapting UI appearances of Shiny (and other Quarto websites)! 
 - [x] Download Google fonts as repo that can be updated easily. (See <https://www.junian.net/tech/macos-google-fonts/>)
+- [ ] Reorganize snippets order and snippets shortcuts in my RStudio snippet files
+
 
 
 ### Not related with this book

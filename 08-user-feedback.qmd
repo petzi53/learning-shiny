@@ -183,7 +183,7 @@ To stop inputs from triggering reactive changes, you need a new tool: `shiny::re
 :::
 
 
-### Cancelling execution
+### Cancelling execution with `req()` {#sec-08-cancelling-execution}
 
 You may have noticed that when you start an app, the complete reactive graph is computed even before the user does anything. This works well when you can choose meaningful default values for your inputs. But that’s not always possible, and sometimes you want to wait until the user actually does something. This tends to crop up with three controls:
 
@@ -563,7 +563,7 @@ shinyApp(ui, server)
 :::
 
 
-### Removing on completion
+### Removing on completion {#sec-08-removing-on-completion}
 
 It’s often useful to tie the presence of a notification to a long-running task. In this case, you want to show the notification when the task starts, and remove the notification when the task completes. To do this, you’ll need to:
 
