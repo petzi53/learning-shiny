@@ -99,7 +99,7 @@ Converting Celsius to Fahrenheit using a function
 
 Computation is cheap in this trivial example, so needlessly repeating it isn’t a big deal, but it’s still unnecessary: if the inputs haven’t changed, why do we need to recompute the output?
 
-### Event-driven programming
+### Event-driven programming {#sec-13-event-driven-programming}
 
 Since neither variables nor functions work, we need to create something new. In previous decades, we would’ve jumped directly to event-driven programming. `r glossary("Event-driven programming")` is an appealingly simple paradigm: you register callback functions that will be executed in response to events.
 

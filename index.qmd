@@ -3,7 +3,7 @@
 ::: {.callout-note style="color: blue;"}
 #### This is work in progress
 
-I have finished about 70% of the book content. Currently I am working on @sec-chap16.
+I have finished about 73% of the book content. Currently I am working on the exercises of @sec-16-exercises 16.3.4 and will start with @sec-chap17.
 
 From the text already covered are following exercises still missing:
  

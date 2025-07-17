@@ -427,7 +427,7 @@ Let’s stop here for just a moment and think about what would have happened wit
 
 Just as important: In a more complex app we would also know which nodes are **not** dependent on each other. If no path exists from a particular reactive input to a particular output (always traveling in the direction that the arrows are pointing), then a change to that input couldn’t possibly have an effect on that output. That gives us the ability to state with confidence that we don’t need to refresh that output when that input changes, which is great – the less work we need to do, the sooner we can get results back to the user.
 
-### An input changes
+### An input changes {#sec-14-input-changes}
 
 Step 8 left off with our Shiny session in a fully idle state. Now remember that we have selected in the application another variable for the bar chart. This causes the browser to send a message to their server, instructing Shiny to update the corresponding reactive input.
 
