@@ -179,7 +179,7 @@ Automated bookmarking relies on the reactive graph. It seeds the inputs with the
 - If your app uses random numbers, the results might be different even if all the inputs are the same. If it’s really important to always generate the same numbers, you’ll need to think about how to make your random process reproducible. The easiest way to do this is use `repeatable()`; see the documentation for more details.
 - If you have tabs and want to bookmark and restore the active tab, make sure to supply an id in your call to `tabsetPanel()`.
 - If there are inputs that should not be bookmarked, e.g. they contain private information that shouldn’t be shared, include a called to `setBookmarkExclude()` somewhere in your server function. For example, `setBookmarkExclude(c("secret1", "secret2"))` will ensure that the `secret1` and `secret2` inputs are not bookmarked.
-- If you are manually managing reactive state in your own `reactiveValues()` object (as we’ll discuss in Chapter @XXX_16), you’ll need to use the `onBookmark()` and `onRestore()` callbacks to manually save and load your additional state. See [Advanced Bookmarking](https://shiny.posit.co/r/articles/share/advanced-bookmarking/) for more details.
+- If you are manually managing reactive state in your own `reactiveValues()` object (as we’ll discuss in Chapter @sec-chap16), you’ll need to use the `onBookmark()` and `onRestore()` callbacks to manually save and load your additional state. See [Advanced Bookmarking](https://shiny.posit.co/r/articles/share/advanced-bookmarking/) for more details.
 
 ## Exercises {#sec-11-exercises}
 

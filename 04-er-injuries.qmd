@@ -521,7 +521,7 @@ Now that we have the basic components in place and working, we can progressively
 ::::
 :::::
 
-I wrote a little function to automate this for any variable. The details aren’t really important here, but we’ll come back to them in @XXX_12.
+Hadley wrote a little function to automate this for any variable. The details aren’t really important here, but we’ll come back to them in @sec-chap12.
 
 :::::{.my-r-code}
 :::{.my-r-code-header}

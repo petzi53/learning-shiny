@@ -468,7 +468,7 @@ HTML file, but it’s now broken into pieces and only one piece is visible
 at a time.
 
 Multi-page apps pair particularly well with modules, which you’ll learn
-about in @XXX_19. Shiny modules allow you to partition up the server
+about in @sec-chap19. Shiny modules allow you to partition up the server
 function in the same way you partition up the user interface, creating
 independent components that only interact through well defined
 connections.

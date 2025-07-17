@@ -39,6 +39,7 @@ book:
         - 13-why-reactivity.qmd
         - 14-reactive-graph.qmd
         - 15-reactive-building-blocks.qmd
+        - 16-escaping-the-graph.qmd
   appendices:
     - 50-packages-used.qmd
     - 60-whr-exercises.qmd

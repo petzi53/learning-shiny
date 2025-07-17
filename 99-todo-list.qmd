@@ -78,7 +78,7 @@ My aim is to clean up all tasks under Book content and Book appearance and to tr
 
 ### Index file
 
-- [ ] explain the presentation of the Shiny apps with ´shinylive-r` and how to work with it. (Changing code, restart etc.)
+- [ ] explain the presentation of the Shiny apps with `shinylive-r` and how to work with it. (Changing code, restart etc.)
 - [ ] describe method to develop Shiny apps and their usage in the Quarto code chunks. This includes also the usage of the apps-XX directories and their inclusion in the `shinylive-r` code chunks
 - [ ] describe method for `<package>::<function()>` references
 - [ ] explain external functions used in "R/helper"

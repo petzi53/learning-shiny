@@ -30,7 +30,7 @@ Chapter section list
 
 The initial impression of Shiny is often that it’s “magic”. Magic is great when you get started because you can make simple apps very very quickly. But magic in software usually leads to disillusionment: without a solid mental model, it’s extremely difficult to predict how the software will act when you venture beyond the borders of its demos and examples. And when things don’t go the way you expect, debugging is almost impossible. Once you’ve formed an accurate mental model of reactivity, you’ll see that there’s nothing up Shiny’s sleeves: the magic comes from simple concepts combined in consistent ways.
 
-## Why do we need reactive programming?
+## Why do we need reactive programming? {#sec-13-why-reactive-programming}
 
 `r glossary("Reactive programming")` is a style of programming that focuses on values that change over time, and calculations and actions that depend on those values. Reactivity is important for Shiny apps because they’re interactive: users change input controls (dragging sliders, typing in textboxes, checking checkboxes, …) which causes logic to run on the server (reading CSVs, subsetting data, fitting models, …) ultimately resulting in outputs updating (plots redrawing, tables updating, …). This is quite different from most R code, which typically deals with fairly static data.
 

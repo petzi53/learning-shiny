@@ -35,11 +35,11 @@ There are three key techniques for creating dynamic user interfaces:
 - Using `uiOutput()` and `renderUI()` to generate selected parts of the user interface with code.
 
 
-## Updating inputs
+## Updating inputs {#sec-10-updating-inputs}
 
 We’ll begin with a simple technique that allows you to modify an input after it has been created: the update family of functions. [Every input control]{.mark}, e.g. `textInput()`, [is paired with an **update function**]{.mark}, e.g. `updateTextInput()`, that allows you to modify the control after it has been created.
 
-The key idea to modify an input is to use `observeEvent()` to trigger the corresponding update<whatever> function whenever the input changes. (For the `observeEvent()` function see @sec-03-observers and @XXX15.3.)
+The key idea to modify an input is to use `observeEvent()` to trigger the corresponding update<whatever> function whenever the input changes. (For the `observeEvent()` function see @sec-03-observers and @sec-15-observers-and-outputs.)
 
 ::: {.column-page-inset}
 
@@ -987,7 +987,7 @@ There are two parts to this solution:
 
 :::
 
-The use of `isolate()` in the improved version is important. We’ll come back to what it does in @XXX_15.4.1, but here it ensures that we don’t create a reactive dependency that would cause this code to re-run every time `input$dynamic` changes (which will happen whenever the user modifies the value). We only want it to change when `input$type` or `input$label` changes.
+The use of `isolate()` in the improved version is important. We’ll come back to what it does in @sec-15-isolate, but here it ensures that we don’t create a reactive dependency that would cause this code to re-run every time `input$dynamic` changes (which will happen whenever the user modifies the value). We only want it to change when `input$type` or `input$label` changes.
 
 
 ::: {.callout-warning #wrn-10-creating-ui-basics2}
@@ -1085,7 +1085,7 @@ Imagine that you’d like users to be able to supply their own color palette. Th
 
 :::
 
-Hadley uses here `purrr::map()` and `purrr::reduce()`, but you could certainly do the same with the base `lapply()` and `Reduce()` functions. If you’re not familiar with the `map()` and `reduce()` of functional programming, you might want to take a brief detour to read [Functional programming](https://adv-r.hadley.nz/functionals.html) before continuing. We’ll also come back to this idea in @XXX_18.
+Hadley uses here `purrr::map()` and `purrr::reduce()`, but you could certainly do the same with the base `lapply()` and `Reduce()` functions. If you’re not familiar with the `map()` and `reduce()` of functional programming, you might want to take a brief detour to read [Functional programming](https://adv-r.hadley.nz/functionals.html) before continuing. We’ll also come back to this idea in @sec-chap18.
 
 Although the server function is short it contains some big ideas:
 

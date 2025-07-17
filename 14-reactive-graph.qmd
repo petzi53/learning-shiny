@@ -174,9 +174,19 @@ discuss the details in @sec-15-observers-and-outputs. For example this here ![](
 
 The lines between the shapes are directional, with the arrows indicating the direction of their inter-dependencies. When a shiny app is loaded, the graph in @fig-14-hello-reactlog-ggplot2 has to be discovered and formed. Because of the additional three plot reactives (height, width and ratio) Shiny need 21 steps to find and rebuild all the elements of the app. 
 
+::: {.callout-important #imp-14-categorization-of-shiny-objects}
+###### Categorization of shiny objects
+
 Recall that reactive inputs and expressions are collectively called
 `r glossary("reactive producers")`; reactive expressions and outputs are
 `r glossary("reactive consumers")`.
+
+![Categorization of shiny objects: Reactive inputs or values, reactive expressions and outputs or observers.](https://rstudio.github.io/reactlog/articles/images/04-reactivity/reactivity-graph-00.png){#fig-14-categorization-of-shiny-objects 
+fig-alt="alt-text" fig-align="center" 
+width="70%"}
+:::
+
+
 
 The covered the colors in the examples above of the `reactlog` objects lack one additional color: Orange means that the object is just in the process of calculating a new value.
 

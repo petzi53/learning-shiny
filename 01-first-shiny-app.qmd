@@ -470,7 +470,7 @@ dataset <- get(input$dataset, "package:datasets")
 ```
 
 
-In traditional R scripting, we use two techniques to deal with duplicated code: either we capture the value using a variable, or capture the computation with a function. Unfortunately neither of these approaches work here, for reasons you’ll learn about in @XXX_13.2. Therefore we need a new mechanism: `r glossary("reactive expressions")`.
+In traditional R scripting, we use two techniques to deal with duplicated code: either we capture the value using a variable, or capture the computation with a function. Unfortunately neither of these approaches work here, for reasons you’ll learn about in @sec-13-why-reactive-programming. Therefore we need a new mechanism: `r glossary("reactive expressions")`.
 
 ::: {.callout-important}
 ###### Creating reactive expressions

@@ -885,7 +885,7 @@ Not knowing about `png()` with my `content(file)` misunderstanding it took me se
 
 #### Task description
 
-Create an app that lets you upload a `r glossary("CSV")` file, select a variable, and then perform a `t.test()` on that variable. After the user has uploaded the csv file, you’ll need to use `updateSelectInput()` to fill in the available variables. See @XXX_10.1 for details.
+Create an app that lets you upload a `r glossary("CSV")` file, select a variable, and then perform a `t.test()` on that variable. After the user has uploaded the csv file, you’ll need to use `updateSelectInput()` to fill in the available variables. See @sec-10-updating-inputs for details.
 
 ::: {.callout-note #nte-upload-file-and-t-test}
 I have extended the task with three more options:
@@ -960,7 +960,7 @@ I used to replicate the code for plotting the histogram in `renderPlot()` and `d
 
 (4) **shinyjs**: In all the previous trials was the `downloadButton()` active, even if there was nothing to download. I learned that I could prevent this easily with {**shinyjs**}. See [SO: shiny app: disable downloadbutton](https://stackoverflow.com/a/31719056/7322615)
 
-(5) **dynamic-UI**: With a dynamic UI there is another solution to present an active `downloadButton()`. The user only get the button when there is something to download. (It seems to me that this will be covered in the next book chapter on [Dynamic UI](https://mastering-shiny.org/action-dynamic.html). See @XXX_10.) But here I have used [SO: Display download button in Shiny R only when output appears in Main Panel](https://stackoverflow.com/a/51041905/7322615)<br/><br/> 
+(5) **dynamic-UI**: With a dynamic UI there is another solution to present an active `downloadButton()`. The user only get the button when there is something to download. (It seems to me that this will be covered in the next book chapter on [Dynamic UI](https://mastering-shiny.org/action-dynamic.html). See @sec-chap10.) But here I have used [SO: Display download button in Shiny R only when output appears in Main Panel](https://stackoverflow.com/a/51041905/7322615)<br/><br/> 
 I do not know what is the better UI alternative. To have an inactive button that changes or appearing a complete new UI element during the processing.
 
 (6) **radioButtons**: In this exercise the user can decide if (s)he wants the graphic as base R plot or with {**ggplot2**}. <br/><br/>

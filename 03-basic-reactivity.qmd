@@ -163,7 +163,7 @@ Note the graphical conventions we used for the inputs and outputs: the name inpu
 fig-alt="The graph consists of two blocks titled 'name' and 'greeting'. The left 'name' block has a pike to the right which fits into the bump of the 'greeting' block." fig-align="center" 
 width="35%"}
 
-The reactive graph is a powerful tool for understanding how your app works. As your app gets more complicated, it’s often useful to make a quick high-level sketch of the reactive graph to remind you how all the pieces fit together. Throughout this book we’ll show you the reactive graph to help understand how the examples work, and later on, in @XXX_14, you’ll learn how to use {**reactlog**} which will draw the graph for you.
+The reactive graph is a powerful tool for understanding how your app works. As your app gets more complicated, it’s often useful to make a quick high-level sketch of the reactive graph to remind you how all the pieces fit together. Throughout this book we’ll show you the reactive graph to help understand how the examples work, and later on, in @sec-chap14, you’ll learn how to use {**reactlog**} which will draw the graph for you.
 
 ### Reactive expressions {#sec-03-reactive-expressions-sub}
 
@@ -1204,7 +1204,7 @@ This transformation yields the substantially simpler graph shown in @fig-03-09. 
 fig-alt="The inputs n1, mean1, sd1 connect to x1 and the inputs n2, mean2, sd2 connect to x2. x1 and x2 connect to ttest and hist. binwidth and range connect to hist." fig-align="center" 
 width="40%"}
 
-To emphasize this modularity @fig-03-10 draws boxes around the independent components. We’ll come back to this idea in @XXX_19, when we discuss modules. Modules allow you to extract out repeated code for reuse, while guaranteeing that it’s isolated from everything else in the app. Modules are an extremely useful and powerful technique for more complex apps.
+To emphasize this modularity @fig-03-10 draws boxes around the independent components. We’ll come back to this idea in @sec-chap19, when we discuss modules. Modules allow you to extract out repeated code for reuse, while guaranteeing that it’s isolated from everything else in the app. Modules are an extremely useful and powerful technique for more complex apps.
 
 ![Modules enforce isolation between parts of an app](https://mastering-shiny.org/diagrams/basic-reactivity/case-study-3.png){#fig-03-10 
 fig-alt="The inputs n1, mean1, sd1 connect to x1; the inputs n2, mean2, sd2 connect to x2. x1 and x2 connect to ttest and hist; binwidth and range connect to hist. Additionally there are two boxes drawn. One around n1, mean, sd1 and x1, the other one around n2, mean2, sd2 and x2." fig-align="center" 
@@ -1223,7 +1223,7 @@ When you first start working with reactive code, you might wonder why we need re
 
 ## Controlling timing of evaluation {#sec-03-control-timing}
 
-Now that you’re familiar with the basic ideas of reactivity, we’ll discuss two more advanced techniques that allow you to either increase or decrease how often a reactive expression is executed. Here I’ll show how to use the basic techniques; in @XXX_15, we’ll come back to their underlying implementations.
+Now that you’re familiar with the basic ideas of reactivity, we’ll discuss two more advanced techniques that allow you to either increase or decrease how often a reactive expression is executed. Here I’ll show how to use the basic techniques; in @sec-chap15, we’ll come back to their underlying implementations.
 
 To explore the basic ideas, I’m going to simplify my simulation app. I’ll use a distribution with only one parameter, and force both samples to share the same `n`. I’ll also remove the plot controls. This yields a smaller UI object and server function.
 
@@ -1911,7 +1911,7 @@ fig-alt="x1 and x2 no longer have a reactive dependency on (are connected to) la
 
 So far, we’ve focused on what’s happening inside the app. But sometimes you need to reach outside of the app and cause side-effects to happen elsewhere in the world. This might be saving a file to a shared network drive, sending data to a web API, updating a database, or (most commonly) printing a debugging message to the console. These actions don’t affect how your app looks, so you shouldn’t use an output and a render function. Instead you need to use an `r glossary("observer")`.
 
-There are multiple ways to create an observer, and we’ll come back to them later in  @XXX_15.3. For now, I wanted to show you how to use `shiny::observeEvent()`, because it gives you an important debugging tool when you’re first learning Shiny.
+There are multiple ways to create an observer, and we’ll come back to them later in  @sec-15-observers-and-outputs. For now, I wanted to show you how to use `shiny::observeEvent()`, because it gives you an important debugging tool when you’re first learning Shiny.
 
 `shiny::observeEvent()` is very similar to `shiny::eventReactive()`. It has two important arguments: `eventExpr` and `handlerExpr`. 
 
@@ -2282,7 +2282,7 @@ shinyApp(ui, server)
 The `input` argument is a list-like object, but unlike a typical list, `input` objects are read-only. If you attempt to modify an input inside the server function, you’ll get the above error.
 
 ::: {.callout-note}
-This error occurs because input reflects what’s happening in the browser, and the browser is Shiny’s “single source of truth”. If you could modify the value in R, you could introduce inconsistencies, where the input text said one thing in the browser, and `input$msg` said something different in R. That would make programming challenging! Later, in @XXX_8, you’ll learn how to use functions like `updateTextInput()` to modify the value in the browser, and then `input$msg` will update accordingly.
+This error occurs because input reflects what’s happening in the browser, and the browser is Shiny’s “single source of truth”. If you could modify the value in R, you could introduce inconsistencies, where the input text said one thing in the browser, and `input$msg` said something different in R. That would make programming challenging! Later, in @sec-chap08, you’ll learn how to use functions like `updateTextInput()` to modify the value in the browser, and then `input$msg` will update accordingly.
 :::
 
 

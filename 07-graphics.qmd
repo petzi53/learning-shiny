@@ -602,9 +602,9 @@ So far we’ve displayed the results of the interaction in another output.
 But the true beauty of interactivity comes when you display the changes
 in the same plot you’re interacting with. Unfortunately this requires an
 advanced reactivity technique that you have not yet learned about:
-`reactiveVal()`. We’ll come back to `reactiveVal()` in @XXX_16, but I
+`reactiveVal()`. We’ll come back to `reactiveVal()` in @sec-chap16, but I
 wanted to show it here because it’s such a useful technique. You’ll
-probably need to re-read this section after you’ve read @XXX_16, but
+probably need to re-read this section after you’ve read @sec-chap16, but
 hopefully even without all the theory you’ll get a sense of the
 potential applications[^07-graphics-1].
 
@@ -649,7 +649,7 @@ run this code in the console you’ll get an error because it has to be
 run in an reactive environment. That makes experimentation and debugging
 more challenging because you’ll need to use `browser()` or something
 similar to pause execution within the call to `shinyApp()`. This is one of
-the challenges we’ll come back to later in @XXX_16.
+the challenges we’ll come back to later in @sec-chap16.
 
 For now, let’s put the challenges of learning `reactiveVal()` aside, and
 show you why you might bother. Imagine that you want to visualize the
