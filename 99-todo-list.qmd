@@ -121,6 +121,7 @@ Add the following packages:
 - [ ] future
 - [ ] gapminder
 - [ ] ggforce
+- [ ] golem (and friends?)
 - [ ] ipc
 - [ ] lorem
 - [ ] mirai

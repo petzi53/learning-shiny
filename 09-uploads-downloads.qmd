@@ -156,7 +156,7 @@ Upload multiple files on the server (working example)
 
 
 
-### Uploading data
+### Uploading data {#sec-09-uploading-data}
 
 If the user is uploading a dataset, there are two details that you need to be aware of:
 

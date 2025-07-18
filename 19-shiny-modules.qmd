@@ -1,0 +1,60 @@
+# Shiny modules {#sec-chap19}
+
+
+```{r}
+#| label: setup
+#| results: hold
+#| include: false
+
+base::source(file = "R/helper.R")
+library(glossary)
+glossary::glossary_path("../glossary-pb/glossary.yml")
+```
+
+## Table of content for chapter 19 {.unnumbered}
+
+::::: {#obj-chap17}
+:::: {.my-objectives}
+::: {.my-objectives-header}
+Chapter section list
+:::
+
+::: {.my-objectives-container}
+
+
+:::
+::::
+:::::
+
+
+
+
+
+
+## Glossary Entries {#unnumbered}
+
+```{r}
+#| label: glossary-table
+#| echo: false
+
+glossary_table()
+```
+
+------------------------------------------------------------------------
+
+## Session Info {.unnumbered}
+
+::: my-r-code
+::: my-r-code-header
+Session Info
+:::
+
+::: my-r-code-container
+```{r}
+#| label: session-info
+
+sessioninfo::session_info()
+```
+:::
+:::
+
