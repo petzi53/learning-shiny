@@ -44,6 +44,7 @@ book:
       chapters:
         - intro3.qmd
         - 17-general-guidelines.qmd
+        - 18-functions.qmd
   appendices:
     - 50-packages-used.qmd
     - 60-whr-exercises.qmd

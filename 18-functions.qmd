@@ -1,0 +1,74 @@
+# Functions {#sec-chap18}
+
+
+```{r}
+#| label: setup
+#| results: hold
+#| include: false
+
+base::source(file = "R/helper.R")
+library(glossary)
+glossary::glossary_path("../glossary-pb/glossary.yml")
+```
+
+## Table of content for chapter 18 {.unnumbered}
+
+::::: {#obj-chap19}
+:::: {.my-objectives}
+::: {.my-objectives-header}
+Chapter section list
+:::
+
+::: {.my-objectives-container}
+
+The goal of this chapter is to activate your existing skills about writing functions, showing you some specific cases where using functions can substantially improve the clarity of your app. Once you’ve mastered the ideas in this chapter, the next step is to learn how to write code that requires coordination across the UI and server. That requires **modules**, which you’ll learn about in @sec-chap19.
+:::
+::::
+:::::
+
+In this chapter, you’ll learn how writing functions can help to manage complex Shiny code. This tends to have slightly different flavors for UI and server components:
+
+- **In the UI**, you have components that are repeated in multiple places with minor variations. Pulling out repeated code into a function reduces duplication (making it easier to update many controls from one place), and can be combined with functional programming techniques to generate many controls at once.
+- **In the server**, complex reactives are hard to debug because you need to be in the midst of the app. Pulling out a reactive into a separate function, even if that function is only called in one place, makes it substantially easier to debug, because you can experiment with computation independent of reactivity.
+
+Functions have another important role in Shiny apps: they allow you to spread out your app code across multiple files. While you certainly can have one giant app.R file, it’s much easier to manage when spread across multiple files.
+
+## File organisation
+
+Functions can live outside of `app.R`. There are two places you might put them depending on how big they are:
+
+- Put large functions (and any smaller helper functions that they need) into their own R/\<function-name\>.R file.
+- You might want to collect smaller, simpler, functions into one place. You could `R/utils.R` for this, but if they’re primarily used in your ui you might use `R/ui.R`.
+
+If you’ve made an R package before, you might notice that Shiny uses the same convention for storing files containing functions. And indeed, if you’re making a complicated app, particularly if there are multiple authors, there are substantial advantages to making a full fledged package. If you want to do this, I recommend reading the “[Engineering Shiny](https://engineering-shiny.org/)” book and using the accompanying {**golem**} package. We’ll touch on packages again when we talk more about testing.
+
+
+
+
+## Glossary Entries {#unnumbered}
+
+```{r}
+#| label: glossary-table
+#| echo: false
+
+glossary_table()
+```
+
+------------------------------------------------------------------------
+
+## Session Info {.unnumbered}
+
+::: my-r-code
+::: my-r-code-header
+Session Info
+:::
+
+::: my-r-code-container
+```{r}
+#| label: session-info
+
+sessioninfo::session_info()
+```
+:::
+:::
+

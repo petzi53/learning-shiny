@@ -125,8 +125,10 @@ Add the following packages:
 - [ ] lorem
 - [ ] mirai
 - [ ] openintro
+- [ ] promises (?)
 - [ ] R6
 - [ ] reactlog
+- [ ] renv
 - [ ] rwasm
 - [ ] shinyWidget
 - [ ] sysfonts

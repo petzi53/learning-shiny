@@ -230,7 +230,7 @@ Accumulate text data with delete, reset and preventing duplicates
 :::::
 :::
 
-### Pausing animations {#sec-pausing-animations}
+### Pausing animations {#sec-16-pausing-animations}
 
 Another common use case is to provide a start and stop button that lets you control some recurring event. This example uses a running reactive value to control whether or not the number increments, and `invalidateLater()` to ensure that the observer is invalidated every 250 ms when running.
 

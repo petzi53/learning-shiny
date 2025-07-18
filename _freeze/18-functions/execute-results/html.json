@@ -1,0 +1,15 @@
+{
+  "hash": "d8e72a05d64a8f0e4d948f32b8be44a2",
+  "result": {
+    "engine": "knitr",
+    "markdown": "# Functions {#sec-chap18}\n\n\n\n\n## Table of content for chapter 18 {.unnumbered}\n\n::::: {#obj-chap17}\n:::: {.my-objectives}\n::: {.my-objectives-header}\nChapter section list\n:::\n\n::: {.my-objectives-container}\n\n\n:::\n::::\n:::::\n\n\n\n\n\n\n## Glossary Entries {#unnumbered}\n\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n\n```\n#> data frame with 0 columns and 0 rows\n```\n\n\n:::\n:::\n\n\n------------------------------------------------------------------------\n\n## Session Info {.unnumbered}\n\n::: my-r-code\n::: my-r-code-header\nSession Info\n:::\n\n::: my-r-code-container\n\n::: {.cell}\n\n```{.r .cell-code}\nsessioninfo::session_info()\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n#> ─ Session info ───────────────────────────────────────────────────────────────\n#>  setting  value\n#>  version  R version 4.5.1 (2025-06-13)\n#>  os       macOS Sequoia 15.5\n#>  system   aarch64, darwin20\n#>  ui       X11\n#>  language (EN)\n#>  collate  en_US.UTF-8\n#>  ctype    en_US.UTF-8\n#>  tz       Europe/Vienna\n#>  date     2025-07-18\n#>  pandoc   3.7.0.2 @ /opt/homebrew/bin/ (via rmarkdown)\n#>  quarto   1.8.4 @ /usr/local/bin/quarto\n#> \n#> ─ Packages ───────────────────────────────────────────────────────────────────\n#>  package     * version    date (UTC) lib source\n#>  cli           3.6.5      2025-04-23 [1] CRAN (R 4.5.0)\n#>  curl          6.4.0      2025-06-22 [1] CRAN (R 4.5.0)\n#>  digest        0.6.37     2024-08-19 [1] CRAN (R 4.5.0)\n#>  evaluate      1.0.4      2025-06-18 [1] CRAN (R 4.5.0)\n#>  fastmap       1.2.0      2024-05-15 [1] CRAN (R 4.5.0)\n#>  glossary    * 1.0.0.9003 2025-06-08 [1] local\n#>  htmltools     0.5.8.1    2024-04-04 [1] CRAN (R 4.5.0)\n#>  htmlwidgets   1.6.4      2023-12-06 [1] CRAN (R 4.5.0)\n#>  jsonlite      2.0.0      2025-03-27 [1] CRAN (R 4.5.0)\n#>  knitr         1.50       2025-03-16 [1] CRAN (R 4.5.0)\n#>  rlang         1.1.6      2025-04-11 [1] CRAN (R 4.5.0)\n#>  rmarkdown     2.29       2024-11-04 [1] CRAN (R 4.5.0)\n#>  rstudioapi    0.17.1     2024-10-22 [1] CRAN (R 4.5.0)\n#>  rversions     2.1.2      2022-08-31 [1] CRAN (R 4.5.0)\n#>  sessioninfo   1.2.3      2025-02-05 [1] CRAN (R 4.5.0)\n#>  xfun          0.52       2025-04-02 [1] CRAN (R 4.5.0)\n#>  xml2          1.3.8      2025-03-14 [1] CRAN (R 4.5.0)\n#>  yaml          2.3.10     2024-07-26 [1] CRAN (R 4.5.0)\n#> \n#>  [1] /Library/Frameworks/R.framework/Versions/4.5-arm64/library\n#>  [2] /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/library\n#>  * ── Packages attached to the search path.\n#> \n#> ──────────────────────────────────────────────────────────────────────────────\n```\n\n\n:::\n:::\n\n:::\n:::\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -26,9 +26,145 @@ Chapter section list
 ::::
 :::::
 
+## Introduction
+
+This chapter introduces the most important software engineering skills you’ll need when writing Shiny apps: 
+
+- code organisation (@sec-17-code-organization), 
+- testing (@sec-17-testing), 
+- dependency management, (@sec-17-dependency-management)
+- source code control, 
+- continuous integration, 
+- and code reviews. 
+
+These skills are not specific to Shiny apps, but you’ll need to learn a bit about all of them if you want to write complex apps that get easier to maintain over time, not harder.
+
+::: {.callout-tip #tip-17-software-develompemnt-skills}
+###### Set aside time for practicing sofware development skills
+
+Hadley recommends setting aside some time each week to practice your software development skills. During this time, try to avoid touching the behavior or appearance of your app, but instead focus your efforts on making the app easier to understand and develop.
+:::
+
+## Code organization {#sec-17-code-organization}
+
+**General guidelines:**
+
+- Are the variable and function names clear and concise? If not, what names would better communicate the intent of the code?
+- Do I have comments where needed to explain complex bits of code?
+- Does this whole function fit on my screen or could it be printed on a single piece of paper? If not, is there a way to break it up into smaller pieces?
+- Am I copying-and-pasting the same block of code many times throughout my app? If so, is there a way to use a function or a variable to avoid the repetition?
+- Are all the parts of my application tangled together, or can I manage the different components of my application in isolation?
+
+**Particularly important tools are**:
+
+- **Functions**, the topic of @sec-chap18, allow you to reduce duplication in your UI code, make your server functions easier to understand and test, and allow you to more flexibly organize your app code.
+- **Shiny modules**, the topic of @sec-chap19, make it possible to write isolated, re-usable code, that coordinates front end and back end behavior. Modules allow you to gracefully separate concerns so that (e.g.) individual pages in your application can operate independently, or repeated components no longer need to be copied and pasted.
+
+## Testing {#sec-17-testing}
+
+Developing a test plan for an application is critical to ensure its ongoing stability. Without a test plan, every change jeopardizes the application.
+
+A testing plan could be entirely manual. A great place to start is a simple text file giving a script to follow to check that all is well. But as the application becomes more complex, the next step is to start to automate some of your testing. Automation takes time to set up, but it pays off over time because you can run the tests more frequently. Various forms of automated testing have been developed for Shiny, as outlined in @sec-chap21.
+
+- **Unit tests** that confirm the correct behaviour of an individual function.
+- **Integration tests** to confirm the interactions between reactives.
+- **Functional tests** to validate the end-to-end experience from a browser
+- **Load tests** to ensure that the application can withstand the amount of traffic you anticipate for it.
+
+## Dependency management {#sec-17-dependency-management}
+
+An app’s dependencies are anything beyond the source code that it requires to run. These could include files on the hard drive, an external database or `r glossary("APIx", "API")`, or other R packages that are used by the app.
+
+### \{renv}
+
+For any analysis that you may want to reproduce in the future, consider using [{**renv**}](https://rstudio.github.io/renv/) which enables you to create **r**eproducible R **env**ironments.
+
+::: {.callout-note #nte-17-renv}
+###### I know {renv}, but I am uncomfortable using it
+
+I have already used several time {**renv**}, but I am still uncomfortable wit it. There are some properties and side effects I do not oversee. Maybe I should give it another try?
+
+:::
 
 
+### \{config}
 
+Another tool for managing dependencies is the {**config**} package. The [config package](https://rstudio.github.io/config/index.html) doesn’t actually manage dependencies itself, but it does provide a convenient place for you to track and manage dependencies other than R packages. For instance, you might specify the path to a `r glossary("CSV")` file that your application depends on, or the URL of an API that you require. Having these enumerated in the config file gives you a single place where you can track and manage these dependencies. Even better, it enables you to create different configurations for different environments.
+
+For example, if your application analyses a database with lots of data, you might choose to configure a few different environments:
+
+- In the **production environment**, you connect the app to the real “production” database.
+- In a **test environment**, you can configure the app to use a test database so that you properly exercise the database connections in your tests but you don’t risk corrupting your production database if you accidentally make a change that corrupts the data.
+- In **development**, you might configure the application to use a small CSV with a subset of data to allow for faster iterating.
+
+Lastly, be wary of making assumptions about the local file system. If your code has references to data at `C:\data\cars.csv` or `~/my-projects/genes.rds`, for example, you need to realize that it’s very unlikely that these files will exist on another computer. Instead, either use a path relative to the app directory (e.g. `data/cars.csv` or `genes.rds`), or use the config package to make the external path explicit and configurable.
+
+::: {.callout-note  #nte-17-config}
+###### {config} is completely new for me
+
+I have never heard about this package. I am not sure if I will need it, because I do not have for my learning trajectory this separation between production and test environment.
+:::
+
+
+## Source code management
+
+Anyone who’s been programming for a long time has inevitably arrived at a state where they’ve accidentally broken their app and want to roll back to a previous working state. This is incredibly arduous when done manually. Fortunately, however, you can rely on a “version-control system” that makes it easy to track atomic changes, roll back to previous work, and integrate the work of multiple contributors.
+
+The most popular version-control system in the R community is [Git](https://git-scm.com/). Git is typically paired with [GitHub](https://github.com/), a website that makes it easy to share your git repos with others. It definitely takes work to become proficient with `r glossary("Git")` and `r glossary("GitHub")`, but any experienced developer will confirm that the effort is well worth it. If you’re new to git, I’d highly recommend starting with [Happy Git and GitHub for the useR](https://happygitwithr.com/), by Jenny Bryan.
+
+::: {.callout-note #nte-17-git-github}
+###### I am using git/GitHub routinely
+
+I am still not an expert with git/GitHub and have in unusually situations to look up relevant questions in `r glossary("StackOverflow")`.
+:::
+
+## Continuous integration/deployment (CI, CD)
+
+Once you are using a version control system and have a robust set of automated tests, you might benefit from continuous integration (CI). `r glossary("CIx", "CI")` is a way to perpetually validate that the changes you’re making to your application haven’t broken anything. You can use it retroactively (to notify you if a change you just made broke your application) or proactively (to notify you if a *proposed* change would break your app).
+
+There are a variety of services that can connect to a Git repo and automatically run tests when you push a new commit or propose changes. Depending on where your code is hosted, you can consider [GitHub actions](https://github.com/features/actions), [Travis CI](https://travis-ci.org/), [Azure Pipelines](https://azure.microsoft.com/en-us/services/devops/pipelines/), [AppVeyor](https://www.appveyor.com/), [Jenkins](https://jenkins.io/), or [GitLab CI/CD](https://about.gitlab.com/product/continuous-integration/), to name a few.
+
+Having a CI process not only prevents experienced developers from making accidental mistakes, but also helps new contributors feel confident in their changes.
+
+::: {.callout-note #nte-17-ci}
+###### I heard already about CI but not yet used it
+
+The reason I have so far not used CI is that I have not (yet) established an automatic test environment with {**testthat**}. This should be one of my next learning steps. Therefore I am already curious about @sec-chap21 to learn more about it.
+:::
+
+## Code reviews
+
+Many software companies have found the benefits of having someone else review code before it’s formally incorporated into a code base. This process of “code review” has a number of benefits:
+
+- Catches bugs before they get incorporated into the application making them much less expensive to fix.
+- Offers teaching opportunities — programmers at all levels often learn something new by reviewing others’ code or by having their code reviewed.
+- Facilitates cross-pollination and knowledge sharing across a team to eliminate having only one person who understands the app.
+
+The resulting conversation often improves the readability of the code.
+
+Typically, a code review involves someone other than you, but you can still benefit even if it’s only you. Most experienced developers will agree that taking a moment to review your own code often reveals some small flaw, particularly if you can let it sit for at least a few hours between writing and review.
+
+Here are few questions to hold in your head when reviewing code:
+
+- Do new functions have concise but evocative names?
+- Are there parts of the code you find confusing?
+- What areas are likely to change in the future, and would particularly benefit from automated testing?
+- Does the style of the code match the rest of the app? (Or even better, your group’s documented code style.)
+
+If you’re embedded in an organisation with a strong engineering culture, setting up code reviews for data science code should be relatively straightforward, and you’ll have existing tools and experience to draw on. If you’re in an organisation that has few other software engineers, you may need to do more convincing.
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-17-code-review}
+: Tips for code reviews
+::::::
+:::
+::::{.my-resource-container}
+
+- [Code Review](https://github.com/thoughtbot/guides/tree/main/code-review) by Mattheus Richard
+- [Google engineering practices](https://google.github.io/eng-practices/review/)
+::::
+:::::
 
 
 ## Glossary Entries {#unnumbered}
