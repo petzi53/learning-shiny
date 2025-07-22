@@ -913,3 +913,32 @@ The next chapter on layouts and themes is the first of a grab bag of useful tech
 ::: {.callout-note #nte-next-chapter}
 I will follow the advice and continue with #sec-chap09 because I need the upload of a dataset for the work on my first real Shiny app.
 :::
+
+
+## Glossary Entries {#unnumbered}
+
+```{r}
+#| label: glossary-table
+#| echo: false
+
+glossary_table()
+```
+
+------------------------------------------------------------------------
+
+## Session Info {.unnumbered}
+
+::: my-r-code
+::: my-r-code-header
+Session Info
+:::
+
+::: my-r-code-container
+```{r}
+#| label: session-info
+
+sessioninfo::session_info()
+```
+:::
+:::
+

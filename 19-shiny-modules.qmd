@@ -26,10 +26,1118 @@ Chapter section list
 ::::
 :::::
 
+In the last chapter we used functions to decompose parts of your Shiny app into independent pieces. Functions work well for code that is either completely on the server side or completely on the client side. For code that spans both, i.e. whether the server code relies on specific structure in the UI, you’ll need a new technique: modules.
+
+At the simplest level, a module is a pair of UI and server functions. The magic of modules comes because these functions are constructed in a special way that creates a “namespace”. So far, when writing an app, the names (`id`s) of the controls are global: all parts of your server function can see all parts of your UI. Modules give you the ability to create controls that can only be seen from within the module. This is called a **namespace** because it creates “spaces” of “names” that are isolated from the rest of the app.
+
+Shiny modules have two big advantages:
+
+- Firstly, namespacing makes it easier to understand how your app works because you can write, analyse, and test individual components in isolation. 
+- Secondly, because modules are functions they help you reuse code; anything you can do with a function, you can do with a module.
+
+## Motivation
+
+Hadley borrows an example from [Eric Nantz](https://github.com/rpodcast), who talked about modules at rstudio::conf(2019): <https://youtu.be/ylLLVo2VL50>. I will skip the details and continue with the next section.
+
+## Module basics
+
+To create your first module, we’ll pull a module out of a very simple app that draws a histogram:
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-module-basics1}
+: Basic example to learn how to use shiny modules
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-module-basics1}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/01-module-basics1/app.R >}}
+```
+
+Drawing a histogram as a basic example to learn how to use shiny modules
+:::
+
+::::
+:::::
+
+:::
+
+This app is so simple that there’s no real benefit to pulling out a module, but it will serve to illustrate the basic mechanics before we dive into more realistic, and hence complicated, use cases.
+
+A module is very similar to an app. Like an app, it’s composed of two pieces. But unlike an app both (module UI and module server) are functions:
+
+- The **module UI function** generates the UI specification.
+- The **module server function** runs code inside the server function.
+
+The two functions have standard forms. They both take an `id` argument and use it to namespace the module. To create a module, we need to extract code out of the app UI and server and put it in to the module UI and server.
+
+### Module UI
+
+We’ll start with the module UI. There are two steps:
+
+1. Put the UI code inside a function that has an `id` argument.
+2. Wrap each existing ID in a call to `NS()`, so that (e.g.) `"var"` turns into `NS(id, "var"`).
+
+This yields the following function:
+
+```{r}
+#| label: histogram-module-ui
+#| eval: false
+
+histogramUI <- function(id) {
+  tagList(
+    selectInput(NS(id, "var"), "Variable", choices = names(mtcars)),
+    numericInput(NS(id, "bins"), "bins", value = 10, min = 1),
+    plotOutput(NS(id, "hist"))
+  )
+}
+```
+
+Here we’ve returned the UI components in a `tagList()`, which is a special type of layout function that allows you to bundle together multiple components without actually implying how they’ll be laid out. It’s the responsibility of the person calling `histogramUI()` to wrap the result in a layout function like `column()` or `fluidRow()` according to their needs.
+
+### Module server
+
+Next we tackle the server function. This gets wrapped inside *another* function which must have an `id` argument. This function calls `moduleServer()` with the `id`, and a function that looks like a regular server function:
+
+```{r}
+#| label: histogram-module-server
+#| eval: false
+
+
+histogramServer <- function(id) {
+  moduleServer(id, function(input, output, session) {
+    data <- reactive(mtcars[[input$var]])
+    output$hist <- renderPlot({
+      hist(data(), breaks = input$bins, main = input$var)
+    }, res = 96)
+  })
+}
+```
+
+The two levels of functions are important here. We’ll come back to them later, but in short they help distinguish the argument to your module from the arguments to the server function. Don’t worry if this looks very complex; it’s basically a boilerplate that you can copy and paste for each new module that you create.
+
+Note that `moduleServer()` takes care of the namespacing automatically: inside of `moduleServer(id)`, `input$var` and `input$bins` refer to the inputs with names `NS(id, "var"`) and `NS(id, "bins")`.
+
+### Updated app
+
+Now that we have the ui and server functions, it’s good practice to write a function that uses them to generate an app which we can use for experimentation and testing:
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-module-basics2}
+: Drawing histograms with Shiny modules
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-module-basics2}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/01-module-basics2/app.R >}}
+
+```
+
+The same app drawing histograms as in @lst-19-module-basics1 but this time using Shiny modules.
+:::
+
+::::
+:::::
+
+:::
+
+Note that, like all Shiny control, you need to use the same `id` in both UI and server, otherwise the two pieces will not be connected.
+
+
+### Namespacing
+
+Now that we have a complete app, let’s circle back and talk about namespacing some more. The key idea that makes modules work is that the name of each control (i.e. its `id`) is now determined by two pieces:
+
+- The first piece comes from the module user, the developer who calls `histogramUI()`.
+- The second piece comes from the module author, the developer who wrote `histogramServer()`.
+
+This two-part specification means that you, the module author, don’t need to worry about clashing with other UI components created by the user. You have your own “space” of names that you own, and can arrange to best meet your own needs.
+
+Namespacing turns modules into black boxes. From outside of the module, you can’t see any of the inputs, outputs, or reactives inside of it. For example, take the app below. The text output `output$out` will never get updated because there is no `input$bins`; the bins input can only be seen inside of the `hist1` module.
+
+```{r}
+#| label: histogram-namespacing
+#| eval: false
+
+
+ui <- fluidPage(
+  histogramUI("hist1"),
+  textOutput("out")
+)
+server <- function(input, output, session) {
+  histogramServer("hist1")
+  output$out <- renderText(paste0("Bins: ", input$bins))
+}
+```
+
+If you want to take input from reactives elsewhere in the app, you’ll need to pass them to the module function explicitly; we’ll come back to that shortly.
+
+Note that the module UI and server differ in how the namespacing is expressed:
+
+-In the module UI, the namespacing is *explicit*: you have to call `NS(id, "name")` every time you create an input or output.
+- In the module server, the namespacing is *implicit*. You only need to use `id` in the call to `moduleServer()` and then Shiny automatically namespaces input and output so that in your module code `input$name` means the input with name `NS(id, "name")`.
+
+### Naming conventions
+
+In this example, we’ve used a special naming scheme for all the components of the module, and it is recommended that you also use it for your own modules. Here, the module draws a histogram, so we’ve called it the histogram module. This base name is then used in a variety of places:
+
+- `R/histogram.R` holds all the code for the module.
+- `histogramUI()` is the module UI. If it’s used primarily for input or output we would call it `histogramInput()` or `histogramOuput()` instead.
+- `histogramServer()` is the module server.
+- `histogramApp()` creates a complete app for interactive experimentation and more formal testing.
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-histogram-shiny-modules-r-files}
+: Using different R files for Shiny modules
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-histogram-shiny-modules-r-files}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: histogramUI.R
+{{< include apps_19/01-module-basics3/R/histogramUI.R >}}
+
+## file: histogramServer.R
+{{< include apps_19/01-module-basics3/R/histogramServer.R >}}
+
+## file: app.R
+{{< include apps_19/01-module-basics3/app.R >}}
+histogramApp()
+```
+
+Using different R files for UI and server Shiny modules
+:::
+
+::::
+:::::
+
+:::
+
+### Exercises {#sec-19-exercises-1}
+
+#### Exercise 1: Good pactices with modules
+
+Why is it good practice to put a module in its own file in the R/ directory? What do you need to do to make sure it’s loaded by your Shiny app?
+
+To put a module in its own file allows to apply the name conventions for modules. The base name can be used for several places: As function name, as file name and for the app in general.
+
+To make sure the module is loading by the Shiny app write a function that uses the module to generate an app which can be called by the function. Additionally you need to use the same id in both UI and server, otherwise the two pieces will not be connected.
+
+#### Exercise 2: 
+
+The following module UI includes a critical mistake. What is it and why will it cause problems?
+
+```{r}
+#| label: ex-02-critical-mistake
+#| eval: false
+
+
+histogramUI <- function(id) {
+  tagList(
+    selectInput("var", "Variable", choices = names(mtcars)),
+    numericInput("bins", "bins", value = 10, min = 1),
+    plotOutput("hist")
+  )
+}
+```
+
+The explicit namespacing is missing: you have to call `NS(id, "var")`, `NS(id, "bins")` and `NS(id, "hist")`  to create two inputs and the one output.
+
+#### Exercise 3: Copies of modules with different values
+
+The following module UI generates a new random number every time you click go:
+
+```{r}
+#| label: ex-03-random-number
+#| eval: false
+
+
+randomUI <- function(id) {
+  tagList(
+    textOutput(NS(id, "val")),
+    actionButton(NS(id, "go"), "Go!")
+  )
+}
+randomServer <- function(id) {
+  moduleServer(id, function(input, output, session) {
+    rand <- eventReactive(input$go, sample(100, 1))
+    output$val <- renderText(rand())
+  })
+}
+```
+
+- Create an app that displays four copies of this module on a single page. Verify that each module is independent. 
+- How could you change the return value of `randomUI()` to make the display more attractive?
+
+
+At first I will try to complement the above code chunk to a full app:
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-ex3-random-number1}
+: The random number app modularized
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-ex3-random-number1}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/ex-03-random-number1/app.R >}}
+```
+
+The random number app modularized
+:::
+
+::::
+:::::
+
+:::
+
+My second action is to answer the first part of the question:
+
+> Create an app that displays four copies of this module on a single page. Verify that each module is independent.
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-ex-03-random-number2}
+: Four copies of the module on a single page
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-ex-03-random-number2}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/ex-03-random-number2/app.R >}}
+```
+
+Four copies of the module on a single page
+:::
+
+::::
+:::::
+
+:::
+
+::: {.callout-note #nte-19-writing-functions-to-simplify-code}
+###### Functions to simplify the code even more?
+
+I am pretty sure that @lst-ex-03-random-number2 is not the best solution. I should write functions calling with the appropriate values to simplify the code. 
+:::
+
+
+
+My next code chunks tries to answer the second part of the question: 
+
+> - How could you change the return value of `randomUI()` to make the display more attractive?
+
+My idea is to put the random numbers in the same row as the actionButtons:
+
+:::{.column-screen-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-ex-03-random-number3}
+: Apps with random numbers in the same row as the action button they belong to.
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-ex-03-random-number3}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/ex-03-random-number3/app.R >}}
+```
+
+Apps with random numbers in the same row as the action button they belong to.
+:::
+
+::::
+:::::
+
+:::
+
+I had to use almost the full page, because otherwise the numbers would not be written beside the buttons but below of them.
 
 
 
 
+
+
+#### Exercise 4: RStudio snippets
+
+Are you sick of typing module boilerplate already? Read about [RStudio snippets](https://support.rstudio.com/hc/en-us/articles/204463668-Code-Snippets) and add the following snippet to your RStudio config to make it even easier to create new modules.
+
+::: {.callout-note #nte-19-rstudio-snippets}
+###### I am using RStudio snippets all the time
+
+The last exercise is easy for me, as I am using RStudio snippets all the time.
+My module snippet has the name `shm` because I use `sh` all the time for shiny snippets and the `m` stands for `modules`.
+:::
+
+```{r}
+#| label: shiny-module-boilerplate-rstudio-snippet
+#| eval: false
+
+
+UI <- function(id) {
+    tagList(
+        
+    )
+}
+
+Server <- function(id) {
+    moduleServer(id, function(input, output, session) {
+        
+    })
+}
+```
+
+## Inputs and outputs
+
+Sometimes a module with only an `id` argument to the module UI and server is useful because it allows you to isolate complex code in its own file. A lot of the time, however, your module UI and server will need additional arguments. Adding arguments to the module UI gives greater control over module appearance, allowing you to use the same module in more places in your app. But the module UI is just a regular R function, so there’s relatively little to learn that’s specific to Shiny, and much of it was already covered in @sec-chap18.
+
+The following sections will focus on the module server, and discuss how your module can take additional reactive inputs and return one or more reactive outputs.
+
+### Getting started: UI input + server output
+
+To see how inputs and outputs work, we’ll start off easy with a module that allows the user to select a dataset from built-in data provided by the datasets package. This isn’t terribly useful by itself, but it illustrates some of the basic principles, is a useful building block for more complex modules, and you’ve seen the idea before in @sec-01-ui-controls.
+
+We’ll start with the module UI. Here we use a single additional argument so that you can limit the options to built-in datasets that are either data frames (`filter = is.data.frame`) or matrices (`filter = is.matrix`, or `filter = is.ts`). We use this argument to optionally filter the objects found in the {**datasets**} package, then create a `selectInput()`.
+
+```{r}
+#| label: module-datasets-ui
+#| eval: false
+
+datasetInput <- function(id, filter = NULL) {
+  names <- ls("package:datasets")
+  if (!is.null(filter)) {
+    data <- lapply(names, get, "package:datasets")
+    names <- names[vapply(data, filter, logical(1))]
+  }
+  
+  selectInput(NS(id, "dataset"), "Pick a dataset", choices = names)
+}
+```
+
+
+The module server is also simple: we just use `get()` to retrieve the dataset with its name. There’s one new idea here: like a function and unlike a regular `server()`, this module server returns a value. Here we take advantage of the usual rule that the last expression processed in the function becomes the return value. **This value should always be a reactive**.
+
+```{r}
+#| label: module-datasets-server
+#| eval: false
+
+datasetServer <- function(id) {
+  moduleServer(id, function(input, output, session) {
+    reactive(get(input$dataset, "package:datasets"))
+  })
+}
+```
+
+To use a module server that returns something, you just have to capture its return value with `<-`. That’s demonstrated in the module app below, where we capture the dataset and then display it in a `tableOutput()`.
+
+```{r}
+#| label: module-datasets-app
+#| eval: false
+
+datasetApp <- function(filter = NULL) {
+  ui <- fluidPage(
+    datasetInput("dataset", filter = filter),
+    tableOutput("data")
+  )
+  server <- function(input, output, session) {
+    data <- datasetServer("dataset")
+    output$data <- renderTable(head(data()))
+  }
+  shinyApp(ui, server)
+}
+```
+
+
+
+There are a few executive decisions in the design of this function:
+
+- It takes a filter argument that’s passed along to the module UI, making it easy to experiment with that input argument.
+- It uses a tabular output to show all the data. It doesn’t really matter what you use here, but the more expressive your UI, the easier it is to check that the module does what you expect.
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-module-datasets}
+: Example for UI input and server output
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-module-datasets}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 750
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/02-ui-input-server-output/app.R >}}
+```
+
+Modularized Shiny app that allows user to filter datasets by type.     
+Allowed filters are: `is.data.frame`, `is.matrix`, `is.ts`, `is.list`, `is.table`, `is.numeric`.
+:::
+
+::::
+:::::
+
+:::
+
+### Case study: selecting a numeric variable
+
+Next, we’ll create a control that allows the user to select variables of specified type from a given reactive dataset. Because we want the dataset to be reactive, we can’t fill in the choices when we start the app. This makes the module UI very simple:
+
+```{r}
+#| label: selecting-numeric-variable-module-ui
+#| eval: false
+
+selectVarInput <- function(id) {
+  selectInput(NS(id, "var"), "Variable", choices = NULL) 
+}
+```
+
+The server function will have two arguments:
+
+- The `data` to select variables from. We want this to be reactive so it can work with the `dataset` module we created above.
+- A `filter` used to select which variables to list. This will be set by the caller of the module, so doesn’t need to be reactive. To keep the module server simple, we’ve extracted out the key idea into a helper function:
+
+```{r}
+#| label: selecting-numeric-variable-helper-function
+#| eval: false
+
+find_vars <- function(data, filter) {
+  names(data)[vapply(data, filter, logical(1))]
+}
+```
+
+Then the module server uses `observeEvent()` to update the `selectInput` choices when the data changes, and returns a reactive that provides the values of the selected variable.
+
+```{r}
+#| label: selecting-numeric-variable-server
+#| eval: false
+
+selectVarServer <- function(id, data, filter = is.numeric) {
+  moduleServer(id, function(input, output, session) {
+    observeEvent(data(), {
+      updateSelectInput(session, "var", choices = find_vars(data(), filter))
+    })
+    
+    reactive(data()[[input$var]])
+  })
+}
+```
+
+
+To make our app, we again capture the results of the module server and connect it to an output in our UI. We want to make sure all the reactive plumbing is correct, so we use the `dataset` module as a source of reactive data frames.
+
+```{r}
+#| label: selecting-numeric-variable-app
+#| eval: false
+
+selectVarApp <- function(filter = is.numeric) {
+  ui <- fluidPage(
+    datasetInput("data", is.data.frame),
+    selectVarInput("var"),
+    verbatimTextOutput("out")
+  )
+  server <- function(input, output, session) {
+    data <- datasetServer("data")
+    var <- selectVarServer("var", data, filter = filter)
+    output$out <- renderPrint(var())
+  }
+  
+  shinyApp(ui, server)
+}
+```
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-selecting-numeric-variable}
+: Modularized app case study: Selecting a numeric variable
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-selecting-numeric-variable}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 850
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/03-selecting-numeric-variable/app.R >}}
+```
+
+Modularized app case study: Selecting a numeric variable
+:::
+
+::::
+:::::
+
+:::
+
+### Server inputs
+
+When designing a module server, you need to think about who is going to provide the value for each argument: is it the R programmer calling your module, or the person using the app? Another way to think about this is when can the value be changed: is it fixed and constant over the life-time of the app, or is it reactive, changing as the user interacts with the app? This is an important design decision that determines whether or not an argument should be a reactive or not.
+
+Once you’ve made this decision, it’s good practice to check that each input to your module is either reactive or constant. If you don’t, and the user supplies the wrong type, they’ll get a cryptic error message. You can make the life of module user much easier with a quick and dirty call to `stopifnot()`. For example, `selectVarServer()` could check that data is reactive and `filter` is not with the following code:
+
+```{r}
+#| label: server-inputs
+#| eval: false
+
+selectVarServer <- function(id, data, filter = is.numeric) {
+  stopifnot(is.reactive(data))
+  stopifnot(!is.reactive(filter))
+  
+  moduleServer(id, function(input, output, session) {
+    observeEvent(data(), {
+      updateSelectInput(session, "var", choices = find_vars(data(), filter))
+    })
+    
+    reactive(data()[[input$var]])
+  })
+}
+```
+
+If you expect the module to be used many times by many people, you might also consider hand crafting an error message with an `if` statement and a call to `stop()`.
+
+Checking that the module inputs are reactive (or not) helps you avoid a common problem when you mix modules with other input controls. `input$var` is not a reactive, so whenever you pass an input value into a module, you’ll need to wrap it in a `reactive()` (e.g. `selectVarServer("var", reactive(input$x))`). If you check the inputs, as recommended here, you’ll get a clear error; if you don’t, you’ll get something cryptic like `could not find function "data"`.
+
+You might also apply this strategy to the helper function `find_vars()`. It’s not quite as important here, but because debugging Shiny apps is a little harder than debugging regular R code, it does make sense to invest a little more time in checking inputs so that you get clearer error messages when something goes wrong.
+
+```{r}
+#| label: selecting-numeric-variable-helper-function2
+#| eval: false
+
+find_vars <- function(data, filter) {
+  stopifnot(is.data.frame(data))
+  stopifnot(is.function(filter))
+  names(data)[vapply(data, filter, logical(1))]
+}
+```
+
+
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-selecting-numeric-variable-stop-if-not}
+: Modularized Shiny app for selecting a numeric variable with input checking
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-selecting-numeric-variable-stop-if-not}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/04-selecting-numeric-variable-stop-if-not/app.R >}}
+```
+
+Modularized Shiny app for selecting a numeric variable with input checking
+:::
+
+::::
+:::::
+
+:::
+
+
+### Modules inside of modules
+
+Before we continue on to talk more about outputs from your server function, it is important to highlight that modules are composable, and it may make sense to create a module that itself contains a module. For example, we could combine the `dataset` and `selectVar` modules to make a module that allows the user to pick a variable from a built-in dataset:
+
+::: {#lst-19-modules-inside-modules}
+
+
+```{r}
+#| label: modules-inside-modules
+#| eval: false
+
+selectDataVarUI <- function(id) {
+  tagList(
+    datasetInput(NS(id, "data"), filter = is.data.frame),
+    selectVarInput(NS(id, "var"))
+  )
+}
+selectDataVarServer <- function(id, filter = is.numeric) {
+  moduleServer(id, function(input, output, session) {
+    data <- datasetServer("data")
+    var <- selectVarServer("var", data, filter = filter)
+    var
+  })
+}
+
+selectDataVarApp <- function(filter = is.numeric) {
+  ui <- fluidPage(
+    sidebarLayout(
+      sidebarPanel(selectDataVarUI("var")),
+      mainPanel(verbatimTextOutput("out"))
+    )
+  )
+  server <- function(input, output, session) {
+    var <- selectDataVarServer("var", filter)
+    output$out <- renderPrint(var(), width = 40)
+  }
+  shinyApp(ui, server)
+}
+```
+
+Code snippet not run:   
+Select variable from dataset collection
+
+:::
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-modules-inside-modules}
+: Module that allows the user to pick a variable from a built-in dataset
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-modules-inside-modules}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 550
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/05-selecting-variable-and-dataset/app.R >}}
+```
+
+Example to show modules in modules:  
+Module that allows the user to pick a variable from a built-in dataset
+:::
+
+::::
+:::::
+
+:::
+
+
+### Case study: histogram
+
+Now let’s circle back to the original histogram module and refactor it into something more composable. The key challenge of creating modules is creating functions that are flexible enough to be used in multiple places, but simple enough that they can easily be understood. Figuring out how to write functions that are good building blocks is the journey of a lifetime; expect that you’ll have to do it wrong quite a few times before you get it right. (Unfortunately we can't provide more concrete advice here, because this is a skill that you’ll have to refine through practice and conscious reflection.)
+
+The composable histogram module could also be considered as an output control because while it does use an input (the number of `bins`) that’s used only to tweak the display, and doesn’t need to be returned by the module.
+
+::: {#lst-histogram-ui-refactored-composable}
+
+
+```{r}
+#| label: histogram-ui-refactored-composable
+#| eval: false
+
+histogramOutput <- function(id) {
+  tagList(
+    numericInput(NS(id, "bins"), "bins", 10, min = 1, step = 1),
+    plotOutput(NS(id, "hist"))
+  )
+}
+```
+
+Code snippet not run:    
+Histogram ui refactored into composable modules
+:::
+
+We give this module two inputs: `x`, the variable to plot, and a `title` for the histogram. Both will be reactive so that they can change over time. (The title is a bit frivolous but it’s going to motivate an important technique very shortly). Note the default value of title: it has to be reactive, so we need to wrap a constant value inside of `reactive()`.
+
+::: {#lst-19-histogram-server-refactored-composable}
+
+```{r}
+#| label: histogram-server-refactored-composable
+#| eval: false
+
+histogramServer <- function(id, x, title = reactive("Histogram")) {
+  stopifnot(is.reactive(x))
+  stopifnot(is.reactive(title))
+  
+  moduleServer(id, function(input, output, session) {
+    output$hist <- renderPlot({
+      req(is.numeric(x()))
+      main <- paste0(title(), " [", input$bins, "]")
+      hist(x(), breaks = input$bins, main = main)
+    }, res = 96)
+  })
+}
+```
+
+Code snippet not run:  
+Histogram server function refactored into composable modules  
+:::
+
+::: {#lst-19-histogram-app-refactored-composable}
+
+```{r}
+#| label: histogram-app-refactored-composable
+#| eval: false
+
+histogram2App <- function() {
+  ui <- fluidPage(
+    sidebarLayout(
+      sidebarPanel(
+        datasetInput("data", is.data.frame),
+        selectVarInput("var"),
+      ),
+      mainPanel(
+        histogramOutput("hist")    
+      )
+    )
+  )
+  
+  server <- function(input, output, session) {
+    data <- datasetServer("data")
+    x <- selectVarServer("var", data)
+    histogramServer("hist", x)
+  }
+  shinyApp(ui, server)
+} 
+
+histogram2App()
+```
+
+Code snippet not run:    
+Histogram app refactored into composable modules
+
+:::
+
+
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-histogram-app-refactored}
+: Histogram app refactored into composable modules
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-histogram-app-refactored}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/06-histogram-app-refactored/app.R >}}
+```
+
+Histogram app refactored into composable modules
+:::
+
+::::
+:::::
+
+:::
+
+Note that if you wanted to allow the module user to place the breaks control and histogram in different places of the app, you could use multiple UI functions. It’s not terribly useful here, but it’s useful to see the basic approach.
+
+
+::: {#lst-19-histogram-modularized-bin-breaks}
+
+```{r}
+#| label: histogram-modularized-bin-breaks
+#| eval: false
+
+histogramOutputBins <- function(id) {
+  numericInput(NS(id, "bins"), "bins", 10, min = 1, step = 1)
+}
+histogramOutputPlot <- function(id) {
+  plotOutput(NS(id, "hist"))
+}
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      datasetInput("data", is.data.frame),
+      selectVarInput("var"),
+      histogramOutputBins("hist")
+    ),
+    mainPanel(
+      histogramOutputPlot("hist")
+    )
+  )
+)
+```
+
+Code snippet not run:  
+Histogram modularized bin breaks
+:::
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-histogram-modularized-bin-breaks}
+: Histogram modularized refactored with bin breaks
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-histogram-modularized-bin-breaks}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/07-histogram-bin-breaks/app.R >}}
+```
+
+Histogram modularized refactored with bin breaks
+:::
+
+::::
+:::::
+
+:::
+
+### Multiple outputs
+
+It would be nice if we could include the name of selected variable in the title of the histogram. There’s currently no way to do that because `selectVarServer()` only returns the value of the variable, not its name. We could certainly rewrite `selectVarServer()` to return the name instead, but then the module user would have to do the subsetting. A better approach would be for the `selectVarServer()` to return *both* the name and the value.
+
+A server function can return multiple values exactly the same way that any R function can return multiple values: by returning a list. Below we modify `selectVarServer()` to return both the name and value, as reactives.
+
+::: {#lst-19-histogram-multiple-outputs-server}
+
+
+```{r}
+#| label: histogram-multiple-outputs-server
+#| eval: false
+
+selectVarServer <- function(id, data, filter = is.numeric) {
+  stopifnot(is.reactive(data))
+  stopifnot(!is.reactive(filter))
+  
+  moduleServer(id, function(input, output, session) {
+    observeEvent(data(), {
+      updateSelectInput(session, "var", choices = find_vars(data(), filter))
+    })
+    
+    list(
+      name = reactive(input$var),
+      value = reactive(data()[[input$var]])
+    )
+  })
+}
+```
+
+Code snippet not run:  
+`selectVarServer()` returns name and value as reactives
+
+:::
+
+
+Now we can update our `histogramApp()` to make use of this. The UI stays the same; but now we pass both the selected variable’s value and its name to `histogramServer()`.
+
+::: {#lst-19-histogram-multiple-outputs-app}
+
+```{r}
+#| label: histogram-multiple-outputs-app
+#| eval: false
+
+histogramApp <- function() {
+  ui <- fluidPage(...)
+
+  server <- function(input, output, session) {
+    data <- datasetServer("data")
+    x <- selectVarServer("var", data)
+    histogramServer("hist", x$value, x$name)
+  }
+  shinyApp(ui, server)
+} 
+```
+
+Code snippet not run:  
+Passing both the selected variable’s value and its name to `histogramServer()`
+:::
+
+The main challenge with this sort of code is remembering when you use the reactive (e.g. `x$value`) vs. when you use its value (e.g. `x$value()`). Just remember that when passing an argument to a module, you want the module to react to the value changing which means that you have to pass the reactive, not it’s current value.
+
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-histogram-multiple-outputs}
+: Histogram refactored to pass multiple outputs to `histogramServer()`.
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-histogram-multiple-outputs}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/08-histogram-multiple-outputs/app.R >}}
+```
+
+Histogram refactored to pass both the selected variable’s value and its name to `histogramServer()`.
+:::
+
+::::
+:::::
+
+:::
+
+If you find yourself frequently returning multiple values from a reactive, you might also consider using the {**zeallot**} package. {**zeallot**} provides the `%<-%` operator which allows you to assign into multiple variables (sometimes called multiple, unpacking, or destructuring assignment). This can be useful when returning multiple values because you avoid a layer of indirection.
+
+::: {#lst-19-histogram-multiple-outputs-app-zeallot}
+
+
+```{r}
+#| label: histogram-multiple-outputs-app-zeallot
+#| eval: false
+
+library(zeallot)
+
+histogramApp <- function() {
+  ui <- fluidPage(...)
+
+  server <- function(input, output, session) {
+    data <- datasetServer("data")
+    c(value, name) %<-% selectVarServer("var", data)
+    histogramServer("hist", value, name)
+  }
+  shinyApp(ui, server)
+}
+```
+
+Code snippet not run:  
+Histogram refactored to pass multiple outputs using {**zeallot**} to `histogramServer()`.
+:::
+:::{.column-page-inset}
+
+:::::{.my-r-code}
+:::{.my-r-code-header}
+:::::: {#cnj-19-histogram-multiple-outputs-zeallot}
+: Histogram refactored to pass multiple outputs using {**zeallot**} to `histogramServer()`.
+::::::
+:::
+::::{.my-r-code-container}
+::: {#lst-19-histogram-multiple-outputs-zeallot}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 700
+#| components: [editor, viewer]
+
+## file: app.R
+{{< include apps_19/09-histogram-multiple-outputs-zeallot/app.R >}}
+```
+
+Histogram refactored to pass multiple outputs with parallel assignment using {**zeallot**} to `histogramServer()`.
+:::
+
+::::
+:::::
+
+:::
+
+### Exercises 2 {#sec-19-exercises2}
+
+
+## Case studies
+
+To summarise what you’ve learned so far:
+
+- Module inputs (i.e. additional arguments to the module server) can be reactives or constants. The choice is a design decision that you make based on who sets the arguments and when they change. You should always check if the arguments are of the expected type to avoid unhelpful error messages.
+- Unlike app servers, but like regular functions, module servers can return values. The return value of a module should always be a reactive or, if you want to return multiple values, a list of reactives.
+
+Following are a few case studies that show a few more examples of using modules. 
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-19-designing-gender-question}
+: Designing gender questions
+::::::
+:::
+::::{.my-resource-container}
+
+- [Sabrina Fonesca]https://uxdesign.cc/designing-forms-for-gender-diversity-and-inclusion-d8194cf1f51): Designing forms for gender diversity and inclusion
+- [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/standards/standard-sex-gender-variations-sex-characteristics-and-sexual-orientation-variables): Standard for Sex, Gender, Variations of Sex Characteristics and Sexual Orientation Variables
+
+::::
+:::::
+
+:::::{.my-resource}
+:::{.my-resource-header}
+:::::: {#lem-19-additonal-resources}
+: Additional resources I found on the web
+::::::
+:::
+::::{.my-resource-container}
+
+- R Consortium: [Structure your app](https://www.youtube.com/watch?v=oOYaHsPXLvs): introduction to Shiny modules
+- Albert Rapp: [Avoid code duplication with Shiny modules](https://www.youtube.com/watch?v=1sCQEpJzv1U)
+- Albert Rapp: [Using Shiny modules](https://www.youtube.com/watch?v=gFia6l2mkDU): The R-Shiny Feature You’re Probably Ignoring (and how to stop)
+- Eric Nantz: [Effective use of Shiny modules](https://www.youtube.com/watch?v=ylLLVo2VL50) in application development
+- Jonas Hagenberg, Tutorial: [Dynamically adding and removing Shiny modules](https://www.youtube.com/watch?v=W7ES6QYvN_c)
+::::
+:::::
 
 ## Glossary Entries {#unnumbered}
 

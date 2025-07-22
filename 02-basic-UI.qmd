@@ -2278,3 +2278,32 @@ shinyApp(ui, server)
 This chapter has introduced the major input and output functions that make up the front end of a Shiny app. This was a big info dump, so don’t expect to remember everything after a single read. Instead, come back to this chapter when you’re looking for a specific component: you can quickly scan the figures, and then find the code you need.
 
 In the next chapter, we’ll move on to the back end of a Shiny app: the R code that makes your user interface come to life.
+
+
+## Glossary Entries {#unnumbered}
+
+```{r}
+#| label: glossary-table
+#| echo: false
+
+glossary_table()
+```
+
+------------------------------------------------------------------------
+
+## Session Info {.unnumbered}
+
+::: my-r-code
+::: my-r-code-header
+Session Info
+:::
+
+::: my-r-code-container
+```{r}
+#| label: session-info
+
+sessioninfo::session_info()
+```
+:::
+:::
+

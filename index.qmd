@@ -1,5 +1,7 @@
 # Preface {.unnumbered}
 
+This books collects my personal notes during reading [Mastering Shiny](https://mastering-shiny.org/index.html) by Hadley Wickham [@wickham2021].
+
 ::: {.callout-note style="color: blue;"}
 #### This is work in progress
 
