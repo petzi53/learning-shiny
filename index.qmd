@@ -130,12 +130,12 @@ If you hover with your mouse over the double underlined links it opens
 an window with the appropriate glossary text. Try this example:
 `r glossary("WHR")`.
 
-:::::: my-watch-out
-::: my-watch-out-header
+:::::: my-watch
+::: my-watch-header
 WATCH OUT! Glossary is my private learning vehicle
 :::
 
-:::: my-watch-out-container
+:::: my-watch-container
 ::: {layout="[10, 30]" layout-valign="center"}
 ![](https://debruine.github.io/glossary/logo.png)
 
@@ -184,6 +184,8 @@ Guide](https://style.tidyverse.org/) and the conventions explained in
 [^index-1]: The parenthesis are my own addition not applied in the
     mentioned RMarkdown book.
     
+## Shiny & shinylive
+    
 Additionally I am adopting the following convention: Whenever I use `Shiny` with capital letter I am referring to the app. In contrast to {**shiny**} which is pointing to the R package.
 
 For learning purposes I am practicing {**shiny**} in two modes:
@@ -223,12 +225,12 @@ format gives you the following @sec-glossary-package.
 
 ### Glossary package {#sec-glossary-package}
 
-:::::: my-num-packagebox
-::: my-num-packagebox-header
+:::::: my-packagebox
+::: my-packagebox-header
 Package Profile: glossary
 :::
 
-:::: my-num-packagebox-container
+:::: my-packagebox-container
 <center>{**glossary**}: [Glossaries for Markdown and Quarto
 Documents](https://debruine.github.io/glossary/) [@glossary]</center>
 
