@@ -1,3 +1,9 @@
+## path: apps_19/02-ui-input-server-output/app.R
+## MS book: 19.3.1 "Getting started: UI input + server output"
+## my book: @cnj-19-module-datasets &  @lst-19-module-datasets
+## UI module with additional input and server module with an output
+
+
 library(shiny)
 
 datasetInput <- function(id, filter = NULL) {
@@ -30,7 +36,16 @@ datasetApp <- function(filter = NULL) {
 }
 
 ################################################################
-## experiment with this app! Allowed arguments are:
-## is.data.frame, is.matrix,is.list, is.table, is.ts, is.numeric
+## experiment with this app and include a filter argument
+## Allowed filter arguments are:
+## "is.data.frame", "is.matrix", "is.list",
+## "is.table", "is.ts", "is.numeric"
+
 datasetApp()
 
+# datasetApp("is.data.frame")
+# datasetApp("is.matrix")
+# datasetApp("is.list")
+# datasetApp("is.table")
+# datasetApp("is.ts")
+# datasetApp("is.numeric")

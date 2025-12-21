@@ -9,11 +9,19 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
     output$numeric <- renderUI({
-        value <- isolate(input$dynamic)
+        value <- isolate(input$dynamic)                     # new line
         if (input$type == "slider") {
-            sliderInput("dynamic", input$label, value = value %||% 0, min = 0, max = 10)
+            sliderInput("dynamic",
+                        input$label,
+                        value = value %||% 0,               # changed
+                        min = 0,
+                        max = 10)
         } else {
-            numericInput("dynamic", input$label, value = value %||% 0, min = 0, max = 10)
+            numericInput("dynamic",
+                         input$label,
+                         value = value %||% 0,              # changed
+                         min = 0,
+                         max = 10)
         }
     })
 }

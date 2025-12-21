@@ -945,7 +945,7 @@ There are two parts to this solution:
 ::::{.my-r-code-container}
 ```{shinylive-r}
 #| standalone: true
-#| viewerHeight: 450
+#| viewerHeight: 500
 #| components: [editor, viewer]
 
 ## file: app.R
@@ -967,7 +967,7 @@ There are two parts to this solution:
 ::::{.my-r-code-container}
 ```{shinylive-r}
 #| standalone: true
-#| viewerHeight: 450
+#| viewerHeight: 500
 #| components: [editor, viewer]
 
 ## file: app.R

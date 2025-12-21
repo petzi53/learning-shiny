@@ -1,8 +1,3 @@
----
-execute:
-  cache: true
----
-
 # Case study: ER injuries {#sec-chap04}
 
 ```{r}
@@ -430,8 +425,9 @@ To help get the balance right, I often do a few pencil-and-paper sketches to rap
 #| components: [editor, viewer]
 
 library(shiny)
-library(tidyverse)
-library(munsell)
+library(dplyr)
+library(ggplot2)
+# library(munsell)
 
 base::source(
   "https://raw.githubusercontent.com/petzi53/learning-shiny/refs/heads/master/R/neiss.R")
@@ -567,18 +563,14 @@ I made one other change to improve the aesthetics of the app: I forced all table
 
 
 library(shiny)
-library(tidyverse)
-library(munsell)
+library(dplyr)
+library(ggplot2)
+# library(munsell)
 
 ##>> get data and functions
 basic_url = "https://raw.githubusercontent.com/petzi53/learning-shiny/refs/heads/master/"
 base::source(base::paste0(basic_url, "R/neiss.R"))
 ##>>
-
-
-library(shiny)
-library(tidyverse)
-library(munsell)
 
 ui <- fluidPage(
   fluidRow(
@@ -650,18 +642,14 @@ So far, we’re displaying only a single plot, but we’d like to give the user 
 
 
 library(shiny)
-library(tidyverse)
-library(munsell)
+library(dplyr)
+library(ggplot2)
+# library(munsell)
 
 ##>> get data and functions
 basic_url = "https://raw.githubusercontent.com/petzi53/learning-shiny/refs/heads/master/"
 base::source(base::paste0(basic_url, "R/neiss.R"))
 ##>>
-
-
-library(shiny)
-library(tidyverse)
-library(munsell)
 
 ui <- fluidPage(
   fluidRow(
@@ -817,18 +805,15 @@ There are two parts to the solution.
 
 
 library(shiny)
-library(tidyverse)
-library(munsell)
+library(dplyr)
+library(ggplot2)
+# library(munsell)
 
 ##>> get data and functions
 basic_url = "https://raw.githubusercontent.com/petzi53/learning-shiny/refs/heads/master/"
 base::source(base::paste0(basic_url, "R/neiss.R"))
 ##>>
 
-
-library(shiny)
-library(tidyverse)
-library(munsell)
 
 ui <- fluidPage(
   fluidRow(
@@ -970,4 +955,3 @@ sessioninfo::session_info()
 ```
 :::
 :::
-

@@ -439,15 +439,21 @@ Server <- function(id) {
 
 ## Inputs and outputs
 
-Sometimes a module with only an `id` argument to the module UI and server is useful because it allows you to isolate complex code in its own file. A lot of the time, however, your module UI and server will need additional arguments. Adding arguments to the module UI gives greater control over module appearance, allowing you to use the same module in more places in your app. But the module UI is just a regular R function, so there’s relatively little to learn that’s specific to Shiny, and much of it was already covered in @sec-chap18.
+### Introduction
 
-The following sections will focus on the module server, and discuss how your module can take additional reactive inputs and return one or more reactive outputs.
+Sometimes a module with only an `id` argument to the module UI and server is useful because it allows you to isolate complex code in its own file. This is particularly useful for apps that aggregate independent components, such as a dashboard where each tab shows a different graph. Here modules allow you to develop each piece in its own file without having to worry about IDs clashing across components.
+
+A lot of the time, however, your module UI and server will need additional arguments. Adding arguments to the module UI gives greater control over module appearance, allowing you to use the same module in more places in your app. But the module UI is just a regular R function, so there’s relatively little to learn that’s specific to Shiny, and much of it was already covered in @sec-chap18.
+
+You might see advice to use `session$userData` or other techniques to break out of the module straitjacket. Be wary of such advice: it’s showing you how to work around the rules imposed by namespacing, making it easy to re-introduce much complexity to your app and significantly reducing the benefits of using a module in the first place.
+
+The following sections will focus on the module server, and discuss how modules can take additional reactive inputs and return one or more reactive outputs.
 
 ### Getting started: UI input + server output
 
 To see how inputs and outputs work, we’ll start off easy with a module that allows the user to select a dataset from built-in data provided by the datasets package. This isn’t terribly useful by itself, but it illustrates some of the basic principles, is a useful building block for more complex modules, and you’ve seen the idea before in @sec-01-ui-controls.
 
-We’ll start with the module UI. Here we use a single additional argument so that you can limit the options to built-in datasets that are either data frames (`filter = is.data.frame`) or matrices (`filter = is.matrix`, or `filter = is.ts`). We use this argument to optionally filter the objects found in the {**datasets**} package, then create a `selectInput()`.
+We’ll start with the module UI. Here we use a single additional argument so that you can limit the options to built-in datasets that are either data frames (`filter = is.data.frame`) or matrices (`filter = is.matrix`, or --- not mentioned in the Mastering Shiny book --- `filter = is.ts`). We use this argument to optionally filter the objects found in the {**datasets**} package, then create a `selectInput()`.
 
 ```{r}
 #| label: module-datasets-ui
@@ -532,6 +538,28 @@ Allowed filters are: `is.data.frame`, `is.matrix`, `is.ts`, `is.list`, `is.table
 :::::
 
 :::
+
+::: {.callout-note #nte-19-add-select-input-for-filter}
+There is the possibility to experiment with @lst-19-module-datasets by changing the hard-coded `filter = NULL` argument in the `datasetApp()` function and replacing it with one of the valid arguments: 
+  -"is.data.frame", 
+  - "is.matrix",
+  - "is.list", 
+  - "is.table", 
+  - "is.ts", and
+  - "is.numeric"
+
+But it would be a better user experience to provide a separate `selectInput()` with choices of
+
+- Data frames,
+- Matrices,
+- Lists,
+- Tables,
+- Time Series, and
+- Numerics.
+
+But I do not know at the moment how to incorporate this addition into the Shiny module structure.
+:::
+
 
 ### Case study: selecting a numeric variable
 
@@ -632,7 +660,7 @@ Modularized app case study: Selecting a numeric variable
 
 When designing a module server, you need to think about who is going to provide the value for each argument: is it the R programmer calling your module, or the person using the app? Another way to think about this is when can the value be changed: is it fixed and constant over the life-time of the app, or is it reactive, changing as the user interacts with the app? This is an important design decision that determines whether or not an argument should be a reactive or not.
 
-Once you’ve made this decision, it’s good practice to check that each input to your module is either reactive or constant. If you don’t, and the user supplies the wrong type, they’ll get a cryptic error message. You can make the life of module user much easier with a quick and dirty call to `stopifnot()`. For example, `selectVarServer()` could check that data is reactive and `filter` is not with the following code:
+Once you’ve made this decision, it’s **good practice to check that each input to your module is either reactive or constant**. If you don’t, and the user supplies the wrong type, they’ll get a cryptic error message. You can make the life of module user much easier with a quick and dirty call to `stopifnot()`. For example, `selectVarServer()` could check that data is reactive and `filter` is not with the following code:
 
 ```{r}
 #| label: server-inputs

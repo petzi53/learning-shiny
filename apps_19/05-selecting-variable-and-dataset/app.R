@@ -1,13 +1,13 @@
 library(shiny)
 
-## helper function
+## helper function #############################################
 find_vars <- function(data, filter) {
     stopifnot(is.data.frame(data))
     stopifnot(is.function(filter))
     names(data)[vapply(data, filter, logical(1))]
 }
 
-## ui
+## ui ##########################################################
 datasetInput <- function(id, filter = NULL) {
     names <- ls("package:datasets")
     if (!is.null(filter)) {
@@ -29,7 +29,7 @@ selectDataVarUI <- function(id) {
     )
 }
 
-## server
+## server ######################################################
 datasetServer <- function(id) {
     moduleServer(id, function(input, output, session) {
         reactive(get(input$dataset, "package:datasets"))
@@ -61,7 +61,7 @@ selectDataVarServer <- function(id, filter = is.numeric) {
     })
 }
 
-## app
+## app #########################################################
 selectDataVarApp <- function(filter = is.numeric) {
     ui <- fluidPage(
         sidebarLayout(
@@ -76,5 +76,5 @@ selectDataVarApp <- function(filter = is.numeric) {
     shinyApp(ui, server)
 }
 
-## invoke app
+## invoke app ##################################################
 selectDataVarApp()

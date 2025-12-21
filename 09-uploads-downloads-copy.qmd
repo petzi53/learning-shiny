@@ -65,7 +65,6 @@ The UI needed to support file uploads is simple: just add `shiny::fileInput()` t
 
 Like most other UI components, there are only two required arguments: `id` and `label`. The `width`, `buttonLabel` and `placeholder` arguments allow you to tweak the appearance in other ways. I won’t discuss them here, but you can read more about them in [File Upload Control — fileInput](https://shiny.posit.co/r/reference/shiny/1.6.0/fileinput.html).
 
-
 ### Server
 
 Handling `fileInput()` on the server is a little more complicated than other inputs. Most inputs return simple vectors, but `fileInput()` returns a data frame with four columns:
@@ -128,6 +127,7 @@ In @lst-09-multiple-files-uploads I have demonstrated my solution.
 ```
 
 
+
 :::::{.my-r-code}
 :::{.my-r-code-header}
 :::::: {#cnj-09-multiple-files-upload}
@@ -164,7 +164,6 @@ If the user is uploading a dataset, there are two details that you need to be aw
 - The `accept` argument allows you to limit the possible inputs. The easiest way is to supply a character vector of file extensions, like `accept = ".csv"`. But the accept argument is only a suggestion to the browser, and is not always enforced, so it’s good practice to also validate it (e.g. @sec-08-validating-input) yourself. The easiest way to get the file extension in R is `tools::file_ext()`, just be aware it removes the leading `.` from the extension.
 
 Putting all these ideas together gives us the following app where you can upload a `.csv` or `.tsv` file and see the first `n` rows. See it in action in <https://hadley.shinyapps.io/ms-upload-validate>.
-
 
 
 ::: {.column-page-inset}
@@ -473,14 +472,13 @@ There are a couple of other tricks worth knowing about:
 
 ```{r}
 #| label: temp-directory
+#| eval: false
 
 report_path <- tempfile(fileext = ".Rmd")
 file.copy("report.Rmd", report_path, overwrite = TRUE)
 ```
 
-::: {.callout-warning #wrn-code-chunk-errors}
-The following three code chunks produce error. I have therefore the source code not executed (`eval: false`).
-:::
+
 
 Then replace "report.Rmd" with `report_path` in the call to `rmarkdown::render()`:
 
@@ -527,7 +525,6 @@ server <- function(input, output) {
 
 
 
-
 ::: {.column-page-inset}
 
 :::::{.my-r-code}
@@ -538,8 +535,7 @@ server <- function(input, output) {
 :::
 ::::{.my-r-code-container}
 
-```{r}
-#| eval: false
+```{shinylive-r}
 #| standalone: true
 #| viewerHeight: 550
 #| components: [editor, viewer]
@@ -609,7 +605,7 @@ shinyApp(ui, server)
 
 
 ::: {.callout-warning  #wrn-09-download-report-failure}
-The last ~~two~~ three code chunks didn't work.
+The last two code chunks didn't work.
 
 At first I got the message with a code version I can't reproduce
 > Warning: Error in : ! in callr subprocess      
@@ -652,10 +648,6 @@ To make it easier to understand how to use the app, I’ve used `sidebarLayout()
 
 All three parts get assembled into a single `fluidPage()` and the server logic follows the same organization.
 
-::: {.callout-warning #wrn-shinylive-produces-error}
-The following code chunk produces an error. I do not know the reason. 
-:::
-
 
 ::: {.column-page-inset}
 
@@ -667,8 +659,7 @@ The following code chunk produces an error. I do not know the reason.
 :::
 ::::{.my-r-code-container}
 
-```{r}
-#| eval: false
+```{shinylive-r}
 #| standalone: true
 #| viewerHeight: 650
 #| components: [editor, viewer]
@@ -763,7 +754,6 @@ shinyApp(ui, server)
 
 :::
 
-
 ## Exercises
 
 ### Multidimensional noise {#sec-09-ex-01}
@@ -821,7 +811,6 @@ There is a conflict between the two versions. The first one (Shiny) does not wor
 :::::
 
 
-
 ###### bslib UI version
 
 :::::{.my-r-code}
@@ -856,8 +845,6 @@ There is a conflict between the two versions. The first one (Shiny) does not wor
 :::::
 
 :::
-
-
 
 ::: {.callout-note #nte-09-bslib-version}
 
@@ -952,8 +939,6 @@ I have extended the task with three more options:
 :::::
 
 :::
-
-
 
 ### Download histogram
 
@@ -1223,7 +1208,7 @@ Caused by error in `gh::gh()`:
 ```
 :::
 
-I have therefore for all the LEGO bricks code chunks only the apps source code provided. To run the apps, copy it form the code chunks below or fork this repo and run the provided Shiny apps.
+I have therefore only the apps source code provided. To run the apps, copy it form the code chunks below or fork this repo and run the provided apps.
 
 :::::{.my-resource}
 :::{.my-resource-header}
@@ -1328,7 +1313,6 @@ I've got several more ideas to improve the app.
 ::: {#lst-09-ex-04-understand-demo-code}
 ```{r}
 #| label: ex-09-04-bricksr-01-demo-r-code
-#| eval: false
 
 library(brickr)
 

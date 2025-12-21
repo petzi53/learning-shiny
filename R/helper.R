@@ -8,11 +8,10 @@
 ## - my_qq_plot: create histogram with overlaid dnorm curve
 ## - my_scatter: create scatterplot with lm and loess curve
 ## - my_save_data_file: save data file
-## - my_pkgs_dl: package downloads
+## - my_pkgs_dl: compare package downloads
 ## - private_list_plotter: plot color list as a palette
 ## - private_t_col: transparent colors
 ##########################################################
-
 
 
 library(glossary)
@@ -296,7 +295,7 @@ my_save_data_file <- function(chapter_folder, object, file_name){
 
 
 ################################################################
-# my_pkgs_downloads: Get number of downloads from RStudio CRAN Mirror
+# my_pkgs_dl: Get number of downloads from RStudio CRAN Mirror
 # Version 1.0: June 8, 2025
 # Purpose:
 # Compare popularity of different packages

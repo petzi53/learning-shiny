@@ -63,3 +63,7 @@ _templates
 _archive
 
 
+
+/.luarc.json
+
+**/*.quarto_ipynb
